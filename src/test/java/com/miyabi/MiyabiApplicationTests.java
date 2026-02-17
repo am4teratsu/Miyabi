@@ -1,4 +1,4 @@
-package com.hotel.demo;
+package com.miyabi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
