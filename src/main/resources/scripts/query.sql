@@ -79,7 +79,7 @@ CREATE TABLE reservations (
     room_subtotal DECIMAL(10,2) NOT NULL COMMENT 'precio_noche x noches',
     total_consumption DECIMAL(10,2) DEFAULT 0.00,
     total_pay DECIMAL(10,2) NOT NULL COMMENT 'subtotal + consumos',
-    state VARCHAR(20) NOT NULL DEFAULT 'Peding'
+    state VARCHAR(20) NOT NULL DEFAULT 'Pending'
         COMMENT 'Pending, Confirmed, Check-in, Check-out, Cancelled',
     observations TEXT,
     reservation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -154,9 +154,9 @@ CREATE TABLE access_log (
 -- ROLES
 
 INSERT INTO roles (name_rol, description) VALUES 
-('Administrador', 'Acceso total al sistema, gestión de habitaciones y usuarios'),
-('Recepcionista', 'Gestión de reservas, check-in, check-out y servicios'),
-('Cliente', 'Acceso web para ver y crear reservas');
+('Administrator', 'Acceso total al sistema, gestión de habitaciones y usuarios'),
+('Receptionist', 'Gestión de reservas, check-in, check-out y servicios'),
+('Client', 'Acceso web para ver y crear reservas');
 
 -- ============================================================
 -- USUARIOS (Admin y Recepcionistas)
@@ -186,54 +186,54 @@ INSERT INTO room_type (name_type, description, capacity_people, base_price, high
 -- HABITACIONES FÍSICAS
 INSERT INTO rooms (room_number, floor, state, type_id) VALUES 
 -- Piso 1 - Simples
-('101', 1, 'Disponible', 1),
-('102', 1, 'Disponible', 1),
-('103', 1, 'Mantenimiento', 1),
+('101', 1, 'Available', 1),
+('102', 1, 'Available', 1),
+('103', 1, 'Maintenance', 1),
 -- Piso 1 - Dobles
-('104', 1, 'Disponible', 2),
-('105', 1, 'Disponible', 2),
+('104', 1, 'Available', 2),
+('105', 1, 'Available', 2),
 -- Piso 2 - Dobles
-('201', 2, 'Disponible', 2),
-('202', 2, 'Disponible', 2),
-('203', 2, 'Disponible', 2),
+('201', 2, 'Available', 2),
+('202', 2, 'Available', 2),
+('203', 2, 'Available', 2),
 -- Piso 2 - Suite Junior
-('204', 2, 'Disponible', 3),
-('205', 2, 'Disponible', 3),
+('204', 2, 'Available', 3),
+('205', 2, 'Available', 3),
 -- Piso 3 - Suite Doble
-('301', 3, 'Disponible', 4),
-('302', 3, 'Disponible', 4),
+('301', 3, 'Available', 4),
+('302', 3, 'Available', 4),
 -- Piso 3 - Familiar
-('303', 3, 'Disponible', 5),
-('304', 3, 'Disponible', 5);
+('303', 3, 'Available', 5),
+('304', 3, 'Available', 5);
 
 -- CATÁLOGO DE SERVICIOS
 INSERT INTO services_catalog (service_name, description, price, category) VALUES 
 -- Bebidas
-('Coca-Cola', 'Bebida gaseosa 500ml', 8.00, 'Bebidas'),
-('Agua Mineral', 'Agua San Mateo 625ml', 5.00, 'Bebidas'),
-('Cerveza Nacional', 'Cerveza Cristal o Pilsen 330ml', 12.00, 'Bebidas'),
-('Cerveza Importada', 'Cerveza Heineken o Corona 330ml', 18.00, 'Bebidas'),
-('Pisco Sour', 'Cóctel tradicional peruano', 25.00, 'Bebidas'),
-('Vino Tinto Copa', 'Copa de vino tinto selección', 35.00, 'Bebidas'),
+('Coca-Cola', 'Bebida gaseosa 500ml', 8.00, 'Drinks'),
+('Agua Mineral', 'Agua San Mateo 625ml', 5.00, 'Drinks'),
+('Cerveza Nacional', 'Cerveza Cristal o Pilsen 330ml', 12.00, 'Drinks'),
+('Cerveza Importada', 'Cerveza Heineken o Corona 330ml', 18.00, 'Drinks'),
+('Pisco Sour', 'Cóctel tradicional peruano', 25.00, 'Drinks'),
+('Vino Tinto Copa', 'Copa de vino tinto selección', 35.00, 'Drinks'),
 -- Comidas
-('Desayuno Continental', 'Pan, jugos, café, frutas', 35.00, 'Comidas'),
-('Desayuno Americano', 'Huevos, tocino, tostadas, jugos', 55.00, 'Comidas'),
-('Almuerzo', 'Plato del día con bebida incluida', 65.00, 'Comidas'),
-('Cena Romántica', 'Cena para dos con vino incluido', 180.00, 'Comidas'),
-('Room Service', 'Servicio de comida a la habitación', 45.00, 'Comidas'),
-('Snacks', 'Papitas, chocolates, maní', 15.00, 'Comidas'),
+('Desayuno Continental', 'Pan, jugos, café, frutas', 35.00, 'Meals'),
+('Desayuno Americano', 'Huevos, tocino, tostadas, jugos', 55.00, 'Meals'),
+('Almuerzo', 'Plato del día con bebida incluida', 65.00, 'Meals'),
+('Cena Romántica', 'Cena para dos con vino incluido', 180.00, 'Meals'),
+('Room Service', 'Servicio de comida a la habitación', 45.00, 'Meals'),
+('Snacks', 'Papitas, chocolates, maní', 15.00, 'Meals'),
 -- Spa y Bienestar
 ('Masaje Relajante 60min', 'Masaje corporal completo', 120.00, 'Spa'),
 ('Masaje en Pareja', 'Masaje para dos personas 60min', 220.00, 'Spa'),
 ('Tratamiento Facial', 'Limpieza facial profunda', 85.00, 'Spa'),
 ('Acceso Piscina', 'Acceso por día a piscina y jacuzzi', 30.00, 'Spa'),
 -- Otros servicios
-('Lavandería por pieza', 'Lavado y planchado por prenda', 10.00, 'Lavandería'),
-('Lavandería Express', 'Servicio express en 3 horas', 25.00, 'Lavandería'),
-('Transfer Aeropuerto', 'Traslado al aeropuerto', 80.00, 'Transporte'),
-('Tour Ciudad', 'Paseo por la ciudad 4 horas', 150.00, 'Transporte'),
-('Alquiler Bicicleta', 'Por día', 40.00, 'Entretenimiento'),
-('Caja de Seguridad', 'Alquiler por noche', 15.00, 'Otros');
+('Lavandería por pieza', 'Lavado y planchado por prenda', 10.00, 'Laundry'),
+('Lavandería Express', 'Servicio express en 3 horas', 25.00, 'Laundry'),
+('Transfer Aeropuerto', 'Traslado al aeropuerto', 80.00, 'Transport'),
+('Tour Ciudad', 'Paseo por la ciudad 4 horas', 150.00, 'Transport'),
+('Alquiler Bicicleta', 'Por día', 40.00, 'Entertainment'),
+('Caja de Seguridad', 'Alquiler por noche', 15.00, 'Others');
 
 -- ============================================================
 -- RESERVAS DE PRUEBA (diferentes estados)
@@ -244,7 +244,7 @@ INSERT INTO reservations (reservation_code, entry_date, departure_date, number_n
 -- Reserva Pendiente (cliente 1, Suite Doble)
 ('RES-2026-0001', '2026-02-17', '2026-02-20', 3, 
     450.00, 1350.00, 0.00, 1350.00, 
-    'Pendiente', 1, 4),
+    'Pending', 1, 4),
 -- Reserva en Check-in (cliente 2, Habitación Doble)
 ('RES-2026-0002', '2026-02-14', '2026-02-16', 2, 
     180.00, 360.00, 33.00, 393.00, 
@@ -256,11 +256,11 @@ INSERT INTO reservations (reservation_code, entry_date, departure_date, number_n
 -- Reserva Pendiente (cliente 4, Habitación Simple)
 ('RES-2026-0004', '2026-02-18', '2026-02-19', 1, 
     120.00, 120.00, 0.00, 120.00, 
-    'Pendiente', 4, 2);
+    'Pending', 4, 2);
 
 -- Actualizar estados de habitaciones según reservas
-UPDATE rooms SET state = 'Reservada' WHERE room_id = 4;
-UPDATE rooms SET state = 'Ocupada' WHERE room_id = 5;
+UPDATE rooms SET state = 'Reserved' WHERE room_id = 4;
+UPDATE rooms SET state = 'Occupied' WHERE room_id = 5;
 -- CONSUMOS DE PRUEBA (reserva 2 en check-in)
 -- ============================================================
 INSERT INTO consumption (amount, unit_price, subtotal, observation, reservation_id, service_id, user_registration_id) VALUES 
@@ -272,7 +272,7 @@ INSERT INTO consumption (amount, unit_price, subtotal, observation, reservation_
 -- PAGO DE PRUEBA (reserva 3 completada)
 -- ============================================================
 INSERT INTO payments (total_amount, payment_method, receipt_number, reservation_id, user_charge_id) VALUES 
-(680.00, 'Tarjeta', 'COMP-2026-0001', 3, 2);
+(680.00, 'Card', 'COMP-2026-0001', 3, 2);
 
 -- Actualizar checkout en reserva 3
 UPDATE reservations SET 
