@@ -58,9 +58,9 @@ CREATE TABLE rooms (
     room_id INT AUTO_INCREMENT PRIMARY KEY,
     room_number VARCHAR(10) NOT NULL UNIQUE COMMENT 'Ej: 101, 205, P3',
     floor INT NOT NULL,
-    state VARCHAR(20) NOT NULL DEFAULT 'Disponible' 
+    state VARCHAR(20) NOT NULL DEFAULT 'Available' 
         COMMENT 'Available, Occupied, Reserved, Cleaning, Maintenance',
-    descripcion_adicional TEXT,
+    additional_description TEXT,
     date_last_maintenance DATE,
     type_id INT NOT NULL,
     FOREIGN KEY (type_id) REFERENCES room_type(type_id)
@@ -79,11 +79,11 @@ CREATE TABLE reservations (
     room_subtotal DECIMAL(10,2) NOT NULL COMMENT 'precio_noche x noches',
     total_consumption DECIMAL(10,2) DEFAULT 0.00,
     total_pay DECIMAL(10,2) NOT NULL COMMENT 'subtotal + consumos',
-    state VARCHAR(20) NOT NULL DEFAULT 'Pendiente'
-        COMMENT 'Pendiente, Confirmada, Check-in, Check-out, Cancelada',
+    state VARCHAR(20) NOT NULL DEFAULT 'Peding'
+        COMMENT 'Pending, Confirmed, Check-in, Check-out, Cancelled',
     observations TEXT,
     reservation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    chekin_date DATETIME COMMENT 'Cuando el recep hace check-in',
+    checkin_date DATETIME COMMENT 'Cuando el recep hace check-in',
     checkout_date DATETIME COMMENT 'Cuando el recep hace check-out',
     guest_id INT NOT NULL,
     room_id INT NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE services_catalog (
     description VARCHAR(200),
     price DECIMAL(10,2) NOT NULL,
     category VARCHAR(50) COMMENT 'Bebidas, Comidas, Spa, Lavandería, etc.',
-    available TINYINT DEFAULT 1 COMMENT '1=Activo, 0=Inactivo'
+    available TINYINT DEFAULT 1 COMMENT '1=Active, 0=Inactive'
 );
 
 
@@ -129,7 +129,7 @@ CREATE TABLE payments (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
     total_amount DECIMAL(10,2) NOT NULL,
     payment_method VARCHAR(30) NOT NULL COMMENT 'Efectivo, Tarjeta, Transferencia',
-    payment_status VARCHAR(20) DEFAULT 'Pagado',
+    payment_status VARCHAR(20) DEFAULT 'Paid',
     receipt_number VARCHAR(50),
     payment_day DATETIME DEFAULT CURRENT_TIMESTAMP,
     observation TEXT,

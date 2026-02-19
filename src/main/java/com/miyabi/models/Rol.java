@@ -8,14 +8,14 @@ public class Rol {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_rol")
+    @Column(name = "rol_id")
     private Integer idRol;
 
-    @Column(name = "nombre_rol", nullable = false, unique = true, length = 50)
-    private String nombreRol;
+    @Column(name = "name_rol", nullable = false, unique = true, length = 50)
+    private String nameRol;
 
     @Column(length = 200)
-    private String descripcion;
+    private String description;
 
     public Rol() {}
 }

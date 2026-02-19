@@ -4,19 +4,19 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "clientes")
-public class Cliente {
+@Table(name = "guests")
+public class Guest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cliente")
+    @Column(name = "guest_id")
     private Integer idCliente;
 
     @Column(nullable = false, length = 100)
-    private String nombres;
+    private String names;
 
     @Column(nullable = false, length = 100)
-    private String apellidos;
+    private String surnames;
 
     @Column(nullable = false, unique = true, length = 15)
     private String dni;
@@ -28,16 +28,16 @@ public class Cliente {
     private String password;
 
     @Column(length = 15)
-    private String telefono;
+    private String phone;
 
     @Column(length = 200)
-    private String direccion;
+    private String address;
 
-    @Column(name = "fecha_registro", insertable = false, updatable = false)
-    private LocalDateTime fechaRegistro;
+    @Column(name = "registration_date", insertable = false, updatable = false)
+    private LocalDateTime registrationDate;
 
     @Column(columnDefinition = "TINYINT DEFAULT 1")
-    private Integer estado = 1;
+    private Integer state = 1;
 
-    public Cliente() {}
+    public Guest() {}
 }

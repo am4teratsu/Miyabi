@@ -4,19 +4,19 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "usuarios")
-public class Usuario {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
+    @Column(name = "user_id")
     private Integer idUsuario;
 
     @Column(nullable = false, length = 100)
-    private String nombres;
+    private String names;
 
     @Column(nullable = false, length = 100)
-    private String apellidos;
+    private String surnames;
 
     @Column(nullable = false, unique = true, length = 100)
     private String email;
@@ -25,14 +25,14 @@ public class Usuario {
     private String password;
 
     @Column(columnDefinition = "TINYINT DEFAULT 1")
-    private Integer estado = 1;
+    private Integer state = 1;
 
-    @Column(name = "fecha_creacion", insertable = false, updatable = false)
-    private LocalDateTime fechaCreacion;
+    @Column(name = "creation_date", insertable = false, updatable = false)
+    private LocalDateTime creationDate;
 
     @ManyToOne
-    @JoinColumn(name = "id_rol", nullable = false)
+    @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
 
-    public Usuario() {}
+    public User() {}
 }
