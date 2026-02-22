@@ -40,4 +40,80 @@ public class Payments {
     private User userCharge;
 
     public Payments() {}
+
+    // ==========================================
+    // GETTERS Y SETTERS
+    // ==========================================
+
+    public Integer getIdPayment() {
+        return idPayment;
+    }
+
+    public void setIdPayment(Integer idPayment) {
+        this.idPayment = idPayment;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getReceiptNumber() {
+        return receiptNumber;
+    }
+
+    public void setReceiptNumber(String receiptNumber) {
+        this.receiptNumber = receiptNumber;
+    }
+
+    public LocalDateTime getPaymentDay() {
+        return paymentDay;
+    }
+
+    public void setPaymentDay(LocalDateTime paymentDay) {
+        this.paymentDay = paymentDay;
+    }
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
+
+    public User getUserCharge() {
+        return userCharge;
+    }
+
+    public void setUserCharge(User userCharge) {
+        this.userCharge = userCharge;
+    }
 }

@@ -34,4 +34,72 @@ public class RoomType {
     private String amenities;
 
     public RoomType() {}
+
+    // ==========================================
+    // GETTERS Y SETTERS
+    // ==========================================
+
+    public Integer getIdTipo() {
+        return idTipo;
+    }
+
+    public void setIdTipo(Integer idTipo) {
+        this.idTipo = idTipo;
+    }
+
+    public String getNameType() {
+        return nameType;
+    }
+
+    public void setNameType(String nameType) {
+        this.nameType = nameType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getCapacityPeople() {
+        return capacityPeople;
+    }
+
+    public void setCapacityPeople(Integer capacityPeople) {
+        this.capacityPeople = capacityPeople;
+    }
+
+    public BigDecimal getBasePrice() {
+        return basePrice;
+    }
+
+    public void setBasePrice(BigDecimal basePrice) {
+        this.basePrice = basePrice;
+    }
+
+    public BigDecimal getHighSeasonPrice() {
+        return highSeasonPrice;
+    }
+
+    public void setHighSeasonPrice(BigDecimal highSeasonPrice) {
+        this.highSeasonPrice = highSeasonPrice;
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
+
+    public String getAmenities() {
+        return amenities;
+    }
+
+    public void setAmenities(String amenities) {
+        this.amenities = amenities;
+    }
 }

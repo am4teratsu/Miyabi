@@ -30,4 +30,56 @@ public class AccessLog {
     private Guest guest;
 
     public AccessLog() {}
+
+    // ==========================================
+    // GETTERS Y SETTERS
+    // ==========================================
+
+    public Integer getIdAccess() {
+        return idAccess;
+    }
+
+    public void setIdAccess(Integer idAccess) {
+        this.idAccess = idAccess;
+    }
+
+    public LocalDateTime getAccessDate() {
+        return accessDate;
+    }
+
+    public void setAccessDate(LocalDateTime accessDate) {
+        this.accessDate = accessDate;
+    }
+
+    public String getIpAccess() {
+        return ipAccess;
+    }
+
+    public void setIpAccess(String ipAccess) {
+        this.ipAccess = ipAccess;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
 }

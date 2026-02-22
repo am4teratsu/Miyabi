@@ -28,4 +28,56 @@ public class ServiceCatalog {
     private Integer available = 1;
 
     public ServiceCatalog() {}
+
+    // ==========================================
+    // GETTERS Y SETTERS
+    // ==========================================
+
+    public Integer getIdService() {
+        return idService;
+    }
+
+    public void setIdService(Integer idService) {
+        this.idService = idService;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Integer getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Integer available) {
+        this.available = available;
+    }
 }

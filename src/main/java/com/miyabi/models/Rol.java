@@ -18,4 +18,32 @@ public class Rol {
     private String description;
 
     public Rol() {}
+
+    // ==========================================
+    // GETTERS Y SETTERS
+    // ==========================================
+
+    public Integer getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(Integer idRol) {
+        this.idRol = idRol;
+    }
+
+    public String getNameRol() {
+        return nameRol;
+    }
+
+    public void setNameRol(String nameRol) {
+        this.nameRol = nameRol;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

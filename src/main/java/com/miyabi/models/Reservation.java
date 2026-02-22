@@ -12,7 +12,7 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
-    private Integer idReserva;
+    private Integer reservationId;
 
     @Column(name = "reservation_code", nullable = false, unique = true, length = 20)
     private String reservationCode;
@@ -39,7 +39,7 @@ public class Reservation {
     private BigDecimal totalPay;
 
     @Column(nullable = false, length = 20)
-    private String state = "Peding";
+    private String state = "Pending";
 
     @Column(columnDefinition = "TEXT")
     private String observations;
@@ -70,4 +70,152 @@ public class Reservation {
     private User userCheckout;
 
     public Reservation() {}
+
+    // ==========================================
+    // GETTERS Y SETTERS 
+    // ==========================================
+
+    public Integer getReservationId() {
+        return reservationId;
+    }
+
+    public void setReservationId(Integer reservationId) {
+        this.reservationId = reservationId;
+    }
+
+    public String getReservationCode() {
+        return reservationCode;
+    }
+
+    public void setReservationCode(String reservationCode) {
+        this.reservationCode = reservationCode;
+    }
+
+    public LocalDate getEntryDate() {
+        return entryDate;
+    }
+
+    public void setEntryDate(LocalDate entryDate) {
+        this.entryDate = entryDate;
+    }
+
+    public LocalDate getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(LocalDate departureDate) {
+        this.departureDate = departureDate;
+    }
+
+    public Integer getNumberNights() {
+        return numberNights;
+    }
+
+    public void setNumberNights(Integer numberNights) {
+        this.numberNights = numberNights;
+    }
+
+    public BigDecimal getPricePerNight() {
+        return pricePerNight;
+    }
+
+    public void setPricePerNight(BigDecimal pricePerNight) {
+        this.pricePerNight = pricePerNight;
+    }
+
+    public BigDecimal getRoomSubtotal() {
+        return roomSubtotal;
+    }
+
+    public void setRoomSubtotal(BigDecimal roomSubtotal) {
+        this.roomSubtotal = roomSubtotal;
+    }
+
+    public BigDecimal getTotalConsumption() {
+        return totalConsumption;
+    }
+
+    public void setTotalConsumption(BigDecimal totalConsumption) {
+        this.totalConsumption = totalConsumption;
+    }
+
+    public BigDecimal getTotalPay() {
+        return totalPay;
+    }
+
+    public void setTotalPay(BigDecimal totalPay) {
+        this.totalPay = totalPay;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
+    }
+
+    public LocalDateTime getReservationDate() {
+        return reservationDate;
+    }
+
+    public void setReservationDate(LocalDateTime reservationDate) {
+        this.reservationDate = reservationDate;
+    }
+
+    public LocalDateTime getChekinDate() {
+        return chekinDate;
+    }
+
+    public void setChekinDate(LocalDateTime chekinDate) {
+        this.chekinDate = chekinDate;
+    }
+
+    public LocalDateTime getCheckOut() {
+        return checkOut;
+    }
+
+    public void setCheckOut(LocalDateTime checkOut) {
+        this.checkOut = checkOut;
+    }
+
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public User getUserCheckin() {
+        return userCheckin;
+    }
+
+    public void setUserCheckin(User userCheckin) {
+        this.userCheckin = userCheckin;
+    }
+
+    public User getUserCheckout() {
+        return userCheckout;
+    }
+
+    public void setUserCheckout(User userCheckout) {
+        this.userCheckout = userCheckout;
+    }
 }
