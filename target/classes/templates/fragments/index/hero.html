@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- ============================================================
+     FRAGMENTO: SECCIÓN HERO — Página de inicio
+     Identificador Thymeleaf: th:fragment="hero"
+     Se importa en la vista index mediante th:replace o th:insert.
+     Contiene: imagen de fondo a pantalla completa, logotipos de
+     certificación, identidad visual central del ryokan y flecha
+     de scroll animada.
+     Todas las animaciones de entrada se controlan mediante las
+     clases CSS "fade-in-element" y "delay-N".
+     ============================================================ -->
+
+<head>
+	<meta charset="UTF-8">
+</head>
+
+<body>
+
+	<div th:fragment="hero">
+
+		<!-- Sección hero: ocupa el 100% del viewport (fullscreen).
+		     Actúa como contenedor de posicionamiento relativo para
+		     todos los elementos que se superponen sobre la imagen de fondo. -->
+		<section class="hero-section">
+
+			<!-- Imagen de fondo del hero aplicada como background-image inline
+			     para permitir su eventual gestión dinámica desde el servidor
+			     (Thymeleaf puede sustituir la URL con th:style). -->
+			<div class="hero-bg"
+				style="background-image: url('https://mukayu.com/wp-content/themes/corporate/img/index/hero_img.jpg');">
+			</div>
+
+			<!-- Logotipos de certificación (Relais & Châteaux y Michelin)
+			     posicionados en la esquina superior izquierda sobre la imagen.
+			     La clase "delay-3" hace que aparezcan después del logo central,
+			     guiando la atención del usuario de forma jerarquizada. -->
+			<div class="hero-top-left fade-in-element delay-3">
+				<img src="https://mukayu.com/wp-content/themes/corporate/img/index/logoRC-w.svg" alt="Relais"
+					class="top-logo">
+				<img src="https://mukayu.com/wp-content/themes/corporate/img/index/logoMichelin2025-w.svg"
+					alt="Michelin" class="top-logo">
+			</div>
+
+			<!-- Identidad visual central del ryokan: logo principal y texto en japonés.
+			     Los delays escalonados (delay-1 → delay-2) crean una animación de
+			     entrada secuencial que establece la marca antes que el resto de elementos. -->
+			<div class="hero-center-wrapper">
+				<!-- Logo principal SVG del ryokan — primer elemento en aparecer -->
+				<img src="https://mukayu.com/wp-content/themes/corporate/img/index/hero_logo.svg" alt="Miyabi Central"
+					class="center-main-img fade-in-element delay-1">
+
+				<!-- Subtítulo en caracteres japoneses — aparece justo después del logo -->
+				<img src="https://mukayu.com/wp-content/themes/corporate/img/index/hero_jp.svg" alt="Miyabi Texto"
+					class="center-sub-img fade-in-element delay-2">
+			</div>
+
+			<!-- Flecha de scroll animada (floating-arrow): indica al usuario que puede
+			     desplazarse hacia abajo. Implementada como SVG inline para mantener
+			     el control total sobre trazo, grosor y animación CSS sin depender
+			     de archivos externos. Aparece en último lugar (delay-4). -->
+			<div class="hero-arrow-container">
+				<div class="fade-in-element delay-4">
+					<svg class="floating-arrow" width="65" height="65" viewBox="0 0 24 24" fill="none"
+						xmlns="http://www.w3.org/2000/svg">
+						<polyline points="5 9 12 16 19 9" stroke="white" stroke-width="0.4" stroke-linecap="round"
+							stroke-linejoin="round" />
+					</svg>
+				</div>
+			</div>
+
+		</section>
+
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,181 @@
+/* ============================================================
+   HERO.CSS — Estilos de la sección hero (portada) del sitio.
+   Cubre: estructura de capas apiladas, posicionamiento de
+   logotipos y contenido central, animaciones de entrada
+   escalonadas y animación de flotación de la flecha de scroll.
+   ============================================================ */
+
+
+/* ============================================================
+   LAYOUT / ESTRUCTURA — Contenedor principal
+   ============================================================ */
+
+/* Contenedor raíz del hero. Usa position: relative como contexto
+   de apilamiento para todos los elementos hijos posicionados
+   en absolute. overflow: hidden recorta cualquier desbordamiento
+   durante las animaciones de entrada. background-color: #000
+   actúa como fallback visible mientras la imagen de fondo carga. */
+.hero-section {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background-color: #000; 
+}
+
+
+/* ============================================================
+   COMPONENTES — Capas del hero
+   El hero se construye con tres capas superpuestas mediante
+   position: absolute. La jerarquía de z-index es:
+     z-index: 1  → imagen de fondo (.hero-bg)
+     z-index: 10 → contenido interactivo (logos, texto, flecha)
+   ============================================================ */
+
+/* --- Capa de Fondo (z-index: 1) ---
+   Estira la imagen al 100% del contenedor padre con cover +
+   center para garantizar que siempre cubra el viewport sin
+   distorsión, independientemente de la resolución. */
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+/* --- Capa Superior Izquierda (z-index: 10) ---
+   Posiciona los logotipos de certificación (Relais & Châteaux
+   y Michelin) sobre la imagen de fondo, alineados en fila
+   mediante Flexbox con un gap uniforme entre ellos. */
+.hero-top-left {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 10;
+}
+
+/* Altura fija con width: auto preserva la proporción original
+   de cada SVG sin necesidad de conocer sus dimensiones exactas. */
+.top-logo {
+    height: 55px;
+    width: auto;
+}
+
+/* --- Capa Central (z-index: 10) ---
+   Técnica de centrado absoluto: top/left al 50% desplazan la
+   esquina superior izquierda del elemento al centro del padre;
+   translate(-50%, -50%) corrige ese desfase usando las propias
+   dimensiones del elemento, logrando un centrado perfecto sin
+   conocer su tamaño en tiempo de compilación. */
+.hero-center-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+/* Logo principal: ancho fijo que establece la escala de referencia
+   del contenido central. height: auto mantiene las proporciones. */
+.center-main-img {
+    display: block;
+    width: 450px; 
+    height: auto;
+}
+
+/* El subtítulo en japonés se posiciona en absolute respecto a
+   .hero-center-wrapper, desplazado hacia abajo y a la derecha
+   del logo principal para crear una composición asimétrica
+   deliberada que evita la rigidez del centrado simétrico. */
+.center-sub-img {
+    position: absolute;
+    bottom: -120px; 
+    right: -120px; 
+    width: 150px; 
+    height: auto;
+}
+
+/* --- Flecha de Scroll (z-index: 10) ---
+   Centrada horizontalmente con left: 50% + translateX(-50%).
+   pointer-events: none evita que intercepte clics o eventos
+   de hover destinados al contenido subyacente, ya que es un
+   elemento puramente decorativo/informativo. */
+.hero-arrow-container {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Las dimensiones se repiten aquí (en lugar de confiar solo en
+   el atributo width/height del SVG inline) para garantizar el
+   tamaño correcto independientemente del CSS de reset del proyecto. */
+.floating-arrow {
+    width: 65px; 
+    height: 65px;
+    animation: flotar 2s ease-in-out infinite;
+}
+
+
+/* ============================================================
+   ANIMACIONES DEL HERO
+   ============================================================ */
+
+/* --- Sistema de Animación de Entrada Escalonada ---
+   .fade-in-element define el estado inicial (invisible) y la
+   animación base. Las clases .delay-N añaden un retraso creciente
+   de 0.5s entre cada elemento, creando una secuencia de aparición
+   jerarquizada que guía la atención del usuario:
+     delay-1 (0.5s) → logo principal
+     delay-2 (1.0s) → texto japonés
+     delay-3 (1.5s) → logotipos de certificación
+     delay-4 (2.0s) → flecha de scroll
+   "forwards" conserva el estado final (opacity: 1) una vez
+   completada la animación, evitando que el elemento vuelva
+   a opacity: 0 al terminar. */
+.fade-in-element {
+    opacity: 0; 
+    animation: aparecer 1.5s ease-out forwards;
+}
+
+/* Secuencia de retrasos — cada paso suma 0.5s al anterior */
+.delay-1 { animation-delay: 0.5s; } 
+.delay-2 { animation-delay: 1s; } 
+.delay-3 { animation-delay: 1.5s; }
+.delay-4 { animation-delay: 2s; }
+
+/* El translateY(10px) inicial añade un sutil movimiento hacia
+   arriba durante la entrada, reforzando la sensación de que los
+   elementos "emergen" en lugar de aparecer abruptamente. */
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(10px); 
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Animación de Flotación de la Flecha ---
+   Bucle infinito con ease-in-out que oscila la flecha 15px hacia
+   abajo y de vuelta. El 0% y 100% comparten el mismo estado para
+   garantizar una transición sin saltos al reiniciarse el ciclo. */
+@keyframes flotar {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(15px); 
+    }
+}

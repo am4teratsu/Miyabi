@@ -4,52 +4,23 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Miyabi Ryokan | Inicio</title>
+	<title>Miyabi</title>
 
-	<link rel="stylesheet" th:href="@{/css/global.css}">
-	<link rel="stylesheet" th:href="@{/css/index.css}">
+	<link rel="stylesheet" th:href="@{/css/base/global.css}">
+	<link rel="stylesheet" th:href="@{/css/index/hero.css}">
 </head>
 
 <body>
 
-	<div th:replace="~{fragments/components :: navbar}"></div>
+	<div th:replace="~{fragments/layout/components :: navbar}"></div>
 
-	<div layout:fragment="content">
+	<div th:replace="~{fragments/index/hero :: hero}"></div>
 
-		<section class="hero-section">
-
-			<div class="hero-bg" style="background-image: url('https://mukayu.com/wp-content/themes/corporate/img/index/hero_img.jpg');"></div>
-
-			<div class="hero-top-left fade-in-element delay-3">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/index/logoRC-w.svg" alt="Relais" class="top-logo">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/index/logoMichelin2025-w.svg" alt="Michelin" class="top-logo">
-			</div>
-
-			<div class="hero-center-wrapper">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/index/hero_logo.svg" alt="Miyabi Central" class="center-main-img fade-in-element delay-1">
-
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/index/hero_jp.svg" alt="Miyabi Texto" class="center-sub-img fade-in-element delay-2">
-			</div>
-
-			<div class="hero-arrow-container">
-				<div class="fade-in-element delay-4">
-					<svg class="floating-arrow" width="65" height="65" viewBox="0 0 24 24" fill="none"
-						xmlns="http://www.w3.org/2000/svg">
-						<polyline points="5 9 12 16 19 9" stroke="white" stroke-width="0.4" stroke-linecap="round"
-							stroke-linejoin="round" />
-					</svg>
-				</div>
-			</div>
-
-		</section>
-
-	</div>
-
-	<div th:replace="~{fragments/components :: footer}"></div>
+	<div th:replace="~{fragments/layout/components :: footer}"></div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-	<script th:src="@{/js/main.js}"></script>
+	<script th:src="@{/js/base/global.js}"></script>
 
 </body>
 
