@@ -34,23 +34,22 @@ const navBar = document.getElementById("main-nav");
  */
 if (window.location.pathname === '/' || window.location.pathname === '') {
 
-    // Estado inicial: navbar desplazada fuera del viewport hacia arriba para
-    // que la primera animación de entrada tenga recorrido visible.
-    gsap.set(navBar, { y: -100, opacity: 0 }); 
+	// Fondo sólido desde el principio para que nunca se vea transparente
+	navBar.classList.add("scrolled");
+	
+    // Lo ocultamos desplazándolo hacia arriba el 100% de su propia altura
+    gsap.set(navBar, { yPercent: -110, opacity: 1 });
 
     gsap.to(navBar, {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
+        yPercent: 0,
+        duration: 0.6,
+        ease: "power3.inOut",
         ease: "power2.out",
         scrollTrigger: {
             trigger: "body",
-            start: "top -100px",   // Se activa cuando el usuario ha bajado 100px desde el top
+            start: "top -400px",   // Se activa cuando el usuario ha bajado 400px desde el top
             // play: aparece al bajar | reverse: desaparece al volver arriba
             toggleActions: "play none none reverse",
-            // Clases CSS que controlan el fondo semitransparente de la navbar
-            onEnter:     () => navBar.classList.add("scrolled"),
-            onLeaveBack: () => navBar.classList.remove("scrolled")
         }
     });
 
