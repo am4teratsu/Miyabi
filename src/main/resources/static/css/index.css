@@ -1,0 +1,115 @@
+/* ==========================================
+   NUEVO HERO SECTION (PORTADA)
+   ========================================== */
+
+.hero-section {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background-color: #000; 
+}
+
+/* --- Capa de Fondo --- */
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+/* --- Capa Superior Izquierda --- */
+.hero-top-left {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 10;
+}
+
+.top-logo {
+    height: 55px;
+    width: auto;
+}
+
+/* --- Capa Central --- */
+.hero-center-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.center-main-img {
+    display: block;
+    width: 450px; 
+    height: auto;
+}
+
+.center-sub-img {
+    position: absolute;
+    bottom: -120px; 
+    right: -120px; 
+    width: 150px; 
+    height: auto;
+}
+
+/* --- Flecha Inferior --- */
+.hero-arrow-container {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.floating-arrow {
+    width: 65px; 
+    height: 65px;
+    animation: flotar 2s ease-in-out infinite;
+}
+
+/* ==========================================
+   ANIMACIONES DEL HERO
+   ========================================== */
+
+/* 1. Animación de entrada */
+.fade-in-element {
+    opacity: 0; 
+    animation: aparecer 1.5s ease-out forwards;
+}
+
+/* Secuencia de tiempos (Retrasos) */
+.delay-1 { animation-delay: 0.5s; } 
+.delay-2 { animation-delay: 1s; } 
+.delay-3 { animation-delay: 1.5s; }
+.delay-4 { animation-delay: 2s; }
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(10px); 
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 2. Animación de la flecha flotante */
+@keyframes flotar {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(15px); 
+    }
+}
