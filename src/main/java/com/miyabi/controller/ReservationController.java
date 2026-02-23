@@ -21,9 +21,9 @@ public class ReservationController {
         return reservationService.findAll();
     }
 
-    @GetMapping("/guest/{guestId}")
-    public List<Reservation> getReservationsByGuest(@PathVariable Integer guestId) {
-        return reservationService.findByGuest_GuestId(guestId);
+    @GetMapping("/guest/{idGuest}")
+    public List<Reservation> getReservationsByGuest(@PathVariable Integer idGuest) {
+        return reservationService.findByGuest_IdGuest(idGuest);
     }
 
     @PostMapping

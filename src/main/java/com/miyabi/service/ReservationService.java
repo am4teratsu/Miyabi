@@ -30,8 +30,8 @@ public class ReservationService {
         return reservationRepository.findById(id).orElse(null);
     }
     
-    public List<Reservation> findByGuest_GuestId(Integer guestId) {
-        return reservationRepository.findByGuest_GuestId(guestId);
+    public List<Reservation> findByGuest_IdGuest(Integer idGuest) {
+        return reservationRepository.findByGuest_IdGuest(idGuest);
     }
 
     @Transactional

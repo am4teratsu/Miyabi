@@ -1,0 +1,50 @@
+:root {
+    --color-fondo: #f9f9f6; 
+    --color-texto: #333333; 
+    --color-acento: #8c7a6b; 
+    --fuente-principal: 'Georgia', serif; 
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    line-height: 1.6;
+    overflow-x: hidden; 
+}
+
+.miyabi-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 50px;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+}
+
+.miyabi-navbar .logo {
+    font-size: 24px;
+    letter-spacing: 4px;
+    text-decoration: none;
+    color: var(--color-texto);
+}
+
+.miyabi-navbar .nav-links a {
+    margin-left: 30px;
+    text-decoration: none;
+    color: var(--color-texto);
+    font-size: 14px;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.miyabi-navbar .nav-links a:hover {
+    color: var(--color-acento);
+}

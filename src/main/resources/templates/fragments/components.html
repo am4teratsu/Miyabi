@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+    <header th:fragment="navbar" class="miyabi-navbar">
+        <a href="/" class="logo">MIYABI 雅</a>
+        <nav class="nav-links">
+            <a href="/habitaciones">Suites</a>
+            <a href="/servicios">Bienestar</a>
+            <a href="/reservas">Reservar</a>
+        </nav>
+    </header>
+
+
+    <footer th:fragment="footer" style="padding: 60px 20px; text-align: center; border-top: 1px solid #ddd; margin-top: 100px;">
+        <p style="font-size: 12px; letter-spacing: 2px;">© 2026 MIYABI RYOKAN. TODOS LOS DERECHOS RESERVADOS.</p>
+    </footer>
+
+</body>
+</html>

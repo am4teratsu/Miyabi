@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 
-    List<Reservation> findByGuest_GuestId(Integer guest_id);
+    List<Reservation> findByGuest_IdGuest(Integer idGuest);
     
     // Buscar una reserva por su código exacto (Ej: RES-2026-0001)
     Reservation findByReservationCode(String reservationCode);
