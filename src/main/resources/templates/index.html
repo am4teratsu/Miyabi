@@ -8,6 +8,7 @@
 
 	<link rel="stylesheet" th:href="@{/css/base/global.css}">
 	<link rel="stylesheet" th:href="@{/css/index/hero.css}">
+	<link rel="stylesheet" th:href="@{/css/index/intro.css}">
 </head>
 
 <body>
@@ -15,12 +16,14 @@
 	<div th:replace="~{fragments/layout/components :: navbar}"></div>
 
 	<div th:replace="~{fragments/index/hero :: hero}"></div>
+	<div th:replace="~{fragments/index/intro :: intro}"></div>
 
 	<div th:replace="~{fragments/layout/components :: footer}"></div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 	<script th:src="@{/js/base/global.js}"></script>
+	<script th:src="@{/js/index/index.js}"></script>
 
 </body>
 

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- ============================================================
+     FRAGMENTO: SECCIÓN INTRO — Concepto y filosofía del ryokan
+     Identificador Thymeleaf: th:fragment="intro"
+     Se importa en la vista index mediante th:replace o th:insert.
+     Estructura: layout de dos columnas (texto + imagen) con
+     animaciones de entrada activadas por scroll mediante las
+     clases "scroll-reveal" y "delay-left / delay-right".
+     ============================================================ -->
+
+<body>
+
+	<div th:fragment="intro">
+
+		<!-- Sección de introducción filosófica del ryokan.
+		     "miyabi-container" aplica los márgenes y el ancho máximo
+		     globales definidos en global.css, manteniendo consistencia
+		     de layout con el resto de secciones de la página. -->
+		<section class="intro-section miyabi-container">
+			<div class="intro-container">
+
+				<!-- Columna izquierda: contenido editorial.
+				     "scroll-reveal delay-left" activa la animación de entrada
+				     desde la izquierda cuando el elemento entra en el viewport. -->
+				<div class="intro-left scroll-reveal delay-left">
+
+					<!-- Título de sección renderizado como SVG para preservar
+					     la tipografía personalizada sin depender de fuentes web externas. -->
+					<img src="https://mukayu.com/wp-content/themes/corporate/img/index/concept_en.svg"
+						alt="Beniya Mukayu - Richness in emptiness" class="intro-title-img">
+
+					<!-- Bloque de texto filosófico que describe el concepto "Miyabi".
+					     Contenido editorial gestionado directamente en el HTML;
+					     candidato a externalizarse a un mensaje Thymeleaf (i18n)
+					     si el sitio requiere soporte multilingüe en el futuro. -->
+					<div class="intro-text">
+						<p> Aquí tienes la versión adaptada para MIYABI, manteniendo la extensión y el formato de un
+							solo párrafo:
+
+							"La verdadera belleza florece en la discreción y el refinamiento; estos son los principios
+							de MIYABI, un concepto que ha definido la estética japonesa durante más de mil años. Sus
+							raíces sugieren que el alma alcanza su máximo esplendor al rodearse de armonía y gracia
+							sutil, habitando un espacio donde cada detalle tiene un sentido profundo. MIYABI significa
+							'elegancia refinada' o 'sofisticación del espíritu', representando un ideal donde los
+							valores cotidianos se elevan hacia lo sublime. Tomemos como ejemplo el brillo
+							del rocío sobre una hoja o el aroma del té en la calma de la tarde; momentos que, aunque
+							efímeros, poseen un valor incalculable para quienes saben observar con el corazón.
+							Consideremos la pausa de silencio en una agenda apretada; no es tiempo vacío, sino un
+							espacio de serenidad lleno de cortesía y reflexión. Es la paz mental que surge al habitar un
+							entorno diseñado con devoción por la belleza y el equilibrio. Tales son los pensamientos y
+							sentimientos que residen en el nombre de esta posada, MIYABI.</p>
+					</div>
+
+					<!-- Atribución del texto al arquitecto del ryokan -->
+					<p class="intro-author">Kiyoshi Sey Takeyama | Arquitecto</p>
+					
+					<!-- CTA de reproducción de vídeo corporativo.
+					     Enlaza a YouTube en una pestaña nueva (target="_blank").
+					     El botón se renderiza como SVG para mantener coherencia
+					     tipográfica con el resto de elementos gráficos de la sección. -->
+					<a href="https://www.youtube.com/watch?v=NZ84oLS6_Uw&t=1s" target="_blank" class="play-movie-btn">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/index/move_btn_en.svg" alt="Play Movie">
+					</a>
+				</div>
+
+				<!-- Columna derecha: imagen editorial de ambientación.
+				     "scroll-reveal delay-right" activa la animación de entrada
+				     desde la derecha con un retraso mayor al de la columna izquierda,
+				     creando un efecto de apertura simétrica desde los bordes hacia
+				     el centro al hacer scroll. -->
+				<div class="intro-right scroll-reveal delay-right">
+					<img src="https://mukayu.com/wp-content/themes/corporate/img/index/concept_img.jpg"
+						alt="Minimalist Plant" class="intro-main-img">
+				</div>
+
+			</div>
+		</section>
+	</div>
+
+</body>
+
+</html>

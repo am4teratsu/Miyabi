@@ -1,0 +1,119 @@
+/* ============================================================
+   INTRO.CSS — Estilos de la sección de introducción filosófica
+   del ryokan (página de inicio).
+   Cubre: layout de dos columnas (texto 20% / imagen 80%),
+   tipografía editorial y botón CTA de reproducción de vídeo.
+   Las animaciones de entrada por scroll se gestionan desde
+   el archivo global correspondiente mediante .scroll-reveal.
+   ============================================================ */
+
+
+/* ============================================================
+   LAYOUT / ESTRUCTURA — Contenedores principales
+   ============================================================ */
+
+/* Centra horizontalmente el bloque de contenido dentro del
+   wrapper .miyabi-container, que ya aplica los márgenes y el
+   ancho máximo globales definidos en global.css. */
+.intro-section {
+    display: flex;
+    justify-content: center;
+}
+
+/* Layout de dos columnas con Flexbox. align-items: flex-start
+   evita que ambas columnas se estiren a la misma altura, permitiendo
+   que la columna de texto quede alineada a la parte superior
+   independientemente de la altura de la imagen. gap: 80px establece
+   la separación visual entre texto e imagen sin necesidad de márgenes
+   individuales en cada columna. */
+.intro-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 80px;
+}
+
+
+/* ============================================================
+   COMPONENTES — Columna izquierda (contenido editorial)
+   ============================================================ */
+
+/* La columna de texto ocupa un 20% del ancho total, dejando el 80%
+   restante a la imagen. Esta proporción deliberadamente estrecha da
+   protagonismo visual a la fotografía y refuerza la estética
+   minimalista del ryokan. gap: 30px separa verticalmente los bloques
+   internos (título, texto, autor y CTA) sin márgenes individuales. */
+.intro-left {
+    width: 20%;
+	padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* max-width: 100% impide que el SVG del título desborde su columna
+   estrecha (20%) en pantallas donde el contenedor pueda reducirse. */
+.intro-title-img {
+    max-width: 100%; 
+    height: auto;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.intro-text p {
+    font-size: 16px;
+	font-weight: 500;
+    line-height: 1.6;
+	color: var(--color-black);
+}
+
+/* Atribución del texto filosófico al arquitecto del ryokan.
+   Tamaño reducido respecto al cuerpo de texto para establecer
+   una jerarquía tipográfica clara entre cita y autoría. */
+.intro-author {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-black);
+    letter-spacing: 1px;
+}
+
+/* Botón CTA de reproducción del vídeo corporativo.
+   margin-top negativo (-15px) compensa el gap: 30px del contenedor
+   padre para acercar visualmente el botón al bloque de autor,
+   agrupándolos como una unidad dentro de la columna. */
+.play-movie-btn {
+    display: inline-block;
+    transition: opacity 0.3s ease;
+    margin-top: -15px; 
+}
+
+/* Altura fija con width: auto preserva las proporciones del SVG
+   del botón sin depender de sus dimensiones intrínsecas. */
+.play-movie-btn img {
+    height: 40px; 
+    width: auto;
+    display: block;
+}
+
+
+/* ============================================================
+   COMPONENTES — Columna derecha (imagen editorial)
+   ============================================================ */
+
+/* Ocupa el 80% del ancho disponible, complementando el 20% de la
+   columna de texto. Al ser el elemento visualmente dominante,
+   esta proporción dirige la atención hacia la fotografía mientras
+   el texto actúa como contrapunto editorial. */
+.intro-right {
+    width: 80%;
+}
+
+/* width: 100% hace que la imagen ocupe todo el ancho de .intro-right.
+   display: block elimina el espacio en línea que los navegadores
+   añaden por defecto bajo los elementos <img>. */
+.intro-main-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}

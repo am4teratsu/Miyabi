@@ -21,9 +21,13 @@
    propaga el ajuste a todo el proyecto automáticamente.
    ============================================================ */
 :root {
-	--background: #F7F7F5;     /* Blanco cálido: fondo general */
-    --color-texto: #000000;    /* Negro puro: texto e iconografía */
-    --color-acento: #8c7a6b;   /* Tono tierra: detalles decorativos */
+	--background: #F7F7F5;     
+    --color-black: #000000;    
+
+	--padding-container-top: 120px;
+	--padding-container-bottom: 120px;
+	--padding-container-left: 8%; 
+	--padding-container-right: 3%;   
 }
 
 
@@ -40,6 +44,12 @@
     box-sizing: border-box;
 }
 
+.miyabi-container {
+    padding: var(--padding-container-top) var(--padding-container-right) var(--padding-container-bottom) var(--padding-container-left);
+    max-width: 1800px; 
+    margin: 0 auto;
+}
+
 /* Estilos base del documento: tipografía, color de fondo y
    comportamiento de scroll. overflow-x: hidden previene la
    aparición de barra de scroll horizontal cuando el menú
@@ -47,7 +57,7 @@
 body {
     font-family: "EB Garamond", serif;
     background-color: var(--background);
-    color: var(--color-texto);
+    color: var(--color-black);
     line-height: 1.6;
     overflow-x: hidden; 
 }
@@ -83,7 +93,7 @@ body {
     font-size: 22px;
     letter-spacing: 6px;
     text-decoration: none;
-    color: var(--color-texto);
+    color: var(--color-black);
 }
 
 .nav-left .logo img {
@@ -107,11 +117,11 @@ body {
    delimitador visual sin recurrir a un fondo sólido, 
    manteniendo la estética minimalista del sitio. */
 .btn-booking {
-    border: 1px solid var(--color-texto);
+    border: 1px solid var(--color-black);
 	border-radius: 4px;
     padding: 4px 16px;
     text-decoration: none;
-    color: var(--color-texto);
+    color: var(--color-black);
     font-size: 18px;
     letter-spacing: 1px;
     transition: all 0.3s ease;
@@ -135,7 +145,7 @@ body {
 .hamburger-btn .line {
     width: 100%;
     height: 1px;
-    background-color: var(--color-texto);
+    background-color: var(--color-black);
     transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
@@ -192,7 +202,7 @@ body {
    pequeño retraso sucesivo). */
 .menu-links a {
     text-decoration: none;
-    color: var(--color-texto);
+    color: var(--color-black);
     font-size: 16px;
 	font-weight: 600;
     letter-spacing: 2px;
@@ -212,7 +222,7 @@ body {
        border-top: 1px solid #000000;
        margin: 0 100px; 
        padding: 40px 0 120px 0;
-       color: var(--color-texto);
+       color: var(--color-black);
        font-size: 13px;
        font-weight: 500;
        letter-spacing: 1px;
@@ -267,9 +277,9 @@ body {
 /* Enlace de mapa con subrayado personalizado mediante border-bottom
    en lugar del text-decoration nativo, para mayor control visual. */
 .map-link {
-    color: var(--color-texto);
+    color: var(--color-black);
     text-decoration: none;
-    border-bottom: 1px solid var(--color-texto);
+    border-bottom: 1px solid var(--color-black);
     display: inline-block;
     width: fit-content;
 }
@@ -357,7 +367,7 @@ body {
     justify-content: space-between;
     align-items: center;
     text-decoration: none;
-    color: var(--color-texto);
+    color: var(--color-black);
     padding: 12px 0;            
     font-size: 13px;           
     letter-spacing: 1.5px;
