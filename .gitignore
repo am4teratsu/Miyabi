@@ -36,5 +36,12 @@ out/
 ### VS Code ###
 .vscode/
 
-# Ignorar configuración con datos sensibles
+# --- JAVA & MAVEN ---
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# --- DATOS SENSIBLES ---
 src/main/resources/application.properties
