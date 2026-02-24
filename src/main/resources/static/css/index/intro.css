@@ -117,3 +117,26 @@
     height: auto;
     display: block;
 }
+
+/* ============================================================
+   ADAPTACIÓN PARA MONITORES MEDIANOS / LAPTOPS (≤ 1200px)
+   ============================================================ */
+@media (max-width: 1200px) {
+    .intro-container {
+        gap: 40px;
+    }
+
+    .intro-left {
+        width: calc(40% - 20px); 
+        padding: 0; 
+    }
+
+    .intro-right {
+        width: calc(60% - 20px); 
+    }
+    
+    .intro-text p {
+        font-size: 14px; 
+        line-height: 1.5;
+    }
+}

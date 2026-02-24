@@ -16,104 +16,107 @@
 
 	<div th:fragment="features">
 
-		<!-- Sección de características principales del ryokan.
-		     "miyabi-container" aplica los márgenes y el ancho máximo
-		     globales definidos en global.css, manteniendo consistencia
-		     de layout con el resto de secciones de la página. -->
 		<section class="features-section miyabi-container">
 
-			<!-- ── BLOQUE 1: Habitaciones ──────────────────────────────
-			     Cada .feature-block sigue la misma estructura de dos
-			     columnas: .feature-left para la identidad tipográfica
-			     y .feature-right para la imagen de ambientación. -->
+			<!-- ── BLOQUE 1: Habitaciones ──────────────────────────────── -->
 			<div class="feature-block">
 				<div class="feature-left">
-					<!-- Título de servicio en caracteres japoneses renderizado
-					     como SVG para preservar la tipografía personalizada. -->
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/rooms_jp.svg" alt="Título en Japonés"
-						class="feature-jp-img">
-					<div class="feature-text">
-						<h3 class="feature-title">Habitaciones</h3>
-					</div>
+				    <a href="/habitaciones" class="feature-link-wrapper">
+				        <img src="https://mukayu.com/wp-content/themes/corporate/img/rooms_jp.svg" alt="Título en Japonés"
+				            class="feature-jp-img">
+				        <h3 class="feature-title rooms">Habitaciones</h3>
+				    </a>
 				</div>
 				<div class="feature-right">
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/index/rooms_img.jpg"
-						alt="Vista de la habitación" class="feature-main-img">
+					<a href="/habitaciones" class="feature-link-wrapper">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/index/rooms_img.jpg"
+							alt="Vista de la habitación" class="feature-main-img">
+					</a>
 				</div>
 			</div>
 
 			<!-- ── BLOQUE 2: Instalaciones ─────────────────────────────── -->
 			<div class="feature-block">
 				<div class="feature-left">
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities_jp.svg"
-						alt="Título en Japonés" class="feature-jp-img">
-					<div class="feature-text">
-						<h3 class="feature-title">Instalaciones</h3>
-					</div>
+					<a href="/instalaciones" class="feature-link-wrapper">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities_jp.svg"
+							alt="Título en Japonés" class="feature-jp-img">
+						<h3 class="feature-title facilities">Instalaciones</h3>
+					</a>
 				</div>
 				<div class="feature-right">
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/index/facilities_img.jpg"
-						alt="Gastronomía Kaiseki" class="feature-main-img">
+					<a href="/instalaciones" class="feature-link-wrapper">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/index/facilities_img.jpg"
+							alt="Instalaciones" class="feature-main-img">
+					</a>
 				</div>
 			</div>
 
 			<!-- ── BLOQUE 3: Cocina Kaiseki Horin ──────────────────────── -->
 			<div class="feature-block">
 				<div class="feature-left">
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/cuisine_jp.svg"
-						alt="Título en Japonés" class="feature-jp-img">
-					<div class="feature-text">
-						<h3 class="feature-title">Cocina Kaiseki Horin</h3>
-					</div>
+					<a href="/cocina" class="feature-link-wrapper">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/cuisine_jp.svg"
+							alt="Título en Japonés" class="feature-jp-img">
+						<h3 class="feature-title cuisine">Cocina Kaiseki Horin</h3>
+					</a>
 				</div>
 				<div class="feature-right">
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/index/cuisine_img.jpg"
-						alt="Gastronomía Kaiseki" class="feature-main-img">
+					<a href="/cocina" class="feature-link-wrapper">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/index/cuisine_img.jpg"
+							alt="Gastronomía Kaiseki" class="feature-main-img">
+					</a>
 				</div>
 			</div>
 
 			<!-- ── BLOQUE 4: Spa Entei ─────────────────────────────────── -->
 			<div class="feature-block">
 				<div class="feature-left">
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/spa_jp.svg"
-						alt="Título en Japonés" class="feature-jp-img">
-					<div class="feature-text">
-						<h3 class="feature-title">Spa Entei</h3>
-					</div>
+					<a href="/spa" class="feature-link-wrapper">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/spa_jp.svg"
+							alt="Título en Japonés" class="feature-jp-img">
+						<h3 class="feature-title spa">Spa Entei</h3>
+					</a>
 				</div>
 				<div class="feature-right">
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/index/spa_img.jpg"
-						alt="Gastronomía Kaiseki" class="feature-main-img">
+					<a href="/spa" class="feature-link-wrapper">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/index/spa_img.jpg"
+							alt="Spa Entei" class="feature-main-img">
+					</a>
 				</div>
 			</div>
 
 			<!-- ── BLOQUE 5: Amenidades de Yakushiyama ─────────────────── -->
 			<div class="feature-block">
 				<div class="feature-left">
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/amenity_jp.svg"
-						alt="Título en Japonés" class="feature-jp-img">
-					<div class="feature-text">
-						<h3 class="feature-title">Amenidades de Yakushiyama</h3>
-					</div>
+					<a href="/amenidades" class="feature-link-wrapper">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/amenity_jp.svg"
+							alt="Título en Japonés" class="feature-jp-img">
+						<h3 class="feature-title amenities">Amenidades de Yakushiyama</h3>
+					</a>
 				</div>
 				<div class="feature-right">
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/index/amenity_img.jpg"
-						alt="Gastronomía Kaiseki" class="feature-main-img">
+					<a href="/amenidades" class="feature-link-wrapper">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/index/amenity_img.jpg"
+							alt="Amenidades de Yakushiyama " class="feature-main-img">
+					</a>
 				</div>
 			</div>
 
 			<!-- ── BLOQUE 6: Experiencias Privadas Únicas ──────────────── -->
 			<div class="feature-block">
 				<div class="feature-left">
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/experience_jp.svg"
-						alt="Título en Japonés" class="feature-jp-img">
-					<div class="feature-text">
-						<h3 class="feature-title">Experiencias Privadas Únicas</h3>
-					</div>
+					<a href="/experiencias" class="feature-link-wrapper">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/experience_jp.svg"
+							alt="Título en Japonés" class="feature-jp-img">
+						<h3 class="feature-title experiences">Experiencias Privadas Únicas</h3>
+					</a>
 				</div>
 				<div class="feature-right">
-					<img src="https://mukayu.com/wp-content/themes/corporate/img/index/experience_img.jpg"
-						alt="Gastronomía Kaiseki" class="feature-main-img">
+					<a href="/experiencias" class="feature-link-wrapper">
+						<img src="https://mukayu.com/wp-content/themes/corporate/img/index/experience_img.jpg"
+							alt="Experiencias Privadas Únicas" class="feature-main-img">
+					</a>
 				</div>
 			</div>
 

@@ -2,7 +2,8 @@
    FEATURES.CSS — Estilos de la sección de servicios y espacios
    del ryokan (página de inicio).
    Cubre: layout de bloques apilados verticalmente, estructura
-   interna de dos columnas por bloque (texto 20% / imagen 80%)
+   interna de dos columnas por bloque (texto 20% / imagen 80%),
+   wrapper de enlace con área de clic ajustada al contenido,
    y adaptación responsive para móviles (≤ 900px).
    ============================================================ */
 
@@ -50,9 +51,29 @@
 .feature-left {
     width: 20%; 
     display: flex;
-    flex-direction: column;
-	padding: 100px 0;
+    justify-content: flex-start;
+	padding: 40px 0;
 }
+
+/* Wrapper de enlace (<a>) que envuelve el SVG japonés y el título
+   en español dentro de la columna izquierda.
+   width: fit-content es la propiedad clave: restringe el área
+   clicable exactamente al ancho del contenido (SVG + texto),
+   evitando que el enlace ocupe el 20% completo de la columna
+   y genere una zona interactiva invisible que interfiera con
+   el resto del layout. color: inherit y text-decoration: none
+   delegan el estilo visual completamente a los elementos hijos,
+   sin añadir los estilos de enlace por defecto del navegador. */
+   .feature-link-wrapper {
+       display: flex;
+       flex-direction: column;
+       align-items: flex-start; 
+       gap: 15px; 	
+       width: fit-content; 
+       text-decoration: none;
+       color: inherit;
+       cursor: pointer;
+   }
 
 /* El título en japonés se renderiza como SVG con un ancho fijo
    de 20px porque está orientado verticalmente (escritura tategaki).
@@ -65,25 +86,47 @@
     display: block;
 }
 
-/* margin-left: 30% desplaza el título en español hacia la derecha
-   dentro de la columna, creando una alineación visual con el SVG
-   japonés vertical que queda a su izquierda. align-self: flex-start
-   impide que el título se estire al ancho completo de la columna. */
-.feature-title {
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    color: var(--color-black);
-    align-self: flex-start; 
-    margin-left: 30%; 
-}
+/* margin-left: 100% desplaza el título en español hacia la derecha
+   usando como referencia el ancho del propio .feature-link-wrapper
+   (que es fit-content, es decir, ~20px del SVG japonés). Esto crea
+   la alineación visual donde el texto aparece a la derecha del SVG
+   vertical. white-space: nowrap impide que el título se parta en
+   varias líneas al quedar fuera del flujo normal del contenedor
+   estrecho. text-decoration: none !important anula la herencia
+   del estilo de subrayado del <a> padre en todos los contextos. */
+   .feature-title {
+	margin-left: 100px;
+       font-size: 16px;
+       font-weight: 500;
+	   text-align: center;
+       letter-spacing: 2px;
+       color: var(--color-black);
+       width: max-content;
+       max-width: 200px;
+       line-height: 1.3;
+       white-space: normal;
+       text-decoration: none !important;
+   }
+   
+   .rooms { margin-top: 70px; }
+   .facilities { margin-top: 40px; }
+   .cuisine { margin-top: 40px; }
+   .spa { margin-top: 30px; }
 
 
 /* --- Columna derecha: imagen de ambientación del servicio ---
    Ocupa el 80% restante del bloque, dando protagonismo visual
    a la fotografía en consonancia con el resto del diseño. */
 .feature-right {
-    width: 80%; 
+    width: calc(80% - 80px); 
+}
+
+/* En la columna derecha el .feature-link-wrapper debe expandirse
+   al 100% para que el enlace cubra toda la imagen, a diferencia
+   del wrapper de la columna izquierda que usa fit-content.
+   El selector más específico sobreescribe la regla global. */
+.feature-right .feature-link-wrapper {
+    width: 100%;
 }
 
 /* display: block elimina el espacio en línea que los navegadores
