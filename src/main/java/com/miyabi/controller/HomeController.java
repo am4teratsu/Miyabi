@@ -12,9 +12,9 @@ public class HomeController {
         return "index"; 
     }
 
-    @GetMapping("/habitaciones")
-    public String suites() {
-        return "suites"; 
+    @GetMapping("/facilities")
+    public String facilities() {
+        return "facilities"; 
     }
 
     @GetMapping("/reservas")
