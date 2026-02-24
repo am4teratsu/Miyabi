@@ -2,7 +2,6 @@ package com.miyabi.controller;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
-
 import com.miyabi.models.Consumption;
 import com.miyabi.service.ConsumptionService;
 

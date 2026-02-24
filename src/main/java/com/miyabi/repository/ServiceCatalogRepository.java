@@ -5,5 +5,5 @@ import com.miyabi.models.ServiceCatalog;
 import java.util.List;
 
 public interface ServiceCatalogRepository extends JpaRepository<ServiceCatalog, Integer> {
-    List<ServiceCatalog> findByAvailableTrue();
+    List<ServiceCatalog> findByAvailable(Integer available);
 }

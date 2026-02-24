@@ -2,7 +2,6 @@ package com.miyabi.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-
 import com.miyabi.models.ServiceCatalog;
 import com.miyabi.repository.ServiceCatalogRepository;
 
@@ -15,18 +14,19 @@ public class ServiceCatalogService {
         this.serviceCatalogRepository = serviceCatalogRepository;
     }
 
-    // Listar todos los servicios
     public List<ServiceCatalog> findAll() {
         return serviceCatalogRepository.findAll();
     }
 
-    // Listar solo los que están disponibles para la venta
     public List<ServiceCatalog> findAvailable() {
-        return serviceCatalogRepository.findByAvailableTrue();
+        return serviceCatalogRepository.findByAvailable(1); // 1 = Activo/Disponible
     }
 
-    // Buscar un servicio por su ID (muy útil para cuando hagamos los Consumos)
     public ServiceCatalog findById(Integer id) {
         return serviceCatalogRepository.findById(id).orElse(null);
+    }
+
+    public ServiceCatalog save(ServiceCatalog serviceCatalog) {
+        return serviceCatalogRepository.save(serviceCatalog);
     }
 }
