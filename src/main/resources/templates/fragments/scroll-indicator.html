@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- ============================================================
+     FRAGMENTO: INDICADOR DE SCROLL LATERAL
+     Identificador Thymeleaf: th:fragment="scroll-indicator (initialText)"
+     Fragmento parametrizado: recibe el texto del primer ítem a mostrar
+     mediante el parámetro "initialText", lo que lo hace reutilizable
+     en cualquier página que necesite un indicador lateral sin duplicar
+     el markup.
+
+     Uso en la página consumidora:
+       <div th:replace="~{fragments/scroll-indicator :: scroll-indicator('Entrada')}"></div>
+
+     El JS de cada página (ej. facilities.js) toma el control del
+     componente tras la carga, actualizando el texto (.indicator-text)
+     y la posición del thumb (.indicator-thumb) mediante ScrollTrigger
+     conforme el usuario navega por las secciones.
+     ============================================================ -->
+
+<body>
+
+    <!-- Indicador lateral fijo: barra vertical que refleja la sección
+         actualmente visible en pantalla. Posicionado como aside para
+         comunicar semánticamente que es contenido complementario,
+         no parte del flujo principal del documento. -->
+    <aside th:fragment="scroll-indicator (initialText)" class="scroll-indicator">
+
+        <!-- Track: contenedor del recorrido total del indicador.
+             Su altura es la referencia que el JS usa para calcular
+             la posición proporcional del thumb en cada sección. -->
+        <div class="indicator-track">
+
+            <!-- Thumb: elemento móvil que se desplaza a lo largo del track.
+                 El JS lo anima con gsap.to({ y: index * stepSize }) para
+                 posicionarlo en el bloque correspondiente a la sección activa. -->
+            <div class="indicator-thumb">
+
+                <!-- Línea decorativa activa que acompaña visualmente al thumb -->
+                <div class="indicator-active-line"></div>
+
+                <!-- Texto de la sección activa. th:text inyecta el valor del
+                     parámetro "initialText" en el primer render del servidor;
+                     a partir de entonces el JS lo reemplaza dinámicamente
+                     con una animación de fade al cambiar de sección. -->
+                <span class="indicator-text" th:text="${initialText}">Entrada</span>
+            </div>
+
+        </div>
+    </aside>
+
+</body>
+</html>

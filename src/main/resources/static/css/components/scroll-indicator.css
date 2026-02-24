@@ -1,0 +1,67 @@
+/* =============================================================================
+   BARRA INDICADORA LATERAL — Scroll Spy
+   Elemento fijo en el borde izquierdo de la ventana que indica visualmente
+   el progreso de scroll del usuario dentro de la página.
+   Composición:
+     - .scroll-indicator  → contenedor fijo, define posición en pantalla
+     - .indicator-track   → pista de fondo (línea gris delgada, estática)
+     - .indicator-thumb   → grupo deslizante (línea negra + etiqueta de texto)
+                            su posición vertical se actualiza vía JS con transform
+     - .indicator-active-line → segmento negro que representa la posición actual
+     - .indicator-text    → etiqueta descriptiva de la sección activa
+   ============================================================================= */
+
+.scroll-indicator {
+    position: fixed;
+    left: 20px;
+    top: 40%;
+    /* Compensa el propio height del contenedor para centrarlo visualmente
+       respecto al punto de anclaje (top: 40%) */
+    transform: translateY(-50%);
+    height: 200px; /* Altura total de la pista gris */
+    z-index: 100;
+    transition: opacity 0.4s ease;
+}
+
+/* Línea de fondo estática que actúa como "riel" del indicador */
+.indicator-track {
+    position: relative;
+    height: 100%;
+    width: 1px;
+    background-color: #D2D2D1;
+}
+
+/* Grupo deslizante controlado por JS mediante translateY().
+   Combina la línea activa y el texto en un único elemento móvil
+   para simplificar la animación: basta con mover este contenedor. */
+.indicator-thumb {
+    position: absolute;
+    top: 0;
+    left: 0.5px; /* Centra visualmente la línea negra (2px) sobre la gris (1px) */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Optimización de rendimiento: avisa al navegador que este elemento
+       cambiará su transform, evitando repaints innecesarios en el scroll */
+    will-change: transform; 
+}
+
+/* Segmento negro que marca la posición actual del usuario en la página */
+.indicator-active-line {
+    width: 1px;
+    height: 28.5px;
+    background-color: var(--color-black);
+}
+
+/* Etiqueta de texto junto al indicador.
+   max-width + white-space: normal evitan que nombres de sección largos
+   desborden fuera del área visible del viewport izquierdo. */
+.indicator-text {
+    font-size: 10px;
+    letter-spacing: 1px;
+   	white-space: normal;
+	width: max-content;
+	max-width: 120px;
+	line-height: 1.4;
+    color: var(--color-black);
+}

@@ -1,0 +1,176 @@
+/* ============================================================
+   SECTIONS.CSS — Estilos de los fragmentos reutilizables de la
+   página de instalaciones (sections.html).
+   Cubre: sección introductoria con posicionamiento mixto
+   (absoluto + flujo), bloques de instalación con layout de dos
+   columnas (texto 23% / carrusel 77%) y el sistema de crossfade
+   del carrusel de imágenes basado en opacidad y position: absolute.
+   ============================================================ */
+
+
+/* ============================================================
+   COMPONENTE: SECCIÓN INTRODUCTORIA (.fac-intro)
+   ============================================================ */
+
+/* position: relative actúa como contexto de posicionamiento para
+   .fac-intro-left, que se extrae del flujo normal con position: absolute.
+   justify-content: center centra únicamente .fac-intro-right (el único
+   hijo en flujo), creando el efecto de párrafo centrado con la
+   identidad tipográfica flotando a la izquierda de forma independiente. */
+.fac-intro {
+    position: relative; 
+    display: flex;
+    justify-content: center; 
+    padding: 60px 0 70px 0;
+}
+
+/* Al extraerse del flujo con position: absolute, .fac-intro-left no
+   ocupa espacio y no desplaza a .fac-intro-right, permitiendo que
+   ambos bloques se superpongan visualmente en el layout sin que
+   uno afecte al tamaño del otro. top: 30px / left: 0 lo ancla a
+   la esquina superior izquierda del contenedor .fac-intro. */
+.fac-intro-left {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    display: flex;
+    flex-direction: row; 
+    align-items: center; 
+    gap: 20px;
+}
+
+/* SVG del kanji con ancho fijo de 20px por estar en orientación
+   horizontal (a diferencia de features.css donde era tategaki).
+   height: auto preserva las proporciones originales del SVG. */
+.fac-jp-img {
+    width: 20px;
+    height: auto;
+}
+
+.fac-title {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+/* El párrafo introductorio ocupa el 60% del ancho del contenedor
+   y se centra gracias al justify-content: center de .fac-intro.
+   margin-top: 60px crea la separación vertical necesaria respecto
+   a .fac-intro-left que, al ser absolute, no genera ese espacio
+   de forma natural. max-width: 600px limita la longitud de línea
+   para mantener la legibilidad en pantallas muy anchas. */
+.fac-intro-right {
+    width: 60%;
+    max-width: 600px;
+    margin-top: 60px;
+}
+
+/* Tamaño de fuente mayor (21px) respecto al cuerpo de texto de las
+   secciones (16px), reforzando la jerarquía visual de la intro
+   como elemento de presentación editorial del contenido. */
+.fac-intro-right p {
+    font-size: 21px;
+	font-weight: 500;
+	letter-spacing: 1px;
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   COMPONENTE: BLOQUE DE INSTALACIÓN (.fac-section)
+   ============================================================ */
+
+/* Layout de dos columnas con proporciones 23% / 77%.
+   La columna de texto es deliberadamente estrecha para dar
+   protagonismo visual al carrusel de imágenes.
+   align-items: start ancla ambas columnas a la parte superior,
+   evitando que la columna de texto se estire a la altura del carrusel. */
+.fac-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    padding: 100px 0;
+    gap: 80px;
+}
+
+/* padding-top: 50px centra visualmente el bloque de texto respecto
+   al carrusel adyacente, que tiene su propio espacio interno.
+   Sin este padding, el título aparecería alineado al borde superior
+   de la imagen, creando una composición desequilibrada. */
+.fac-text-col {
+    width: 23%;
+    display: flex;
+	padding-top: 50px;
+    flex-direction: column;
+}
+
+.fac-section-title {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+/* Divisor decorativo de ancho fijo (30px) que actúa como separador
+   visual entre el título y el párrafo descriptivo. Su animación de
+   entrada en facilities.js usa un stagger respecto al título para
+   que aparezcan secuencialmente como una unidad. */
+.fac-divider {
+    width: 30px;
+    height: 1px;
+    background-color: var(--color-black);
+    margin: 25px 0;
+}
+
+.fac-text-col p {
+    font-size: 16px;
+    line-height: 1.7;
+	font-weight: 500;
+}
+
+
+/* ============================================================
+   COMPONENTE: CARRUSEL DE IMÁGENES (.fac-carousel)
+   ============================================================ */
+
+/* position: relative establece el contexto de apilamiento para
+   los slides en position: absolute. aspect-ratio: 16/10 fija las
+   proporciones del carrusel independientemente del ancho del
+   contenedor, garantizando una caja consistente sin altura fija.
+   overflow: hidden recorta cualquier imagen que desborde durante
+   las transiciones. cursor: pointer señala al usuario que el
+   carrusel es interactivo (avance manual por clic). */
+.fac-carousel {
+    width: 77%;
+    position: relative; 
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+/* Todas las imágenes se apilan en la misma posición (top:0, left:0)
+   mediante position: absolute. El sistema de crossfade funciona
+   únicamente con opacidad: todos los slides parten de opacity: 0
+   y solo el que tenga la clase "active" es visible (opacity: 1).
+   La transición de 1.3s crea el fundido suave entre imágenes.
+   pointer-events: none en los slides inactivos evita que capturen
+   el clic destinado al contenedor .fac-carousel. */
+.fac-carousel .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1.3s ease-in-out;
+    pointer-events: none;
+}
+
+/* El slide activo es el único visible. La clase "active" es gestionada
+   por facilities.js, que la mueve al siguiente slide cada 4s o al
+   hacer clic. El primer slide recibe "active" desde el servidor
+   mediante th:classappend en sections.html (iterStat.first). */
+.fac-carousel .slide.active {
+    opacity: 1;
+}

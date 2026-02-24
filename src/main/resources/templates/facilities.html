@@ -3,23 +3,29 @@
 
 <!-- ============================================================
      PÁGINA: INSTALACIONES (facilities.html)
-     Página de detalle de los espacios y servicios del ryokan.
-     Estructura: navbar global → indicador de scroll lateral →
-     sección intro + 6 secciones de instalación con carrusel →
-     footer global.
-     Cada .fac-section lleva un atributo data-name que el JS
-     de facilities.js usa para actualizar el indicador lateral
-     conforme el usuario hace scroll.
+     Versión refactorizada: todo el markup de secciones se delega
+     a fragmentos parametrizados de sections.html y sections.html,
+     manteniendo esta vista como un archivo de composición limpio
+     donde solo se declaran los datos (textos, imágenes, rutas).
+
+     Para añadir una nueva instalación: duplicar cualquier bloque
+     th:replace de fac-section y actualizar sus parámetros.
+     Para modificar la estructura HTML de una sección: editar
+     directamente fragments/sections.html.
      ============================================================ -->
 
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Miyabi</title>
-	<!-- Estilos globales compartidos por todas las páginas del sitio -->
+	<!-- Estilos globales compartidos por todas las páginas -->
 	<link rel="stylesheet" th:href="@{/css/base/global.css}">
 	<!-- Estilos específicos de la página de instalaciones -->
 	<link rel="stylesheet" th:href="@{/css/pages/facilities.css}">
+	<!-- Estilos de los fragmentos de sección (fac-intro, fac-section, fac-carousel) -->
+	<link rel="stylesheet" th:href="@{/css/components/sections.css}">
+	<!-- Estilos del indicador de scroll lateral -->
+	<link rel="stylesheet" th:href="@{/css/components/scroll-indicator.css}">
 </head>
 
 <body>
@@ -27,239 +33,142 @@
 	<!-- Navbar global inyectado desde el fragmento Thymeleaf compartido -->
 	<div th:replace="~{fragments/layout/components :: navbar}"></div>
 
-	<!-- ============================================================
-	     INDICADOR DE SCROLL LATERAL
-	     Barra fija en el lado derecho de la pantalla que muestra
-	     el nombre de la sección actualmente visible mientras el
-	     usuario hace scroll. El texto (.indicator-text) y la línea
-	     activa (.indicator-active-line) son actualizados por JS
-	     (facilities.js) al detectar qué .fac-section está en el
-	     viewport mediante ScrollTrigger.
-	     ============================================================ -->
-	<aside class="scroll-indicator">
-		<div class="indicator-track">
-
-			<div class="indicator-thumb">
-				<div class="indicator-active-line"></div>
-				<!-- Texto inicial: se reemplaza dinámicamente por el data-name
-				     de la sección activa al hacer scroll -->
-				<span class="indicator-text">Entrada</span>
-			</div>
-
-		</div>
-	</aside>
+	<!-- Indicador de scroll lateral parametrizado: "Entrada" es el texto inicial
+	     que se muestra antes de que el JS tome el control al hacer scroll.
+	     Definido en fragments/scroll-indicator.html. -->
+	<div th:replace="~{fragments/scroll-indicator :: scroll-indicator('Entrada')}"></div>
 
 	<!-- ============================================================
-	     CONTENIDO PRINCIPAL DE LA PÁGINA
-	     "miyabi-container" aplica los márgenes y el ancho máximo
-	     globales. Contiene la introducción de la página seguida
-	     de una sección por cada instalación del ryokan.
+	     CONTENIDO PRINCIPAL
+	     Cada sección se inyecta mediante th:replace, pasando todos
+	     los datos como parámetros al fragmento correspondiente.
+	     Estructura de parámetros de fac-section:
+	       1. dataName  — Nombre para el indicador lateral (data-name)
+	       2. title     — Título H2 de la instalación
+	       3. paragraph — Descripción (admite HTML con <br> para saltos)
+	       4. images    — Set literal de URLs para el carrusel
+	       5. ctaText   — Texto del botón CTA (null = sin botón)
+	       6. ctaLink   — URL destino del CTA (null = sin botón)
 	     ============================================================ -->
 	<main class="facilities-page miyabi-container">
 
-		<!-- Sección introductoria de la página de instalaciones.
-		     Layout de dos columnas: título en japonés + H1 a la
-		     izquierda, y párrafo de contexto histórico a la derecha.
-		     data-name="Entrada" la asocia al primer ítem del indicador
-		     lateral al cargar la página. -->
-		<section class="fac-intro" data-name="Entrada">
-			<div class="fac-intro-left">
-				<!-- Título "Instalaciones" en caracteres japoneses como SVG
-				     para mantener la tipografía personalizada sin fuentes web. -->
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities_jp.svg" alt="Kanji Facilities"
-					class="fac-jp-img">
-				<h1 class="fac-title">Instalaciones</h1>
-			</div>
+		<!-- Sección introductoria: kanji + H1 + párrafo de contexto histórico.
+		     Parámetros: dataName, kanjiImg, title, paragraph.
+		     Definida en fragments/sections :: fac-intro. -->
+		<div th:replace="~{fragments/sections :: fac-intro(
+	        'Entrada', 
+	        'https://mukayu.com/wp-content/themes/corporate/img/facilities_jp.svg', 
+	        'Instalaciones', 
+	        'MIYABI se sitúa en la ladera de Yakushiyama, la montaña sagrada del Buda de la Curación y lugar de culto al 
+				Monte Hakusan. En este mismo sitio se encontraba el Templo Yakuoin, donde los monjes estudiaban escrituras 
+				y sanaban con aguas termales y hierbas medicinales. Como tributo a esta historia, MIYABI ofrece tres 
+				bibliotecas para la lectura, dos baños onsen para disfrutar del manantial, y el Spa Entei, con 
+				tratamientos modernos de sanación basados en el agua termal y la botánica medicinal de la región.'
+			
+	    )}"></div>
 
-			<div class="fac-intro-right">
-				<p>Miyabi se encuentra en la ladera de Yakushiyama (la Montaña del Buda de la Sanación),
-					considerada un lugar sagrado para el culto de la Montaña Hakusan. En el mismo lugar, antiguamente se
-					alzaba el Templo Yakuoin, donde los monjes estudiaban las escrituras budistas y sanaban con baños
-					termales y hierbas medicinales. Como homenaje a la historia local, Miyabi ofrece tres
-					bibliotecas para estudiar o leer libros, dos baños comunes para disfrutar de las aguas termales y el
-					Spa Entei ofrece tratamientos curativos modernos.</p>
-			</div>
-		</section>
+		<!-- ── INSTALACIÓN 1: Entrada — sin CTA (null, null) ───────── -->
+		<div th:replace="~{fragments/sections :: fac-section(
+	        'Entrada', 
+	        'Entrada', 
+	        'El ryokan se erige al final de una estrecha pendiente que nace en el pueblo de Yamashiro Onsen. Tras un acceso 
+				rodeado de verdor, la entrada se abre hacia un amplio vestíbulo. El sol filtrándose a través de los árboles y 
+				la suave brisa agitando las ramas crean un encantador juego de luces y sombras sobre el suelo, elaborado con 
+				tierra de diatomeas local. Los huéspedes son atraídos desde la entrada hacia la terraza y el Jardín del Bosque.', 
+	        ${ {'https://mukayu.com/wp-content/themes/corporate/img/facilities/lob_img_01.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/lob_img_02.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/lob_img_03.jpg'} },
+	        null, 
+	        null
+	    )}"></div>
 
-		<!-- ══════════════════════════════════════════════════════════
-		     SECCIONES DE INSTALACIÓN
-		     Cada .fac-section sigue la misma estructura:
-		       - .fac-text-col  → título, divisor y descripción (+ CTA opcional)
-		       - .fac-carousel  → galería de imágenes con clase .slide;
-		                          la imagen activa lleva la clase "active".
-		     El atributo data-name es leído por facilities.js para
-		     sincronizar el indicador lateral con la sección visible.
-		     Para añadir una nueva instalación, duplicar un bloque
-		     .fac-section completo y actualizar su data-name, textos
-		     e imágenes del carrusel.
-		     ══════════════════════════════════════════════════════════ -->
+		<!-- ── INSTALACIÓN 2: Jardín del Bosque — sin CTA ──────────── -->
+		<div th:replace="~{fragments/sections :: fac-section(
+			'Jardín del Bosque', 
+			'Jardín del Bosque', 
+			'El sagrado pino rojo Akamatsu, con 300 años de antigüedad, es el árbol emblemático del Jardín del
+				Bosque. Grandes ejemplares como cerezos de montaña, arces y camelias japonesas, entre muchos otros,
+				extienden sus ramas con total libertad, reflejando el constante cambio de las estaciones. Uno de los
+				mayores placeres del Jardín del Bosque es contemplar la rica variedad de musgos que prosperan en su
+				interior.', 
+			${ {'https://mukayu.com/wp-content/themes/corporate/img/facilities/gar_img_01.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/gar_img_02.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/gar_img_03.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/gar_img_04.jpg'} },
+			null, 
+			null
+		)}"></div>
 
-		<!-- ── INSTALACIÓN 1: Entrada ──────────────────────────────── -->
-		<section class="fac-section" data-name="Entrada">
-			<div class="fac-text-col">
-				<h2 class="fac-section-title">Entrada</h2>
-				<div class="fac-divider"></div>
-				<p>El ryokan se erige al final de una estrecha pendiente que nace en el pueblo de Yamashiro Onsen. Tras
-					un acceso rodeado de verdor, la entrada se abre hacia un amplio vestíbulo. El sol filtrándose a
-					través de los árboles y la suave brisa agitando las ramas crean un encantador juego de luces y
-					sombras sobre el suelo, elaborado con tierra de diatomeas local. Los huéspedes son atraídos desde la
-					entrada hacia la terraza y el Jardín del Bosque.</p>
-			</div>
+		<!-- ── INSTALACIÓN 3: Baños Comunitarios Onsen — sin CTA ───── -->
+		<div th:replace="~{fragments/sections :: fac-section(
+			'Baños Comunitarios Onsen', 
+			'Baños Comunitarios Onsen', 
+			'MIYABI cuenta con dos baños comunitarios: GENSEI, un espacio para la meditación tranquila que destaca
+				por un respaldo circular en la bañera; y USUKŌ, un baño construido en madera de ciprés blanco
+				diseñado para purificar el cuerpo y la mente. Cada baño comunitario dispone de una zona interior, un
+				baño al aire libre (rotenburo) y sauna. Están a disposición de todos los huéspedes, con áreas
+				separadas por género. Con más de 1300 años de historia, las aguas del renombrado Yamashiro Onsen
+				poseen una alta concentración de calcio, sodio y sulfato; estas no solo mejoran la circulación
+				sanguínea y alivian la fatiga gracias a sus efectos térmicos, sino que también mejoran las
+				condiciones físicas y dermatológicas.', 
+			${ {'https://mukayu.com/wp-content/themes/corporate/img/facilities/bath_img_01.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/bath_img_02.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/bath_img_03.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/bath_img_04.jpg', 'https://mukayu.com/wp-content/themes/corporate/img/facilities/bath_img_05.jpg'} },
+			null, 
+			null
+		)}"></div>
 
-			<!-- Carrusel de imágenes: la clase "active" marca el slide visible.
-			     La lógica de rotación automática o manual la gestiona facilities.js. -->
-			<div class="fac-carousel">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/lob_img_01.jpg"
-					class="slide active" alt="Entrada 1">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/lob_img_02.jpg" class="slide"
-					alt="Entrada 2">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/lob_img_03.jpg" class="slide"
-					alt="Entrada 3">
-			</div>
-		</section>
+		<!-- ── INSTALACIÓN 4: Bibliotecas — con CTA a /ruta-bibliotecas
+		     El párrafo usa <br> (HTML literal) para los saltos de línea
+		     entre los nombres de cada biblioteca; esto funciona gracias
+		     a que el fragmento usa th:utext en lugar de th:text. ────── -->
+		<div th:replace="~{fragments/sections :: fac-section(
+	        'Bibliotecas', 
+	        'Bibliotecas', 
+	        'MIYABI cuenta con tres bibliotecas, cada una con su propia atmósfera única donde podrá disfrutar de
+				la lectura de una gran variedad de libros.<br>Biblioteca Principal<br>Biblioteca del Bosque<br>Biblioteca Zero', 
+	        ${ {'https://mukayu.com/wp-content/themes/corporate/img/facilities/lib_img_01.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/lib_img_02.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/lib_img_03.jpg'} },
+	        'Tres Bibliotecas', 
+	        '/ruta-bibliotecas'
+	    )}"></div>
 
-		<!-- ── INSTALACIÓN 2: Jardín del Bosque ────────────────────── -->
-		<section class="fac-section" data-name="Jardín del Bosque">
-			<div class="fac-text-col">
-				<h2 class="fac-section-title">Jardín del Bosque</h2>
-				<div class="fac-divider"></div>
-				<p>El sagrado pino rojo Akamatsu, con 300 años de antigüedad, es el árbol emblemático del Jardín del
-					Bosque. Grandes ejemplares como cerezos de montaña, arces y camelias japonesas, entre muchos otros,
-					extienden sus ramas con total libertad, reflejando el constante cambio de las estaciones. Uno de los
-					mayores placeres del Jardín del Bosque es contemplar la rica variedad de musgos que prosperan en su
-					interior..</p>
-			</div>
+		<!-- ── INSTALACIÓN 5: Kaiseki Horin — sin CTA
+		     Las comillas tipográficas de "Rin" y "Horin" se escapan como
+		     &quot; para evitar que el parser de Thymeleaf las interprete
+		     como delimitadores de cadena dentro del th:replace. ───────── -->
+		<div th:replace="~{fragments/sections :: fac-section(
+			'Kaiseki Horin', 
+			'Kaiseki Horin', 
+			'Kaiseki Horin es un restaurante de alta cocina que cuenta con 25 pilares y una amplia terraza con
+				vistas al Jardín del Bosque. El &quot;Rin&quot; en la palabra &quot;Horin&quot; significa &quot;juntos&quot;, lo que hace
+				referencia a un lugar donde las personas se reúnen y descubren nuevas sensaciones. Aquí se sirven
+				tanto el desayuno como la cena.', 
+			${ {'https://mukayu.com/wp-content/themes/corporate/img/facilities/cu_img_01.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/cu_img_02.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/facilities/cu_img_03.jpg'} },
+			null, 
+			null
+		)}"></div>
 
-			<div class="fac-carousel">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/gar_img_01.jpg"
-					class="slide active" alt="Cocina 1">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/gar_img_02.jpg" class="slide"
-					alt="Cocina 2">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/gar_img_03.jpg" class="slide"
-					alt="Cocina 3">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/gar_img_04.jpg" class="slide"
-					alt="Cocina 4">
-			</div>
-		</section>
-
-		<!-- ── INSTALACIÓN 3: Baños Comunitarios Onsen ─────────────── -->
-		<section class="fac-section" data-name="Baños Comunitarios Onsen">
-			<div class="fac-text-col">
-				<h2 class="fac-section-title">Baños Comunitarios Onsen</h2>
-				<div class="fac-divider"></div>
-				<p>MIYABI cuenta con dos baños comunitarios: GENSEI, un espacio para la meditación tranquila que destaca
-					por un respaldo circular en la bañera; y USUKŌ, un baño construido en madera de ciprés blanco
-					diseñado para purificar el cuerpo y la mente. Cada baño comunitario dispone de una zona interior, un
-					baño al aire libre (rotenburo) y sauna. Están a disposición de todos los huéspedes, con áreas
-					separadas por género. Con más de 1300 años de historia, las aguas del renombrado Yamashiro Onsen
-					poseen una alta concentración de calcio, sodio y sulfato; estas no solo mejoran la circulación
-					sanguínea y alivian la fatiga gracias a sus efectos térmicos, sino que también mejoran las
-					condiciones físicas y dermatológicas.</p>
-			</div>
-
-			<div class="fac-carousel">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/bath_img_01.jpg"
-					class="slide active" alt="Cocina 1">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/bath_img_02.jpg" class="slide"
-					alt="Cocina 2">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/bath_img_03.jpg" class="slide"
-					alt="Cocina 3">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/bath_img_04.jpg" class="slide"
-					alt="Cocina 4">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/bath_img_05.jpg" class="slide"
-					alt="Cocina 5">
-			</div>
-		</section>
-
-		<!-- ── INSTALACIÓN 4: Bibliotecas ──────────────────────────── -->
-		<section class="fac-section" data-name="Bibliotecas">
-			<div class="fac-text-col">
-				<h2 class="fac-section-title">Bibliotecas</h2>
-				<div class="fac-divider"></div>
-				<p> MIYABI cuenta con tres bibliotecas, cada una con su propia atmósfera única donde podrá disfrutar de
-					la lectura de una gran variedad de libros.
-					<br>
-					Biblioteca Principal
-					<br>
-					Biblioteca del Bosque
-					<br>
-					Biblioteca Zero
-				</p>
-				<!-- CTA de navegación hacia la página dedicada a las bibliotecas.
-				     La flecha se implementa como SVG inline para control total
-				     sobre su trazo sin depender de iconos externos.
-				     NOTA: reemplazar @{/ruta-de-tu-pagina} con la ruta definitiva. -->
-				<a href="@{/ruta-de-tu-pagina}" class="miyabi-link-btn">
-					<span class="link-btn-text">Tres Bibliotecas</span>
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-						alt="Ir a la página" class="link-btn-icon">
-						<polyline points="8 5 16 12 8 19" stroke="black" stroke-width="1" stroke-linecap="round"
-							stroke-linejoin="round" />
-					</svg>
-				</a>
-			</div>
-
-			<div class="fac-carousel">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/lib_img_01.jpg"
-					class="slide active" alt="Cocina 1">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/lib_img_02.jpg" class="slide"
-					alt="Cocina 2">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/lib_img_03.jpg" class="slide"
-					alt="Cocina 3">
-			</div>
-		</section>
-
-		<!-- ── INSTALACIÓN 5: Kaiseki Horin ────────────────────────── -->
-		<section class="fac-section" data-name="Kaiseki Horin">
-			<div class="fac-text-col">
-				<h2 class="fac-section-title">Kaiseki Horin</h2>
-				<div class="fac-divider"></div>
-				<p>Kaiseki Horin es un restaurante de alta cocina que cuenta con 25 pilares y una amplia terraza con
-					vistas al Jardín del Bosque. El "Rin" en la palabra "Horin" significa "juntos", lo que hace
-					referencia a un lugar donde las personas se reúnen y descubren nuevas sensaciones. Aquí se sirven
-					tanto el desayuno como la cena.</p>
-			</div>
-
-			<div class="fac-carousel">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/cu_img_01.jpg"
-					class="slide active" alt="Cocina 1">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/cu_img_02.jpg" class="slide"
-					alt="Cocina 2">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/cu_img_03.jpg" class="slide"
-					alt="Cocina 3">
-			</div>
-		</section>
-
-		<!-- ── INSTALACIÓN 6: Spa Entei y Tsukubai "Ho-sun" ────────── -->
-		<section class="fac-section" data-name="Spa Entei y Tsukubai &quot;Ho-sun&quot;">
-			<div class="fac-text-col">
-				<h2 class="fac-section-title">Spa Entei y Tsukubai "Ho-sun"</h2>
-				<div class="fac-divider"></div>
-				<p>Frente al Spa Entei se encuentran un gran estanque negro y circular, y la obra de arte TSUKUBAI
-					"Ho-sun" de Kenya Hara. Esta pieza fue instalada en Beniya Mukayu tras haber sido exhibida en el
-					Museo de Arte Contemporáneo del Siglo XXI de Kanazawa en 2005. El Spa Entei y sus tratamientos
-					exclusivos se inspiraron en Yakushiyama —la Montaña del Buda de la Curación—, lugar donde los monjes
-					locales sanaban a las personas utilizando aguas termales y hierbas medicinales.</p>
-				<!-- CTA de navegación hacia la página dedicada al Spa Entei.
-				     NOTA: reemplazar @{/ruta-de-tu-pagina} con la ruta definitiva. -->
-				<a href="@{/ruta-de-tu-pagina}" class="miyabi-link-btn">
-					<span class="link-btn-text">Spa Entei</span>
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-						alt="Ir a la página" class="link-btn-icon">
-						<polyline points="8 5 16 12 8 19" stroke="black" stroke-width="1" stroke-linecap="round"
-							stroke-linejoin="round" />
-					</svg>
-				</a>
-			</div>
-
-			<!-- Carrusel de imagen única: mantiene la estructura .fac-carousel
-			     para consistencia con el resto de secciones, aunque en este
-			     caso solo contenga un slide. -->
-			<div class="fac-carousel">
-				<img src="https://mukayu.com/wp-content/themes/corporate/img/facilities/en_img_01.jpg"
-					class="slide active" alt="Cocina 1">
-			</div>
-		</section>
+		<!-- ── INSTALACIÓN 6: Spa Entei — con CTA a /spa-entei
+		     Las comillas de "Ho-sun" también se escapan con &quot; tanto
+		     en dataName como en el párrafo por la misma razón que en
+		     Kaiseki Horin. Carrusel de imagen única: se pasa un set de
+		     un solo elemento; el fragmento lo gestiona igual que los demás. -->
+		<div th:replace="~{fragments/sections :: fac-section(
+			'Spa Entei y Tsukubai &quot;Ho-sun&quot;', 
+			'Spa Entei y Tsukubai &quot;Ho-sun&quot;', 
+			'Frente al Spa Entei se encuentran un gran estanque negro y circular, y la obra de arte TSUKUBAI &quot;Ho-sun&quot; de Kenya Hara. 
+				Esta pieza fue instalada en Beniya Mukayu tras haber sido exhibida en el Museo de Arte Contemporáneo del Siglo XXI de Kanazawa en 
+				2005. El Spa Entei y sus tratamientos exclusivos se inspiraron en Yakushiyama —la Montaña del Buda de la Curación—, lugar donde 
+				los monjes locales sanaban a las personas utilizando aguas termales y hierbas medicinales.', 
+			${ {'https://mukayu.com/wp-content/themes/corporate/img/facilities/en_img_01.jpg'} },
+			'Spa Entei', 
+			'/spa-entei'
+		)}"></div>
 
 	</main>
 
@@ -267,17 +176,21 @@
 	<div th:replace="~{fragments/layout/components :: footer}"></div>
 
 	<!-- ============================================================
-	     SCRIPTS
-	     Orden de carga obligatorio:
-	       1. gsap.min.js       — biblioteca base de animaciones
-	       2. ScrollTrigger.min — plugin de GSAP (requiere gsap cargado)
-	       3. global.js         — lógica compartida (navbar, reveal, etc.)
-	       4. facilities.js     — lógica específica de esta página:
-	                              carrusel de imágenes e indicador lateral
+	     SCRIPTS — Orden de carga obligatorio:
+	       1. gsap.min.js        — biblioteca base (requerida por los siguientes)
+	       2. ScrollTrigger.min  — plugin de GSAP (requiere gsap cargado)
+	       3. global.js          — navbar, reveal y lógica compartida del sitio
+	       4. scroll-indicator.js— lógica del indicador lateral (posición + texto)
+	       5. sections.js        — animaciones de fac-intro, fac-section y carrusel
+	       6. facilities.js      — lógica adicional específica de esta página,
+	                               si la hubiera (puede estar vacío o eliminarse
+	                               si sections.js cubre toda la funcionalidad)
 	     ============================================================ -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 	<script th:src="@{/js/base/global.js}"></script>
+	<script th:src="@{/js/components/scroll-indicator.js}"></script>
+	<script th:src="@{/js/components/sections.js}"></script>
 	<script th:src="@{/js/pages/facilities.js}"></script>
 </body>
 
