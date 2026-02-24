@@ -10,8 +10,8 @@
  * @requires ScrollTrigger - Plugin oficial de GSAP (registrado en main.js)
  *
  * @modules
- *   [1] Intro  — Animación de entrada de la sección introductoria (.intro-section)
- *   [2] ...    — (Próximo módulo)
+ *   [1] Intro    — Animación de entrada de la sección introductoria (.intro-section)
+ *   [2] Features — Animación escalonada por bloque de servicio (.feature-block)
  */
 
 
@@ -63,6 +63,70 @@ introTimeline.from(".intro-right", {
 
 
 // =============================================================================
-// MÓDULO 2 — (Nombre del módulo) ((nombre-fragmento).html)
-// Añadir aquí la lógica de animación del siguiente módulo del index
+// MÓDULO 2 — FEATURES (features.html)
 // =============================================================================
+
+/**
+ * Aplica una Timeline de animación independiente a cada bloque de servicio
+ * (.feature-block) de la sección features conforme van entrando en el viewport.
+ *
+ * Cada bloque recibe su propio ScrollTrigger en lugar de uno compartido para
+ * toda la sección, garantizando que la animación se active en el momento exacto
+ * en que ESE bloque concreto se vuelve visible, sin depender de la posición de
+ * los bloques anteriores o posteriores.
+ *
+ * La secuencia de aparición dentro de cada bloque sigue una jerarquía visual
+ * de tres pasos que guía la atención del usuario de mayor a menor protagonismo:
+ *   1. Imagen principal  (.feature-main-img) — impacto visual inmediato
+ *   2. Título en japonés (.feature-jp-img)   — identidad tipográfica del servicio
+ *   3. Título en español (.feature-title)    — lectura y comprensión del contenido
+ *
+ * Los offsets negativos (-=0.8 y -=0.6) solapan el inicio de cada paso con el
+ * final del anterior, creando una cascada fluida en lugar de tres animaciones
+ * secuenciales con pausas perceptibles entre ellas.
+ *
+ * toggleActions: "play none none reverse" permite que la animación se revierta
+ * si el usuario vuelve a subir, manteniendo la coherencia visual en ambas
+ * direcciones de scroll.
+ *
+ * @param {NodeList} featureBlocks - Colección de todos los .feature-block del DOM.
+ */
+const featureBlocks = document.querySelectorAll(".feature-block");
+
+// Cada bloque gestiona su propia Timeline para que el trigger sea independiente
+featureBlocks.forEach((block) => {
+        
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: block,           // Trigger individual por bloque, no por sección completa
+            start: "top 80%",         // Margen anticipado para que la animación no se corte al entrar
+            toggleActions: "play none none reverse"
+        }
+    });
+
+    // Paso 1: La imagen entra primero — es el elemento de mayor peso visual del bloque
+    tl.from(block.querySelector(".feature-main-img"), {
+        y: 50,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.out"
+    })
+    
+    // Paso 2: El SVG japonés aparece solapando los últimos 0.8s de la imagen,
+    // añadiendo la identidad tipográfica mientras la fotografía aún está animándose
+    .from(block.querySelector(".feature-jp-img"), {
+        y: 40,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out"
+    }, "-=0.8")
+    
+    // Paso 3: El título en español cierra la secuencia, invitando a la lectura
+    // una vez que imagen e identidad japonesa ya han captado la atención
+    .from(block.querySelector(".feature-title"), {
+        y: 30,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out"
+    }, "-=0.6");
+});

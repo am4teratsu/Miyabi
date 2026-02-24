@@ -1,0 +1,131 @@
+/* ============================================================
+   FEATURES.CSS — Estilos de la sección de servicios y espacios
+   del ryokan (página de inicio).
+   Cubre: layout de bloques apilados verticalmente, estructura
+   interna de dos columnas por bloque (texto 20% / imagen 80%)
+   y adaptación responsive para móviles (≤ 900px).
+   ============================================================ */
+
+
+/* ============================================================
+   LAYOUT / ESTRUCTURA — Contenedor principal
+   ============================================================ */
+
+/* Lista vertical de bloques de servicio separados por un gap
+   generoso (100px) que crea respiración visual entre secciones
+   y refuerza la estética minimalista del ryokan. El padding
+   vertical reserva espacio entre esta sección y las adyacentes
+   sin depender de márgenes externos. */
+.features-section {
+    display: flex;
+    flex-direction: column;
+    gap: 100px; 
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+
+/* ============================================================
+   COMPONENTES — Bloque de servicio individual (.feature-block)
+   ============================================================ */
+
+/* Cada bloque replica la proporción 20/80 de la sección intro:
+   columna de texto estrecha a la izquierda e imagen dominante
+   a la derecha. align-items: flex-start evita que ambas columnas
+   se estiren a la misma altura, permitiendo que el texto quede
+   anclado a la parte superior independientemente del tamaño
+   de la imagen. */
+.feature-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+    gap: 80px;
+}
+
+
+/* --- Columna izquierda: identidad tipográfica del servicio ---
+   padding: 100px 0 centra verticalmente el contenido de texto
+   respecto a la imagen de la columna derecha, que suele ser
+   considerablemente más alta que el bloque de texto. */
+.feature-left {
+    width: 20%; 
+    display: flex;
+    flex-direction: column;
+	padding: 100px 0;
+}
+
+/* El título en japonés se renderiza como SVG con un ancho fijo
+   de 20px porque está orientado verticalmente (escritura tategaki).
+   Al ser un trazo vertical estrecho, width controla su escala
+   mientras height: auto preserva sus proporciones originales. */
+.feature-jp-img {
+    width: 20px; 
+    height: auto; 
+    align-self: flex-start;
+    display: block;
+}
+
+/* margin-left: 30% desplaza el título en español hacia la derecha
+   dentro de la columna, creando una alineación visual con el SVG
+   japonés vertical que queda a su izquierda. align-self: flex-start
+   impide que el título se estire al ancho completo de la columna. */
+.feature-title {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: var(--color-black);
+    align-self: flex-start; 
+    margin-left: 30%; 
+}
+
+
+/* --- Columna derecha: imagen de ambientación del servicio ---
+   Ocupa el 80% restante del bloque, dando protagonismo visual
+   a la fotografía en consonancia con el resto del diseño. */
+.feature-right {
+    width: 80%; 
+}
+
+/* display: block elimina el espacio en línea que los navegadores
+   añaden por defecto bajo los elementos <img>. */
+.feature-main-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+/* ============================================================
+   MEDIA QUERIES — Adaptación responsive (≤ 900px)
+   ============================================================ */
+
+/* En el breakpoint intermedio (tabletas y móviles landscape)
+   se centra el SVG japonés para mejorar su legibilidad antes
+   de que el layout colapse a una sola columna. */
+@media (max-width: 900px) {
+    .feature-jp-img {
+        align-self: center; 
+    }
+}
+
+/* En móvil el bloque invierte su orden de columnas con
+   flex-direction: column-reverse, colocando la imagen arriba
+   y el texto abajo. Esto prioriza el impacto visual de la
+   fotografía en pantallas pequeñas antes de mostrar el texto.
+   Ambas columnas pasan a ocupar el 100% del ancho disponible
+   y el gap se reduce de 80px a 40px para aprovechar el espacio. */
+@media (max-width: 900px) {
+    .feature-block {
+        flex-direction: column-reverse; 
+        gap: 40px;
+    }
+    .feature-left, .feature-right {
+        width: 100%;
+    }
+    /* En columna única el SVG japonés cambia de width a height
+       como propiedad de control, ya que ahora su orientación
+       visual es horizontal dentro del layout apilado. */
+    .feature-jp-img {
+        height: 80px; 
+    }
+}
