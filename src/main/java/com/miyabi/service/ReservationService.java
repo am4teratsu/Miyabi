@@ -29,7 +29,7 @@ public class ReservationService {
     public Reservation findById(Integer id) {
         return reservationRepository.findById(id).orElse(null);
     }
-    
+
     public List<Reservation> findByGuest_IdGuest(Integer idGuest) {
         return reservationRepository.findByGuest_IdGuest(idGuest);
     }
@@ -37,25 +37,41 @@ public class ReservationService {
     @Transactional
     public Reservation createReservation(Reservation reservation) {
 
+        
+        int adults = reservation.getNumAdults() != null ? reservation.getNumAdults() : 1;
+        int children = reservation.getNumChildren() != null ? reservation.getNumChildren() : 0;
+        int totalGuests = adults + children;
+
+        if (totalGuests > 6) {
+            throw new RuntimeException("No aceptamos reservas para más de 6 personas en un grupo.");
+        }
+        if (adults < 1) {
+            throw new RuntimeException("Debe haber al menos 1 adulto en la reserva.");
+        }
+
+        
         Room roomToReserve = roomService.findById(reservation.getRoom().getIdRoom());
         if (roomToReserve == null || !roomToReserve.getState().equals("Available")) {
             throw new RuntimeException("Room is not available.");
         }
 
+        
         long nights = ChronoUnit.DAYS.between(reservation.getEntryDate(), reservation.getDepartureDate());
         reservation.setNumberNights((int) nights);
 
         BigDecimal nightsDecimal = new BigDecimal(nights);
         BigDecimal subtotal = reservation.getPricePerNight().multiply(nightsDecimal);
         reservation.setRoomSubtotal(subtotal);
-        reservation.setTotalPay(subtotal); 
+        reservation.setTotalPay(subtotal);
 
+        
         String code = "RES-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
         reservation.setReservationCode(code);
         reservation.setState("Pending");
 
+        
         roomToReserve.setState("Reserved");
-        roomService.save(roomToReserve); 
+        roomService.save(roomToReserve);
 
         return reservationRepository.save(reservation);
     }

@@ -2,6 +2,7 @@ package com.miyabi.models;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "room_type")
@@ -12,11 +13,16 @@ public class RoomType {
     @Column(name = "type_id")
     private Integer idTipo;
 
-    @Column(name = "name_type", nullable = false, unique = true, length = 50)
+    // Ampliado de 50 a 100
+    @Column(name = "name_type", nullable = false, unique = true, length = 100)
     private String nameType;
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+
+    @Column(name = "short_description", length = 255)
+    private String shortDescription;
 
     @Column(name = "capacity_people", nullable = false)
     private Integer capacityPeople = 2;
@@ -27,17 +33,36 @@ public class RoomType {
     @Column(name = "high_season_price", precision = 10, scale = 2)
     private BigDecimal highSeasonPrice;
 
-    @Column(name = "imagen_url", length = 500)
-    private String imagenUrl;
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
 
-    @Column(columnDefinition = "TEXT")
+    // croquis arquitectónico
+    @Column(name = "floor_plan_url", length = 500)
+    private String floorPlanUrl;
+
+    //  Tamaño "25 m²"
+    @Column(name = "room_size", length = 50)
+    private String roomSize;
+
+    //  Ubicación específica,  "Planta 2, vista al jardín"
+    @Column(name = "location_info", length = 150)
+    private String locationInfo;
+
+    //  Detalle de camas, ej: "1 cama king size + sofá cama"
+    @Column(name = "bed_type", length = 150)
+    private String bedType;
+
+    // Ahora en formato JSON: ["WiFi","TV","Jacuzzi","Hamaca disponible"]
+    @Column(columnDefinition = "JSON")
     private String amenities;
+
+    // Relación con las imágenes del carrusel
+    @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RoomImage> images;
 
     public RoomType() {}
 
-    // ==========================================
-    // GETTERS Y SETTERS
-    // ==========================================
+   
 
     public Integer getIdTipo() {
         return idTipo;
@@ -61,6 +86,14 @@ public class RoomType {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 
     public Integer getCapacityPeople() {
@@ -87,12 +120,44 @@ public class RoomType {
         this.highSeasonPrice = highSeasonPrice;
     }
 
-    public String getImagenUrl() {
-        return imagenUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImagenUrl(String imagenUrl) {
-        this.imagenUrl = imagenUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getFloorPlanUrl() {
+        return floorPlanUrl;
+    }
+
+    public void setFloorPlanUrl(String floorPlanUrl) {
+        this.floorPlanUrl = floorPlanUrl;
+    }
+
+    public String getRoomSize() {
+        return roomSize;
+    }
+
+    public void setRoomSize(String roomSize) {
+        this.roomSize = roomSize;
+    }
+
+    public String getLocationInfo() {
+        return locationInfo;
+    }
+
+    public void setLocationInfo(String locationInfo) {
+        this.locationInfo = locationInfo;
+    }
+
+    public String getBedType() {
+        return bedType;
+    }
+
+    public void setBedType(String bedType) {
+        this.bedType = bedType;
     }
 
     public String getAmenities() {
@@ -101,5 +166,13 @@ public class RoomType {
 
     public void setAmenities(String amenities) {
         this.amenities = amenities;
+    }
+
+    public List<RoomImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<RoomImage> images) {
+        this.images = images;
     }
 }

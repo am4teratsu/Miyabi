@@ -44,6 +44,14 @@ public class Reservation {
     @Column(columnDefinition = "TEXT")
     private String observations;
 
+    // Número de adultos (mínimo 1)
+    @Column(name = "num_adults", nullable = false)
+    private Integer numAdults = 1;
+
+    //  Número de niños
+    @Column(name = "num_children", nullable = false)
+    private Integer numChildren = 0;
+
     @Column(name = "reservation_date", insertable = false, updatable = false)
     private LocalDateTime reservationDate;
 
@@ -71,10 +79,7 @@ public class Reservation {
 
     public Reservation() {}
 
-    // ==========================================
-    // GETTERS Y SETTERS 
-    // ==========================================
-
+    
     public Integer getReservationId() {
         return reservationId;
     }
@@ -161,6 +166,22 @@ public class Reservation {
 
     public void setObservations(String observations) {
         this.observations = observations;
+    }
+
+    public Integer getNumAdults() {
+        return numAdults;
+    }
+
+    public void setNumAdults(Integer numAdults) {
+        this.numAdults = numAdults;
+    }
+
+    public Integer getNumChildren() {
+        return numChildren;
+    }
+
+    public void setNumChildren(Integer numChildren) {
+        this.numChildren = numChildren;
     }
 
     public LocalDateTime getReservationDate() {
