@@ -17,8 +17,8 @@ public class HomeController {
         return "facilities"; 
     }
 
-    @GetMapping("/reservas")
-    public String booking() {
-        return "booking"; 
+    @GetMapping("/cuisine")
+    public String cuisine() {
+        return "cuisine"; 
     }
 }

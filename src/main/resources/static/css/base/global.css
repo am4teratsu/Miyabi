@@ -1,24 +1,17 @@
 /* ============================================================
-   GLOBAL.CSS — Hoja de estilos base del proyecto Miyabi Ryokan
-   Cubre: variables de marca, reset, tipografía, navbar,
-   menú lateral y footer. Los estilos específicos de cada
-   página se encuentran en sus propios archivos CSS.
-   ============================================================ */
-
-
-/* ============================================================
-   FUENTES EXTERNAS
-   EB Garamond: tipografía principal del proyecto. Se importa
-   con rango de peso completo (400–800) para cubrir todos los
-   usos sin peticiones adicionales.
+   TIPOGRAFÍA
+   EB Garamond: fuente principal serif del proyecto, usada en
+   body y heredada por todos los componentes. El rango de peso
+   400–800 cubre desde el texto corrido hasta los títulos.
    ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');
 
 
 /* ============================================================
-   VARIABLES GLOBALES (DESIGN TOKENS)
-   Centralizan los valores de color de la marca. Cambiar aquí
-   propaga el ajuste a todo el proyecto automáticamente.
+   VARIABLES GLOBALES
+   Tokens de diseño centralizados que definen la paleta de
+   colores y el sistema de espaciado del contenedor principal.
+   Modificar aquí afecta a toda la aplicación.
    ============================================================ */
 :root {
 	--background: #F7F7F5;     
@@ -26,7 +19,7 @@
 
 	--padding-container-top: 120px;
 	--padding-container-bottom: 120px;
-	--padding-container-left: 8%; 
+	--padding-container-left: 8%; /* Margen izquierdo mayor para crear asimetría intencional */
 	--padding-container-right: 3%;   
 }
 
@@ -34,9 +27,8 @@
 /* ============================================================
    RESET / BASE
    Elimina márgenes y paddings por defecto del navegador y
-   establece box-sizing: border-box de forma universal para
-   garantizar un modelo de caja predecible en todos los
-   elementos.
+   aplica box-sizing: border-box globalmente para que el
+   padding no altere el ancho calculado de los elementos.
    ============================================================ */
 * {
     margin: 0;
@@ -44,16 +36,28 @@
     box-sizing: border-box;
 }
 
+
+/* ============================================================
+   LAYOUT — CONTENEDOR PRINCIPAL
+   Clase envolvente de todas las páginas del proyecto.
+   max-width + margin: auto centra el contenido en pantallas
+   anchas manteniendo un máximo de 1800px para no extirpar
+   la legibilidad en monitores ultra-wide.
+   ============================================================ */
 .miyabi-container {
     padding: var(--padding-container-top) var(--padding-container-right) var(--padding-container-bottom) var(--padding-container-left);
     max-width: 1800px; 
     margin: 0 auto;
 }
 
-/* Estilos base del documento: tipografía, color de fondo y
-   comportamiento de scroll. overflow-x: hidden previene la
-   aparición de barra de scroll horizontal cuando el menú
-   lateral se desplaza fuera del viewport. */
+
+/* ============================================================
+   BASE — BODY
+   Define la tipografía, color de fondo y color de texto base
+   heredados por todos los elementos de la página.
+   overflow-x: hidden previene el scroll horizontal causado
+   por animaciones GSAP que trasladan elementos fuera del viewport.
+   ============================================================ */
 body {
     font-family: "EB Garamond", serif;
     background-color: var(--background);
@@ -65,13 +69,15 @@ body {
 
 
 /* ============================================================
-   COMPONENTE: BARRA DE NAVEGACIÓN (NAVBAR)
-   ========================================== */
-
-/* La navbar usa position: fixed + z-index: 1000 para
-   mantenerse visible sobre el contenido al hacer scroll.
-   La transición en background-color permite el efecto de
-   aparición suave del fondo al añadir la clase .scrolled. */
+   COMPONENTE — NAVBAR
+   Barra de navegación fija en la parte superior de la página.
+   z-index: 1000 la mantiene por encima del contenido de scroll
+   y de los elementos de sección, pero por debajo del menú
+   lateral (.side-menu z-index: 999 no aplica; ver z-index
+   del botón hamburguesa a continuación).
+   La transición de background-color proporciona el efecto de
+   "navbar transparente → opaca" al hacer scroll.
+   ============================================================ */
 .miyabi-navbar {
     display: flex;
     justify-content: space-between;
@@ -84,8 +90,8 @@ body {
     transition: background-color 0.4s ease;
 }
 
-/* Clase añadida por JS al detectar scroll > 0.
-   Revela el fondo de la barra sobre el contenido de la página. */
+/* Estado "scrolled": clase añadida vía JS cuando el usuario baja de la posición 0.
+   Rellena el fondo para mantener la legibilidad sobre el contenido de la página. */
 .miyabi-navbar.scrolled {
     background-color: var(--background);
 }
@@ -97,16 +103,15 @@ body {
     color: var(--color-black);
 }
 
+/* El logotipo es una imagen SVG/PNG; height fijo + width: auto preserva la proporción */
 .nav-left .logo img {
 	height: 35px;
 	width: auto;
 	display: block;
 }
 
-/* z-index: 1001 garantiza que el área derecha de la navbar
-   (botón de reservas + hamburguesa) quede siempre por encima
-   del panel lateral (z-index: 999), evitando que el menú
-   tape los controles al desplegarse. */
+/* z-index: 1001 eleva el grupo de acciones (reserva + hamburguesa) por encima
+   de la navbar base, necesario cuando el menú lateral se despliega sobre ella */
 .nav-right {
     display: flex;
     align-items: center;
@@ -114,9 +119,8 @@ body {
     z-index: 1001;
 }
 
-/* Botón CTA de reservas: borde visible que actúa como
-   delimitador visual sin recurrir a un fondo sólido, 
-   manteniendo la estética minimalista del sitio. */
+/* Botón de reserva con borde sutil; el borde actúa como CTA sin competir
+   visualmente con el logotipo */
 .btn-booking {
     border: 1px solid var(--color-black);
 	border-radius: 4px;
@@ -128,10 +132,13 @@ body {
     transition: all 0.3s ease;
 }
 
-/* --- Botón Hamburguesa ---
-   Construido con tres spans independientes (.line) en lugar
-   de un icono SVG, para poder animar cada línea por separado
-   con transform y lograr la transición hamburguesa → "X". */
+
+/* ============================================================
+   COMPONENTE — BOTÓN HAMBURGUESA
+   Tres líneas que se transforman en una "X" al activarse.
+   z-index: 1002 lo mantiene siempre clickeable por encima del
+   menú lateral (.side-menu) y de la propia navbar.
+   ============================================================ */
 .hamburger-btn {
     background: none;
     border: none;
@@ -140,9 +147,11 @@ body {
     flex-direction: column;
     gap: 6px;
     width: 30px;
-    z-index: 1002; /* Nivel más alto: siempre interactuable */
+    z-index: 1002; 
 }
 
+/* Cada línea es un bloque de 1px de alto; la transición anima
+   el cambio a la "X" cuando se añade la clase .active */
 .hamburger-btn .line {
     width: 100%;
     height: 1px;
@@ -150,12 +159,9 @@ body {
     transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
-/* Animación hamburguesa → "X":
-   - .top sube y rota 45°
-   - .middle desaparece con opacity: 0
-   - .bottom baja y rota -45°
-   El translateY compensa el desplazamiento necesario para que
-   las dos líneas visibles se crucen exactamente en el centro. */
+/* Estado activo: la línea superior rota 45° hacia abajo,
+   la central desaparece y la inferior rota -45° hacia arriba,
+   formando una "X" de cierre */
 .hamburger-btn.active .top {
     transform: translateY(7px) rotate(45deg);
 }
@@ -168,14 +174,15 @@ body {
 
 
 /* ============================================================
-   COMPONENTE: MENÚ LATERAL (SIDE MENU)
+   COMPONENTE — MENÚ LATERAL (SIDE MENU)
+   Panel que se desliza desde la derecha al activar el hamburger.
+   Arranca fuera del viewport (translateX(100%)) y JS le aplica
+   translateX(0) para la animación de entrada.
+   z-index: 999 lo coloca sobre el contenido de la página pero
+   por debajo del botón hamburguesa (1002) para que este siempre
+   sea accesible para cerrarlo.
+   padding-top: 120px evita solapamiento con la navbar fija.
    ============================================================ */
-
-/* El menú ocupa el 100% de la altura del viewport y arranca
-   fuera de pantalla (translateX: 100%) para ser invisible por
-   defecto. JS añade/elimina una clase que lo desliza al interior.
-   z-index: 999 lo coloca por debajo de los controles de la
-   navbar (z-index: 1001/1002) pero sobre el resto del contenido. */
 .side-menu {
     position: fixed;
     top: 0;
@@ -185,9 +192,9 @@ body {
     background-color: var(--background);
     display: flex;
     align-items: start;
-	padding-top: 120px;    /* Espacio para no solapar la navbar fija */
+	padding-top: 120px;   
     padding-left: 50px;
-    transform: translateX(100%);  /* Oculto fuera del viewport inicialmente */
+    transform: translateX(100%);  
     z-index: 999;
 }
 
@@ -197,10 +204,8 @@ body {
     gap: 30px;
 }
 
-/* opacity: 0 y transform: translateY(20px) son el estado inicial
-   de cada enlace, listo para la animación de entrada escalonada
-   que JS aplica al abrir el menú (cada ítem aparece con un
-   pequeño retraso sucesivo). */
+/* Los enlaces arrancan con opacity: 0 y translateY(20px) para que
+   JS/GSAP los anime de entrada en cascada al abrir el menú */
 .menu-links a {
     text-decoration: none;
     color: var(--color-black);
@@ -213,53 +218,62 @@ body {
 
 
 /* ============================================================
-   COMPONENTE: PIE DE PÁGINA (FOOTER)
+   VARIABLES — FOOTER
+   Variables específicas del footer declaradas en un segundo
+   bloque :root para mantenerlas separadas de las globales y
+   facilitar su ajuste independiente en media queries.
    ============================================================ */
+   :root {
+       --site-margin: 100px;   
+       --footer-column-gap: 20px; 
+       --footer-links-width: 300px; 
+   }
+   
 
-/* margin: 0 100px limita el footer al área central del layout,
-   alineándolo con el contenido principal de las páginas interiores
-   sin necesidad de un contenedor adicional. */
+/* ============================================================
+   COMPONENTE — FOOTER
+   El borde superior y los márgenes laterales (--site-margin)
+   lo separan visualmente del contenido de la página sin
+   necesidad de un contenedor adicional.
+   ============================================================ */
    .miyabi-footer {
        border-top: 1px solid #000000;
-       margin: 0 100px; 
-       padding: 40px 0 120px 0;
+       margin: 0 var(--site-margin); 
+       padding: 40px 0 80px 0;
        color: var(--color-black);
        font-size: 13px;
        font-weight: 500;
        letter-spacing: 1px;
    }
 
-/* Grid de tres columnas con justify-content: space-between para
-   distribuir el espacio disponible entre ellas sin anchos fijos,
-   lo que facilita la adaptación a distintas resoluciones. 
-   max-width: 1050px + margin: auto centra el bloque en pantallas
-   anchas. */
+
+/* Flexbox con flex-wrap permite que las columnas pasen a varias filas
+   en pantallas pequeñas sin necesidad de media queries adicionales para
+   el flujo básico de columnas */
    .footer-content {
-       border-top: none;
-       padding-top: 0;          
-       
-       display: grid;
-       grid-template-columns: auto auto auto;
+       display: flex; 
+       flex-wrap: wrap; 
        justify-content: space-between;
+       gap: var(--footer-column-gap); 
        max-width: 1050px;
        margin: 0 auto;
    }
 
+/* flex: 1 1 auto permite que cada columna crezca y se contraiga libremente,
+   mientras que min-width: min-content evita que el texto se rompa
+   de forma indeseada en columnas muy estrechas */
 .footer-col {
-    display: flex;
-    flex-direction: column;
+	flex: 1 1 auto; 
+	min-width: min-content;
 }
 
-/* --- Columna Izquierda: contacto ---
-   gap: 25px separa visualmente los cuatro bloques de información
-   (logo, dirección, mapa y teléfono) sin necesidad de márgenes
-   individuales en cada elemento. */
 .left-col {
     display: flex;
     flex-direction: column;
     gap: 25px; 
 }
 
+/* height fijo + width: auto mantiene la proporción del logo en todos los tamaños */
 .footer-logo {
     height: 60px;
     width: auto;
@@ -275,8 +289,8 @@ body {
     letter-spacing: 2px;
 }
 
-/* Enlace de mapa con subrayado personalizado mediante border-bottom
-   en lugar del text-decoration nativo, para mayor control visual. */
+/* Enlace al mapa con subrayado personalizado mediante border-bottom,
+   evitando el text-decoration nativo para mayor control visual */
 .map-link {
     color: var(--color-black);
     text-decoration: none;
@@ -285,16 +299,19 @@ body {
     width: fit-content;
 }
 
-/* Número de teléfono en tamaño grande como elemento destacado
-   dentro del bloque de contacto. */
+/* clamp() escala el número de teléfono de forma fluida entre 22px y 28px
+   según el ancho del viewport, evitando saltos bruscos en pantallas intermedias */
 .phone {
-    font-size: 28px;
+    font-size: clamp(22px, 2.5vw, 28px);
     margin-bottom: 8px !important;
     line-height: 1;
 }
 
-/* --- Columna Central: premios --- */
 
+/* ============================================================
+   COMPONENTE — PREMIOS (FOOTER)
+   Sección de reconocimientos con lista y logotipos de galardones.
+   ============================================================ */
 .award-title {
     font-weight: normal;
     margin-bottom: 5px;
@@ -307,8 +324,8 @@ body {
     margin-bottom: 35px;
 }
 
-/* Tamaño reducido (10px) y uppercase para los títulos de los premios,
-   siguiendo la convención de etiquetas en capsulares del diseño. */
+/* text-transform: uppercase y letter-spacing amplio dan un acabado
+   de etiqueta de lujo coherente con la identidad de marca */
 .award-list li {
     margin-bottom: 4px;
     line-height: 1.4;
@@ -317,8 +334,9 @@ body {
     letter-spacing: 1.5px;
 }
 
-/* Flexbox alinea verticalmente los logotipos de Relais & Châteaux y
-   Michelin, que tienen alturas distintas, manteniéndolos centrados. */
+/* Los logos de Relais & Châteaux y Michelin se alinean en fila;
+   alturas distintas (60px / 55px) compensan las diferencias de
+   proporción entre ambas marcas para que visualmente parezcan iguales */
 .award-logos {
     display: flex;
     align-items: center;
@@ -336,24 +354,25 @@ body {
     width: auto;
 }
 
-/* margin-top: 50px empuja el copyright al fondo de la columna,
-   creando separación visual respecto a los logos de certificación. */
 .copyright {
     margin-top: 50px;
     letter-spacing: 2px;
     font-size: 10px;
 }
 
-/* --- Columna Derecha: enlaces externos ---
-   La lista usa bordes superior e inferior en cada <li> para crear
-   una cuadrícula de separadores sin recurrir a <hr> ni pseudo-elementos.
-   width: 300px fija el ancho de la columna para que las flechas (›)
-   alineen en la misma posición vertical. */
+
+/* ============================================================
+   COMPONENTE — ENLACES DE NAVEGACIÓN DEL FOOTER
+   Lista de enlaces con separadores top/bottom mediante border,
+   logrando el patrón de "lista dividida" sin pseudo-elementos.
+   width controlado por --footer-links-width para alinearse con
+   la cuadrícula del footer.
+   ============================================================ */
 .footer-links {
     list-style: none;
     margin-bottom: 0px;
     border-top: 1px solid #000000;
-	width: 300px;
+	width: var(--footer-links-width);
     max-width: 320px;          
 }
 
@@ -361,8 +380,8 @@ body {
     border-bottom: 1px solid #000000;
 }
 
-/* justify-content: space-between separa el texto del enlace y la
-   flecha indicadora (›) en los extremos del contenedor. */
+/* Flexbox con justify-content: space-between separa el texto del enlace
+   y la flecha/icono hacia los extremos del contenedor */
 .footer-links a {
     display: flex;
     justify-content: space-between;
@@ -374,22 +393,50 @@ body {
     letter-spacing: 1.5px;
 }
 
-/* Flecha en gris suave para comunicar interactividad sin competir
-   con el texto del enlace. */
+/* El span actúa como indicador de flecha/chevron; el color gris lo
+   distingue del texto del enlace sin añadir un icono extra */
 .footer-links span {
     font-size: 14px;
     color: #A9A9A8;
 }
 
-/* --- Redes Sociales --- */
 .social-icons {
     display: flex;
     gap: 15px;
     margin-top: 20px; 
 }
 
+/* Dimensiones fijas para que todos los iconos sociales tengan
+   el mismo tamaño independientemente de la proporción del SVG/PNG */
 .social-img {
     width: 40px;
     height: 40px;
     display: block;
 }
+
+
+/* ============================================================
+   MEDIA QUERIES
+   Ajustes progresivos de las variables de espaciado del footer
+   a medida que el viewport se estrecha. Se usa el enfoque de
+   sobrescribir variables :root en lugar de duplicar reglas,
+   lo que mantiene el CSS DRY y fácil de mantener.
+   ============================================================ */
+
+/* Pantallas medianas: reducimos los márgenes laterales del footer
+   para ganar espacio horizontal en tablets y laptops pequeños */
+@media (max-width: 1250px) {
+       :root {
+           --site-margin: 50px;       
+           --footer-column-gap: 40px; 
+       }
+   }
+
+/* Pantallas pequeñas: margen lateral mínimo y la columna de enlaces
+   ocupa el 100% del ancho para evitar que quede demasiado estrecha */
+   @media (max-width: 1024px) {
+       :root {
+           --site-margin: 30px;
+           --footer-links-width: 100%; 
+       }
+   }

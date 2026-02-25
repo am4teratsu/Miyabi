@@ -6,9 +6,8 @@
      Contiene tres fragmentos parametrizados que componen la
      estructura completa de cualquier página tipo "facilities":
 
-       1. scroll-indicator  → Barra lateral de navegación por sección
-       2. fac-intro         → Sección introductoria con kanji + título + párrafo
-       3. fac-section       → Bloque de instalación con texto, carrusel y CTA opcional
+       1. fac-intro         → Sección introductoria con kanji + título + párrafo
+       2. fac-section       → Bloque de instalación con texto, carrusel y CTA opcional
 
      Al ser fragmentos parametrizados, toda la variación de contenido
      (textos, imágenes, rutas) se pasa desde la vista consumidora,
@@ -18,42 +17,9 @@
 
 <body>
 
-    <!-- ============================================================
-         FRAGMENTO 1: INDICADOR DE SCROLL LATERAL
-         Identificador: th:fragment="scroll-indicator (initialText)"
-         Parámetro:
-           - initialText {String} — Texto de la primera sección visible,
-             inyectado por Thymeleaf en el render inicial para evitar
-             un parpadeo antes de que el JS tome el control.
-
-         Uso:
-           <div th:replace="~{fragments/sections :: scroll-indicator('Entrada')}"></div>
-
-         El JS de la página (ej. facilities.js) actualiza dinámicamente
-         .indicator-text y anima .indicator-thumb con ScrollTrigger
-         conforme el usuario navega entre secciones.
-         ============================================================ -->
-    <aside th:fragment="scroll-indicator (initialText)" class="scroll-indicator">
-
-        <!-- Track: recorrido total del indicador. Su altura es la
-             referencia geométrica que el JS usa para calcular la
-             posición proporcional del thumb en cada sección. -->
-        <div class="indicator-track">
-
-            <!-- Thumb: elemento móvil animado por JS mediante
-                 gsap.to({ y: index * stepSize }) al cambiar de sección. -->
-            <div class="indicator-thumb">
-                <div class="indicator-active-line"></div>
-                <!-- th:text inyecta el parámetro en el servidor; el JS
-                     lo reemplaza con fade al detectar cambio de sección. -->
-                <span class="indicator-text" th:text="${initialText}">Entrada</span>
-            </div>
-        </div>
-    </aside>
-
 
     <!-- ============================================================
-         FRAGMENTO 2: SECCIÓN INTRODUCTORIA
+         FRAGMENTO 1: SECCIÓN INTRODUCTORIA
          Identificador: th:fragment="fac-intro (dataName, kanjiImg, title, paragraph)"
          Parámetros:
            - dataName  {String} — Nombre de sección para el indicador lateral
@@ -71,7 +37,7 @@
                paragraph='Texto de introducción...')}">
            </div>
          ============================================================ -->
-    <section th:fragment="fac-intro (dataName, kanjiImg, title, paragraph)" class="fac-intro" th:attr="data-name=${dataName}">
+    <section th:fragment="fac-intro (kanjiImg, title, paragraph)" class="fac-intro">
 
         <!-- Columna izquierda: identidad tipográfica de la sección.
              El SVG tategaki y el H1 establecen la marca visual
@@ -93,7 +59,7 @@
 
 
     <!-- ============================================================
-         FRAGMENTO 3: BLOQUE DE INSTALACIÓN REPETIBLE
+         FRAGMENTO 2: BLOQUE DE INSTALACIÓN REPETIBLE
          Identificador: th:fragment="fac-section (dataName, title, paragraph, images, ctaText, ctaLink)"
          Parámetros:
            - dataName  {String}      — Nombre de sección para el indicador lateral.

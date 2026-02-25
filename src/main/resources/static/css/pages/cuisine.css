@@ -1,0 +1,80 @@
+/* ============================================================
+   CUISINE.CSS — Sobrescrituras de sections.css para la página
+   de cocina (.cuisine-page).
+   
+   Este archivo NO define estilos desde cero: actúa como una
+   capa de personalización que ajusta las proporciones del
+   componente reutilizable .fac-section (definido en sections.css)
+   para adaptarlo a las necesidades visuales específicas de la
+   página de cocina.
+   
+   Jerarquía de archivos relacionados:
+     sections.css   → estilos base de .fac-section
+     cuisine.css    → sobrescrituras con el prefijo .cuisine-page
+   ============================================================ */
+
+
+/* ============================================================
+   SOBRESCRITURA DE ESCRITORIO — Proporciones del componente
+   .fac-section en la página de cocina.
+   
+   En sections.css el layout base es 23% texto / 77% carrusel
+   con gap: 80px. Aquí se reduce el gap y se ajusta el carrusel
+   a una proporción más cuadrada, acorde con la estética de la
+   sección de cocina donde la imagen tiene mayor peso visual
+   vertical que en otras páginas.
+   ============================================================ */
+
+/* Reducimos el gap de 80px (base) a 60px para acercar la columna
+   de texto y el carrusel, creando una composición más compacta */
+.cuisine-page .fac-section {
+    gap: 60px;
+}
+
+/* Mantiene el 23% original de sections.css.
+   Nota: el comentario anterior indicaba un cambio al 40%
+   que no llegó a aplicarse; el valor definitivo es 23%. */
+.cuisine-page .fac-text-col {
+    width: 23%; 
+}
+
+/* El carrusel amplía su ancho al 80% (frente al 77% base) para
+   compensar la reducción del gap y mantener el equilibrio visual.
+   
+   aspect-ratio: 4/4 (equivalente a 1/1) reemplaza el rectángulo
+   panorámico 16/10 de sections.css por un formato cuadrado,
+   que favorece la presentación de la fotografía gastronómica.
+   Valores de referencia para ajustes futuros:
+     1 / 1  → cuadrado perfecto
+     4 / 5  → ligeramente vertical (estilo editorial)
+     16 / 10 → panorámico original de sections.css */
+.cuisine-page .fac-carousel {
+    width: 80%; 
+    aspect-ratio: 4 / 4; 
+}
+
+
+/* ============================================================
+   MEDIA QUERIES — Breakpoint tablet (≤ 1200px)
+   En pantallas medianas el layout de dos columnas se mantiene
+   pero con una redistribución de proporciones: la columna de
+   texto recibe más espacio relativo y el carrusel se hace
+   más estrecho y vertical para no dominar en exceso la pantalla.
+   ============================================================ */
+
+@media (max-width: 1200px) {
+    /* Ampliamos la columna de texto del 23% al 55% para que tenga
+       espacio suficiente en pantallas donde el total es más reducido,
+       evitando que el texto quede comprimido junto al carrusel */
+    .cuisine-page .fac-text-col {
+        width: 55%; 
+    }
+    
+    /* El carrusel cede espacio (50%) y adopta una proporción más
+       vertical (10/16) para reducir su altura total en pantalla
+       y evitar que empuje el contenido inferior demasiado abajo */
+    .cuisine-page .fac-carousel {
+        width: 50%; 
+        aspect-ratio: 10 / 16; 
+    }
+}

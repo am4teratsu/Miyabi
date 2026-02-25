@@ -49,7 +49,6 @@
 /* Segmento negro que marca la posición actual del usuario en la página */
 .indicator-active-line {
     width: 1px;
-    height: 28.5px;
     background-color: var(--color-black);
 }
 

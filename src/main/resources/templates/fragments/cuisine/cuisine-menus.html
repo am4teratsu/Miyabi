@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<!-- Plantilla Thymeleaf: fragmentos reutilizables para los menús de cocina por temporada -->
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+	<!-- =====================================================================
+	     FRAGMENTO PRINCIPAL: seasonal-menus
+	     Sección completa de menús estacionales. Se incluye en otras vistas
+	     mediante th:replace o th:insert con el selector "seasonal-menus".
+	     Contiene el sistema de pestañas (tabs) y el contenido de cada temporada.
+	     ===================================================================== -->
+	<section th:fragment="seasonal-menus" class="seasonal-menus-section">
+
+		<!-- Barra de navegación por pestañas de temporada.
+		     Cada botón lleva un atributo data-target que referencia el id
+		     del bloque .season-content correspondiente. La clase "active"
+		     marca la pestaña seleccionada por defecto (invierno). -->
+		<div class="season-tabs-container">
+			<button class="season-tab" data-target="spring">PRIMAVERA</button>
+			<button class="season-tab" data-target="summer">VERANO</button>
+			<button class="season-tab" data-target="autumn">OTOÑO</button>
+			<button class="season-tab active" data-target="winter">INVIERNO</button>
+		</div>
+
+		<!-- Contenedor de todos los paneles de contenido estacional.
+		     Solo el panel con la clase "active" debe ser visible en pantalla;
+		     la lógica de visibilidad se gestiona vía CSS/JS. -->
+		<div class="season-content-wrapper">
+
+			<!-- ============================================================
+			     PANEL: INVIERNO (activo por defecto)
+			     Incluye el menú base y tres niveles de mejora (upgrade):
+			     Kaiseki de Cangrejo de Nieve, Menú Completo de Cangrejo
+			     de Nieve, y las mejoras disponibles todo el año (fragment).
+			     ============================================================ -->
+			<div class="season-content active" id="winter">
+
+				<!-- Grupo de menú: Platos de ejemplo de la temporada de invierno.
+				     La columna izquierda muestra el título del grupo;
+				     la columna derecha contiene el listado de platos y las mejoras opcionales. -->
+				<div class="menu-group">
+					<div class="menu-col-left">
+						<h3 class="menu-title">Ejemplo de nuestros platos</h3>
+					</div>
+					<div class="menu-col-right">
+						<!-- Listado de platos incluidos en el menú estándar de invierno -->
+						<ul class="menu-list">
+							<li>Dumpling de ñame al vapor</li>
+							<li>Cangrejo de nieve hembra con gelatina de ámbar</li>
+							<li>Sopa de nabo con camarones</li>
+							<li>Sashimi: camarones Toraebi, caracol de mar Baigai, jurel Buri</li>
+							<li>Cangrejo de nieve a la brasa</li>
+							<li>Dumpling de raíz de loto de Kagag</li>
+							<li>Arroz con "Nodoguro" (lubina de garganta negra)</li>
+							<li>Sorbete de mandarina</li>
+							<li>Fruta de temporada</li>
+						</ul>
+
+						<!-- Bloque de mejora opcional: Sashimi de Cangrejo de Nieve.
+						     Incluye disponibilidad, requisitos de reserva y precio. -->
+						<div class="menu-upgrades">
+							<p class="upgrade-item"><span class="menu-icon circle-black">●</span>Mejore su cena con
+								Sashimi de Cangrejo de Nieve.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 7 de noviembre al 20
+								de marzo</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>9,680 JPY por persona (incluye 10%
+								de cargo por servicio y 10% de IVA).</p>
+						</div>
+
+						<!-- Bloque de mejora opcional: Pato Silvestre en olla caliente (hot pot).
+						     Incluye descripción del plato, disponibilidad, mínimo de comensales y precio. -->
+						<div class="menu-upgrades">
+							<p class="upgrade-item"><span class="menu-icon circle-black">●</span>Mejore su cena con el
+								Pato Silvestre servido en olla caliente (hot pot). Con pechuga e hígado de pato
+								recubiertos de harina al estilo 'Jibuni', esta olla caliente se finaliza con un gachas
+								de arroz, añadiendo albóndigas de pato, mizuna y cebolla verde a la brasa dentro del
+								caldo.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 10 de enero al 19 de
+								marzo</p>
+							<p class="upgrade-item">*Debido al uso de ingredientes naturales, la disponibilidad puede
+								variar según el clima.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere un mínimo de 2 personas
+								para esta mejora.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Cargo adicional de 12,100 JPY por
+								persona (incluye 10% de cargo por servicio y 10% de IVA).</p>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- Grupo de menú: Menú Kaiseki de Cangrejo de Nieve (mejora de nivel medio).
+				     Presenta las condiciones de la mejora antes del listado de platos. -->
+				<div class="menu-group">
+					<div class="menu-col-left">
+						<h3 class="menu-title">Menú Kaiseki de Cangrejo de Nieve</h3>
+					</div>
+
+					<div class="menu-col-right">
+
+						<!-- Condiciones de disponibilidad, reserva, mínimo de comensales y precio -->
+						<div class="menu-upgrades">
+							<p class="upgrade-item">Mejore su cena con el Menú Kaiseki de Cangrejo de Nieve.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 7 de noviembre al 20
+								de
+								marzo</p>
+							<p class="upgrade-item">*Debido al uso de ingredientes naturales, la disponibilidad puede
+								variar
+								según el clima.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere un mínimo de 2 personas
+								para
+								esta mejora.</p>
+							<p class="upgrade-item">*Debido al uso de ingredientes naturales, la disponibilidad puede
+								variar
+								según el clima.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Cargo adicional de 26,950 JPY por
+								persona (incluye 10% de cargo por servicio y 10% de IVA).</p>
+						</div>
+
+						<!-- Platos de ejemplo incluidos en el Menú Kaiseki de Cangrejo de Nieve -->
+						<ul class="menu-list">
+							<li>Menú de ejemplo:</li>
+							<li>Sopa de nabo</li>
+							<li>Cangrejo de nieve hembra con gelatina de ámbar</li>
+							<li>Vegetales locales de temporada con tofu y pasta de sésamo</li>
+							<li>Sashimi: cangrejo de nieve macho, jurel buri, camarón dulce amaebi, mero kue</li>
+							<li>Cangrejo de nieve macho a la brasa</li>
+							<li>Dumpling de raíz de loto de Kaga</li>
+							<li>Arroz con cangrejo de nieve y huevas de pescado curadas karasumi</li>
+							<li>Helado de almendras</li>
+						</ul>
+
+					</div>
+				</div>
+
+				<!-- Grupo de menú: Menú Completo de Cangrejo de Nieve (mejora premium). -->
+				<div class="menu-group">
+					<div class="menu-col-left">
+						<h3 class="menu-title">Menú completo de cangrejo de nieve</h3>
+					</div>
+
+					<div class="menu-col-right">
+
+						<!-- Condiciones de disponibilidad, reserva, mínimo de comensales y precio -->
+						<div class="menu-upgrades">
+							<p class="upgrade-item">Mejore su cena al menú completo de cangrejo de nieve.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 7 de noviembre al 20 de marzo</p>
+							<p class="upgrade-item">*Debido al uso de ingredientes naturales, la disponibilidad puede variar según el clima.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere un mínimo de 2 personas para esta mejora.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Cargo adicional de 47,630 JPY por persona (incluye 10% de cargo por servicio y 10% de IVA).</p>
+						</div>
+
+						<!-- Platos de ejemplo incluidos en el Menú Completo de Cangrejo de Nieve -->
+						<ul class="menu-list">
+							<li>Menú de ejemplo:</li>
+							<li>Sopa de nabo</li>
+							<li>Cangrejo de nieve hembra con gelatina de ámbar</li>
+							<li>Sashimi de cangrejo de nieve macho</li>
+							<li>Cangrejo de nieve macho a la brasa</li>
+							<li>Cangrejo de nieve macho hervido</li>
+							<li>Arroz con cangrejo de nieve y huevas de pescado curadas karasumi</li>
+							<li>Helado de almendras</li>
+						</ul>
+
+					</div>
+				</div>
+				
+				<!-- Inclusión del fragmento de mejoras disponibles todo el año.
+				     th:replace sustituye este elemento por el fragment "year-round-upgrades"
+				     definido al final de este mismo archivo. -->
+				<div th:replace="~{fragments/cuisine/cuisine-menus :: year-round-upgrades}"></div>
+
+			</div>
+
+			<!-- ============================================================
+			     PANEL: OTOÑO
+			     Incluye el menú base y tres niveles de mejora:
+			     Siete Setas Regionales, Matsutake a la brasa,
+			     Menú de Setas Matsutake, y mejoras todo el año (fragment).
+			     ============================================================ -->
+			<div class="season-content" id="autumn">
+				<div class="menu-group">
+					<div class="menu-col-left">
+						<h3 class="menu-title">Ejemplo de nuestros platos</h3>
+					</div>
+					<div class="menu-col-right">
+						<!-- Listado de platos incluidos en el menú estándar de otoño -->
+						<ul class="menu-list">
+							<li>Sopa de pollo Yamanaka con hierbas medicinales</li>
+							<li>Cangrejo velludo Kegani del puerto de Hashitate</li>
+							<li>Setas Matsutake al vapor en tetera de barro dobin</li>
+							<li>Sashimi: camarón dulce Amaebi, rodaballo Karei, calamar Akaika</li>
+							<li>"Nodoguro" (lubina de garganta negra) a la brasa con arroz tostado</li>
+							<li>Vegetales de otoño a la brasa: seta Shiitake, castaña, nueces de ginkgo, barracuda, etc.</li>
+							<li>Ternera japonesa "Wagyu" a la brasa con salsa de higos</li>
+							<li>Arroz cocinado con setas Matsutake</li>
+							<li>Flan de leche con gelatina de miel</li>
+							<li>Pera de Kaga, uva de Kaga</li>
+						</ul>
+				
+						<!-- Bloque de mejora opcional: Siete Setas Regionales en olla caliente -->
+						<div class="menu-upgrades">
+							<p class="upgrade-item"><span class="menu-icon circle-black">●</span>Mejore su cena con las Siete Setas Regionales servidas en 
+								olla caliente. Podrá disfrutar de los sabores otoñales con los diversos colores y texturas de los ingredientes 
+								estacionales de nuestra región.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 1 de octubre al 6 de noviembre.</p>
+							<p class="upgrade-item">*Debido al uso de ingredientes naturales, la disponibilidad puede variar según el clima.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere un mínimo de 2 personas para esta mejora.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Cargo adicional de 6,050 JPY por persona (incluye 10% de cargo por 
+								servicio y 10% de IVA).</p>
+						</div>
+				
+						<!-- Bloque de mejora opcional: Setas Matsutake a la brasa (unidad individual) -->
+						<div class="menu-upgrades">
+							<p class="upgrade-item"><span class="menu-icon circle-black">●</span>Mejore su cena con setas Matsutake a la brasa.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 1 de octubre al 6 de noviembre.</p>
+							<p class="upgrade-item">*Debido al uso de ingredientes naturales, la disponibilidad puede variar según el clima.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Una pieza de Matsutake (aprox. 50 g) 9,680 JPY (incluye 10% de cargo por servicio y 10% de IVA).</p>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Grupo de menú: Menú completo de Setas Matsutake (mejora premium de otoño) -->
+				<div class="menu-group">
+					<div class="menu-col-left">
+						<h3 class="menu-title">Menú de setas Matsutake</h3>
+					</div>
+				
+					<div class="menu-col-right">
+				
+						<!-- Condiciones de disponibilidad, reserva, mínimo de comensales y precio -->
+						<div class="menu-upgrades">
+							<p class="upgrade-item">Mejore su cena al menú de setas Matsutake.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 1 de octubre al 6 de noviembre.</p>
+							<p class="upgrade-item">*Debido al uso de ingredientes naturales, la disponibilidad puede variar según el clima.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere un mínimo de 2 personas para esta mejora.</p>
+							<p class="upgrade-item">*Para huéspedes en estancia individual, por favor contáctenos.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Cargo adicional de 18,150 JPY por persona (incluye 10% de cargo 
+								por servicio y 10% de IVA).</p>
+						</div>
+				
+						<!-- Platos de ejemplo incluidos en el Menú de Setas Matsutake -->
+						<ul class="menu-list">
+							<li>Menú de ejemplo:</li>
+							<li>Fideos soba con ñame rallado</li>
+							<li>Setas Matsutake al vapor en tetera de barro dobin</li>
+							<li>Sashimi: mero Ako, caballa Sawara, almeja Shirogai, calamar Akaika</li>
+							<li>Vegetales de otoño a la brasa: seta Shiitake, castaña, nueces de ginkgo, barracuda, etc.</li>
+							<li>Estofado de cangrejo velludo kegani y melón de cera</li>
+							<li>"Nodoguro" (lubina de garganta negra) y berenjenas a la brasa</li>
+							<li>Arroz cocinado con setas Matsutake</li>
+							<li>Helado de leche de soja y pera de Kaga</li>
+						</ul>
+				
+					</div>
+				</div>
+				
+				<!-- Inclusión del fragmento de mejoras disponibles todo el año -->
+				<div th:replace="~{fragments/cuisine/cuisine-menus :: year-round-upgrades}"></div>
+		</div>
+		
+		
+			<!-- ============================================================
+			     PANEL: VERANO
+			     Incluye el menú base con múltiples mejoras de abulón y ostra,
+			     más el Menú Especial de Abulón, el Menú de Ostra de Roca
+			     y las mejoras todo el año (fragment).
+			     ============================================================ -->
+			<div class="season-content" id="summer">
+				<div class="menu-group">
+					<div class="menu-col-left">
+						<h3 class="menu-title">Ejemplo de nuestros platos</h3>
+					</div>
+					<div class="menu-col-right">
+						<!-- Listado de platos incluidos en el menú estándar de verano -->
+						<ul class="menu-list">
+							<li>Vegetales de verano con pasta de nueces</li>
+							<li>Cangrejo velludo Kegani del puerto de Hashitate</li>
+							<li>Sopa de almejas servida en pepino 'grande' de Kaga</li>
+							<li>Sashimi: mero Jiara, pez limón Hiramasa, jurel Aji</li>
+							<li>Pez dulce "Ayu" a la brasa del desfiladero de Shogawa</li>
+							<li>Vegetales de Kaga a fuego lento: berenjena, calabaza castaña de piel roja, espinaca Kinjiso, etc.</li>
+							<li>Arroz cocinado con abulón Awabi y caracoles de mar Sazae, o Hot Pot de ternera japonesa "Wagyu" con pimienta Sansho</li>
+							<li>Helado de almendras</li>
+						</ul>
+			
+						<!-- Bloque de mejora opcional: Sashimi de Abulón -->
+						<div class="menu-upgrades">
+							<p class="upgrade-item"><span class="menu-icon circle-black">●</span>Mejore su cena con Sashimi de Abulón.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 28 de abril a mediados de septiembre.
+							</p>
+							<p class="upgrade-item">*Debido al uso de ingredientes naturales, la disponibilidad puede variar según el clima.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Una pieza de abulón para 1-2 personas (150-250 g).</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Los precios pueden variar según el tamaño del abulón.</p>
+						</div>
+			
+						<!-- Bloque de mejora opcional: Filete de Abulón -->
+						<div class="menu-upgrades">
+							<p class="upgrade-item"><span class="menu-icon circle-black">●</span>Mejore su cena con Filete de Abulón.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 28 de abril a mediados de septiembre.</p>
+							<p class="upgrade-item">*Debido al uso de ingredientes naturales, la disponibilidad puede variar según el clima.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Una pieza de abulón para 1-2 personas (150-250 g).</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Los precios pueden variar según el tamaño del abulón.</p>
+						</div>
+						
+						<!-- Bloque de mejora opcional: Abulón al vapor (precio fijo por unidad) -->
+						<div class="menu-upgrades">
+							<p class="upgrade-item"><span class="menu-icon circle-black">●</span>Mejore su cena con Abulón al vapor.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 28 de abril a mediados de septiembre.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Un abulón para 1-2 personas (150 g). 6,050 JPY cada uno 
+								(incluye 10% cargo por servicio y 10% IVA).</p>
+						</div>
+						
+						<!-- Bloque de mejora opcional: Ostra de roca de temporada (unidad individual) -->
+						<div class="menu-upgrades">
+							<p class="upgrade-item"><span class="menu-icon circle-black">●</span>Mejore su cena con Ostra de roca de temporada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 10 de junio al 9 de agosto.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+							<p class="upgrade-item"><span class="menu-icon">◎</span>3,000 JPY cada una (incluye 10% cargo por servicio y 10% IVA).</p>
+						</div>
+					</div>
+				</div>
+			
+			<!-- Grupo de menú: Menú Especial de Abulón (mejora premium de verano) -->
+			<div class="menu-group">
+				<div class="menu-col-left">
+					<h3 class="menu-title">Menú especial de abulón</h3>
+				</div>
+			
+				<div class="menu-col-right">
+			
+					<!-- Condiciones de disponibilidad, reserva, mínimo de comensales y precio -->
+					<div class="menu-upgrades">
+						<p class="upgrade-item">Mejore su cena al menú especial de abulón.</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 20 de junio al 10 de septiembre.</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere un mínimo de 2 personas para esta mejora.</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>Cargo adicional de 30,000 JPY por persona (incluye 10% de cargo por servicio y 10% de IVA).</p>
+					</div>
+			
+					<!-- Platos de ejemplo incluidos en el Menú Especial de Abulón -->
+					<ul class="menu-list">
+						<li>Menú de ejemplo:</li>
+						<li>Sopa de almejas servida en pepino 'grande' de Kaga</li>
+						<li>Abulón awabi cocido a fuego lento</li>
+						<li>Sashimi de abulón awabi</li>
+						<li>Abulón awabi a la brasa</li>
+						<li>Variedad de vegetales de Kaga</li>
+						<li>Gachas de arroz con abulón awabi</li>
+						<li>Postre: especialidades de temporada</li>
+					</ul>
+			
+				</div>
+			</div>
+			
+			<!-- Grupo de menú: Menú de Ostra de Roca (mejora de temporada estival) -->
+			<div class="menu-group">
+				<div class="menu-col-left">
+					<h3 class="menu-title">Menú de ostra de roca</h3>
+				</div>
+			
+				<div class="menu-col-right">
+			
+					<!-- Condiciones de disponibilidad, reserva, mínimo de comensales y precio -->
+					<div class="menu-upgrades">
+						<p class="upgrade-item">Mejore su cena al menú de ostra de roca.</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>Disponible del 10 de junio al 9 de agosto.</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere un mínimo de 2 personas para esta mejora.</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>Cargo adicional de 12,100 JPY por persona (incluye 10% de cargo por servicio y 10% de IVA).</p>
+					</div>
+			
+					<!-- Platos de ejemplo incluidos en el Menú de Ostra de Roca -->
+					<ul class="menu-list">
+						<li>Ostra de roca Iwagaki con jugo de limón</li>
+						<li>Vegetales de verano con tofu y pasta de sésamo</li>
+						<li>Sopa de dumpling de ostra de roca Iwagaki</li>
+						<li>Sashimi: selección variada</li>
+						<li>Pez dulce "Ayu" a la brasa del desfiladero de Shogawa</li>
+						<li>Ostra de roca Iwagaki a la brasa</li>
+						<li>Arroz cocinado con ostras de roca Iwagaki</li>
+						<li>Helado de shiso verde Oba</li>
+					</ul>
+			
+				</div>
+			</div>
+		
+			<!-- Inclusión del fragmento de mejoras disponibles todo el año -->
+			<div th:replace="~{fragments/cuisine/cuisine-menus :: year-round-upgrades}"></div>
+		</div>
+		
+		
+			<!-- ============================================================
+			     PANEL: PRIMAVERA
+			     Incluye el menú base y el Menú Degustación de Brotes de
+			     Bambú, más las mejoras todo el año (fragment).
+			     ============================================================ -->
+			<div class="season-content" id="spring">
+				<div class="menu-group">
+					<div class="menu-col-left">
+						<h3 class="menu-title">Ejemplo de nuestros platos</h3>
+					</div>
+					<div class="menu-col-right">
+						<!-- Listado de platos incluidos en el menú estándar de primavera -->
+						<ul class="menu-list">
+							<li>Abulón Awabi cocido a fuego lento</li>
+							<li>Vegetales de primavera con tofu y pasta de sésamo</li>
+							<li>Cangrejo velludo Kegani del puerto de Hashitate</li>
+							<li>Sashimi: camarones Shirotora, rodaballo Hirame, agujeta japonesa Sayori</li>
+							<li>Brote de bambú a la brasa</li>
+							<li>Arroz cocinado con vieiras y erizo de mar</li>
+							<li>Olla caliente de almejas con vegetales</li>
+							<li>Helado de sal de Noto en oblea monaka</li>
+						</ul>
+					</div>
+				</div>
+			
+			<!-- Grupo de menú: Menú Degustación de Brotes de Bambú (mejora de temporada) -->
+			<div class="menu-group">
+				<div class="menu-col-left">
+					<h3 class="menu-title">Menú degustación de brotes de bambú de temporada</h3>
+				</div>
+		
+				<div class="menu-col-right">
+		
+					<!-- Condiciones de disponibilidad (estacional), reserva, mínimo de comensales y precio -->
+					<div class="menu-upgrades">
+						<p class="upgrade-item">Mejore su cena al menú degustación de brotes de bambú.</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>La disponibilidad depende de la estación (finales de marzo a principios de mayo).</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere un mínimo de 2 personas para esta mejora.</p>
+						<p class="upgrade-item">*Para huéspedes en estancia individual, por favor contáctenos.</p>
+						<p class="upgrade-item"><span class="menu-icon">◎</span>Cargo adicional de 6,050 JPY por persona (incluye 10% de cargo por servicio y 10% de IVA).</p>
+					</div>
+		
+					<!-- Platos de ejemplo incluidos en el Menú Degustación de Brotes de Bambú -->
+					<ul class="menu-list">
+						<li>Menú de ejemplo:</li>
+						<li>Brotes de bambú en caldo</li>
+						<li>Cangrejo velludo Kegani del puerto de Hashitate</li>
+						<li>Sashimi: brotes de bambú, besugo Sakura, jurel Ajitataki, calamar Yariika</li>
+						<li>Brotes de bambú a la brasa con miso de hierba kinome</li>
+						<li>"Nodoguro" (lubina de garganta negra) a la brasa</li>
+						<li>Olla caliente de ternera japonesa "Wagyu" y brotes de bambú</li>
+						<li>Arroz cocinado con brotes de bambú</li>
+						<li>Helado de sal de Noto en oblea monaka</li>
+					</ul>
+		
+				</div>
+			</div>
+		
+			<!-- Inclusión del fragmento de mejoras disponibles todo el año -->
+			<div th:replace="~{fragments/cuisine/cuisine-menus :: year-round-upgrades}"></div>
+		</div>
+
+	</section>
+	
+	
+	<!-- =====================================================================
+	     FRAGMENTO REUTILIZABLE: year-round-upgrades
+	     Bloque de mejoras disponibles durante todo el año, independientemente
+	     de la temporada. Se incluye al final de cada panel estacional mediante
+	     th:replace. Contiene cuatro opciones: Cena de Sushi, Sushi Kaiseki de
+	     Kanazawa, Menú de Carne y Menú Vegetariano.
+	     ===================================================================== -->
+	<div th:fragment="year-round-upgrades" class="menu-group">
+		<div class="menu-col-left">
+			<h3 class="menu-title">Mejora de cena (disponible todo el año)</h3>
+		</div>
+	
+		<div class="menu-col-right">
+	
+			<!-- Opción de mejora: Cena de Sushi (sustituye el plato de arroz Kaiseki por nigiri) -->
+			<div class="menu-upgrades">
+				<p class="upgrade-item bold-item">Cena de Sushi</p>
+				<br>
+				<p class="upgrade-item">Este menú permite disfrutar simultáneamente de los sabores del kaiseki tradicional y
+					la elegancia del sushi.
+					El plato de arroz del menú Kaiseki se sustituye por seis piezas de sushi nigiri.</p>
+				<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+				<p class="upgrade-item"><span class="menu-icon">◎</span>Cargo adicional de 3,630 JPY por persona (incluye
+					10% de cargo por servicio y 10% de IVA).</p>
+			</div>
+	
+			<!-- Opción de mejora: Sushi Kaiseki de Kanazawa (menú completo con mariscos de Ishikawa) -->
+			<div class="menu-upgrades">
+				<p class="upgrade-item bold-item">Sushi Kaiseki de Kanazawa</p>
+				<br>
+				<p class="upgrade-item">Presentando mariscos frescos de Ishikawa cuidadosamente seleccionados. Este menú de
+					sushi kaiseki destaca el sushi y el sashimi,
+					ofreciendo también una variedad de otros platos para una experiencia culinaria verdaderamente memorable.
+				</p>
+				<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+				<p class="upgrade-item"><span class="menu-icon">◎</span>Para 2 personas o más.</p>
+				<p class="upgrade-item">*Para huéspedes en estancia individual, por favor contáctenos.</p>
+				<p class="upgrade-item"><span class="menu-icon">◎</span>Cargo adicional de 9,680 JPY por persona (incluye
+					10% de cargo por servicio y 10% de IVA).</p>
+			</div>
+	
+			<!-- Opción de mejora: Menú de Carne (ternera japonesa Wagyu) -->
+			<div class="menu-upgrades">
+				<p class="upgrade-item bold-item">Menú de carne</p>
+				<br>
+				<p class="upgrade-item">Deguste varios platos de carne que incluyen ternera japonesa "Wagyu".</p>
+				<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+			</div>
+	
+			<!-- Opción de mejora: Menú Vegetariano (vegetales locales japoneses) -->
+			<div class="menu-upgrades">
+				<p class="upgrade-item bold-item">Menú vegetariano</p>
+				<br>
+				<p class="upgrade-item">Deguste vegetales locales japoneses.</p>
+				<p class="upgrade-item"><span class="menu-icon">◎</span>Se requiere reserva anticipada.</p>
+			</div>
+	
+		</div>
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!-- Página principal de la sección de cocina del hotel Miyabi.
+     Plantilla Thymeleaf que compone la vista completa mediante fragments reutilizables:
+     navbar, intro, sección de filosofía, menús estacionales y footer. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Miyabi</title>
+
+	<!-- Hojas de estilo globales y específicas de la página -->
+	<link rel="stylesheet" th:href="@{/css/base/global.css}">          <!-- Estilos base compartidos por toda la aplicación -->
+	<link rel="stylesheet" th:href="@{/css/pages/cuisine.css}">         <!-- Estilos específicos de la página de cocina -->
+	<link rel="stylesheet" th:href="@{/css/cuisine/cuisine-menus.css}"> <!-- Estilos del componente de menús estacionales -->
+	<link rel="stylesheet" th:href="@{/css/components/sections.css}">   <!-- Estilos de los componentes de sección reutilizables (fac-intro, fac-section) -->
+</head>
+
+<body>
+
+	<!-- Barra de navegación global del sitio.
+	     Inyectada desde el fragment "navbar" en fragments/layout/components. -->
+	<div th:replace="~{fragments/layout/components :: navbar}"></div>
+
+	<!-- Contenido principal de la página de cocina -->
+	<main class="cuisine-page miyabi-container">
+
+		<!-- Sección de introducción al restaurante Kaiseki Horin.
+		     Utiliza el fragment "fac-intro" con: logo SVG del restaurante,
+		     título y descripción general del establecimiento. -->
+		<div th:replace="~{fragments/sections :: fac-intro(
+			'https://mukayu.com/wp-content/themes/corporate/img/cuisine_jp.svg', 
+			'Cocina Kaiseki Horin', 
+			'Kaiseki Horin es un restaurante de alta cocina con una amplia terraza con vistas al Jardín del Bosque, 
+				donde pinos rojos, membrillos, cerezos silvestres, camelias y arces crecen en total libertad. 
+				Seleccionamos cuidadosamente los ingredientes más selectos de una amplia variedad de productos de 
+				nuestra región, preparando frescos menús de temporada para el deleite de nuestros huéspedes.'	
+			)}"></div>
+
+		<!-- Sección de filosofía culinaria del restaurante.
+		     Utiliza el fragment "fac-section" con: título, descripción extensa sobre la tradición
+		     omakase y el entorno natural de Kaga, y un conjunto de tres imágenes ilustrativas.
+		     Los dos últimos parámetros (null) indican que no se pasan enlace ni CTA opcionales. -->
+		<div th:replace="~{fragments/sections :: fac-section(
+			'Filosofía', 
+			'Filosofía', 
+			'Siguiendo la tradición culinaria omakase de Japón, los menús de cena servidos en Kaiseki Horin son un escaparate 
+				de los mejores productos de temporada. Los platos se preparan teniendo en cuenta los requisitos dietéticos y las 
+				preferencias de cada huésped, utilizando los ingredientes locales más selectos.
+				<br>
+				La característica distintiva de la ciudad de Kaga, desde el punto de vista del entorno natural, es que sus dos 
+				ríos (el río Daisyouji y el río Iburibashi) fluyen desde su nacimiento hasta el mar atravesando únicamente esta 
+				ciudad. Estos ríos descienden del monte Dainichi, a 1368 metros sobre el nivel del mar. Debido a la corta 
+				distancia entre el nacimiento y la desembocadura, la ciudad de Kaga alberga diversos ecosistemas (bosques 
+				vírgenes, lagos, ríos, humedales, arrozales, etc.). Esta variedad se traduce en una biodiversidad única, 
+				demostrada por la presencia de 11 especies de aves rapaces (indicadores clave de salud ecológica), lo que 
+				representa el 70% de las especies de aves de presa observadas en todo el país. Estos ecosistemas y su 
+				biodiversidad dan lugar a una extraordinaria variedad de ingredientes frescos provenientes de la montaña, los 
+				lagos y el Mar del Japón.', 
+			${ {'https://mukayu.com/wp-content/themes/corporate/img/cuisine/cuisine_img_01.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/cuisine/cuisine_img_02.jpg', 
+				'https://mukayu.com/wp-content/themes/corporate/img/cuisine/cuisine_img_03.jpg'} },
+			null, 
+			null
+		)}"></div>
+		
+		<!-- Sección de menús estacionales (Invierno, Otoño, Verano, Primavera).
+		     Inyectada desde el fragment "seasonal-menus" en fragments/cuisine/cuisine-menus.
+		     Incluye el sistema de pestañas por temporada y todas las opciones de mejora de menú. -->
+		<div th:replace="~{fragments/cuisine/cuisine-menus :: seasonal-menus}"></div>
+
+	</main>
+	
+	<!-- Pie de página global del sitio.
+	     Inyectado desde el fragment "footer" en fragments/layout/components. -->
+	<div th:replace="~{fragments/layout/components :: footer}"></div>
+
+	<!-- Librería GSAP: motor de animaciones JavaScript (cargada desde CDN) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+	<!-- Plugin ScrollTrigger de GSAP: activa animaciones en función del scroll de la página -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+	<!-- Scripts de la aplicación -->
+	<script th:src="@{/js/base/global.js}"></script>              <!-- Lógica JavaScript global compartida -->
+	<script th:src="@{/js/cuisine/cuisine-menu.js}"></script>     <!-- Lógica del sistema de pestañas de menús estacionales -->
+	<script th:src="@{/js/components/sections.js}"></script>      <!-- Comportamiento interactivo de los componentes de sección -->
+
+</body>
+
+</html>

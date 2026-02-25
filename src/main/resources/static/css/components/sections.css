@@ -1,176 +1,222 @@
 /* ============================================================
-   SECTIONS.CSS — Estilos de los fragmentos reutilizables de la
-   página de instalaciones (sections.html).
-   Cubre: sección introductoria con posicionamiento mixto
-   (absoluto + flujo), bloques de instalación con layout de dos
-   columnas (texto 23% / carrusel 77%) y el sistema de crossfade
-   del carrusel de imágenes basado en opacidad y position: absolute.
+   COMPONENTE: MENÚS DE TEMPORADA
+   Estilos del sistema de pestañas estacionales y la cuadrícula
+   de grupos de menú. La arquitectura se divide en tres bloques:
+     1. Pestañas de navegación (.season-tab)
+     2. Paneles de contenido (.season-content / .menu-group)
+     3. Elementos de detalle (listas, upgrades e iconos)
    ============================================================ */
 
-
-/* ============================================================
-   COMPONENTE: SECCIÓN INTRODUCTORIA (.fac-intro)
-   ============================================================ */
-
-/* position: relative actúa como contexto de posicionamiento para
-   .fac-intro-left, que se extrae del flujo normal con position: absolute.
-   justify-content: center centra únicamente .fac-intro-right (el único
-   hijo en flujo), creando el efecto de párrafo centrado con la
-   identidad tipográfica flotando a la izquierda de forma independiente. */
-.fac-intro {
-    position: relative; 
-    display: flex;
-    justify-content: center; 
-    padding: 60px 0 70px 0;
-}
-
-/* Al extraerse del flujo con position: absolute, .fac-intro-left no
-   ocupa espacio y no desplaza a .fac-intro-right, permitiendo que
-   ambos bloques se superpongan visualmente en el layout sin que
-   uno afecte al tamaño del otro. top: 30px / left: 0 lo ancla a
-   la esquina superior izquierda del contenedor .fac-intro. */
-.fac-intro-left {
-    position: absolute;
-    top: 30px;
-    left: 0;
-    display: flex;
-    flex-direction: row; 
-    align-items: center; 
-    gap: 20px;
-}
-
-/* SVG del kanji con ancho fijo de 20px por estar en orientación
-   horizontal (a diferencia de features.css donde era tategaki).
-   height: auto preserva las proporciones originales del SVG. */
-.fac-jp-img {
-    width: 20px;
-    height: auto;
-}
-
-.fac-title {
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    margin: 0;
-}
-
-/* El párrafo introductorio ocupa el 60% del ancho del contenedor
-   y se centra gracias al justify-content: center de .fac-intro.
-   margin-top: 60px crea la separación vertical necesaria respecto
-   a .fac-intro-left que, al ser absolute, no genera ese espacio
-   de forma natural. max-width: 600px limita la longitud de línea
-   para mantener la legibilidad en pantallas muy anchas. */
-.fac-intro-right {
-    width: 60%;
-    max-width: 600px;
-    margin-top: 60px;
-}
-
-/* Tamaño de fuente mayor (21px) respecto al cuerpo de texto de las
-   secciones (16px), reforzando la jerarquía visual de la intro
-   como elemento de presentación editorial del contenido. */
-.fac-intro-right p {
-    font-size: 21px;
-	font-weight: 500;
-	letter-spacing: 1px;
-    line-height: 1.6;
+.seasonal-menus-section {
+    margin: 100px 0 50px 0;
 }
 
 
 /* ============================================================
-   COMPONENTE: BLOQUE DE INSTALACIÓN (.fac-section)
+   BLOQUE 1 — PESTAÑAS DE TEMPORADA
+   Las tabs controlan qué panel .season-content se muestra.
+   El estado visual activo/inactivo se gestiona combinando
+   color y border-bottom; no se usan pseudo-elementos para
+   mantener el marcado lo más simple posible.
    ============================================================ */
 
-/* Layout de dos columnas con proporciones 23% / 77%.
-   La columna de texto es deliberadamente estrecha para dar
-   protagonismo visual al carrusel de imágenes.
-   align-items: start ancla ambas columnas a la parte superior,
-   evitando que la columna de texto se estire a la altura del carrusel. */
-.fac-section {
+.season-tabs-container {
     display: flex;
-    justify-content: space-between;
-    align-items: start;
-    padding: 100px 0;
+    justify-content: start;
     gap: 80px;
+    margin-bottom: 80px;
 }
 
-/* padding-top: 50px centra visualmente el bloque de texto respecto
-   al carrusel adyacente, que tiene su propio espacio interno.
-   Sin este padding, el título aparecería alineado al borde superior
-   de la imagen, creando una composición desequilibrada. */
-.fac-text-col {
-    width: 23%;
+/* Estado inactivo: color gris neutro para comunicar que la tab
+   existe pero no está seleccionada, sin usar opacity (que
+   afectaría también al border-bottom del estado activo) */
+.season-tab {
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 24px;
+    letter-spacing: 2px;
+    color: #BABAB9; 
+    cursor: pointer;
+    padding-bottom: 5px;
+    transition: color 0.3s ease;
+}
+
+/* Estado activo: el border-bottom actúa como indicador de selección
+   alineado con el texto gracias al padding-bottom de la tab */
+.season-tab.active {
+    color: var(--color-black);
+    border-bottom: 1px solid var(--color-black);
+}
+
+
+/* ============================================================
+   BLOQUE 2 — PANELES DE CONTENIDO Y GRUPOS DE MENÚ
+   Solo el panel con la clase .active es visible; el cambio de
+   display none → block lo gestiona JS añadiendo/quitando la
+   clase .active en el elemento .season-content correspondiente.
+   ============================================================ */
+
+.season-content {
+    display: none; /* Ocultamos por defecto */
+}
+
+/* Elimina el margin-bottom del último .menu-group para evitar
+   espacio extra al final de cada panel antes del siguiente componente */
+.season-content .menu-group:last-child {
+    margin-bottom: 0;
+}
+
+.season-content.active {
+    display: block; /* Mostramos el activo */
+}
+
+/* Cada grupo de menú es una fila de dos columnas (título + contenido).
+   gap: 10% crea un espacio proporcional al ancho del contenedor en lugar
+   de un valor fijo, manteniendo la separación consistente en pantallas anchas.
+   justify-content: flex-start deja el espacio sobrante a la derecha
+   sin distribuirlo entre las columnas. */
+.menu-group {
     display: flex;
-	padding-top: 50px;
-    flex-direction: column;
+	justify-content: flex-start;
+	gap: 10%;
+    margin-bottom: 80px; /* Separación entre bloques de menú */
 }
 
-.fac-section-title {
+
+/* ============================================================
+   BLOQUE 3 — COLUMNAS DE TÍTULO Y CONTENIDO
+   La proporción 15% (izquierda) + 10% (gap) + 55% (derecha) = 80%
+   deja un 20% de espacio en blanco a la derecha, creando la
+   asimetría editorial característica del diseño.
+   ============================================================ */
+
+/* Columna Izquierda (Título) */
+.menu-col-left {
+    width: 15%;
+}
+
+/* margin-top: 20px alinea visualmente el título con la primera
+   línea de contenido de la columna derecha, compensando el
+   line-height amplio de los ítems de la lista */
+.menu-title {
     font-size: 18px;
     font-weight: 500;
-    letter-spacing: 1px;
+    margin: 0;
+	margin-top: 20px;
 }
 
-/* Divisor decorativo de ancho fijo (30px) que actúa como separador
-   visual entre el título y el párrafo descriptivo. Su animación de
-   entrada en facilities.js usa un stagger respecto al título para
-   que aparezcan secuencialmente como una unidad. */
-.fac-divider {
-    width: 30px;
-    height: 1px;
-    background-color: var(--color-black);
-    margin: 25px 0;
+/* Columna Derecha (Lista) */
+.menu-col-right {
+    width: 55%;
 }
 
-.fac-text-col p {
-    font-size: 16px;
-    line-height: 1.7;
-	font-weight: 500;
+/* Evita que el último bloque hijo (.menu-list o .menu-upgrades)
+   añada margin-bottom extra al final de la columna */
+.menu-col-right > :last-child {
+    margin-bottom: 0;
 }
 
 
 /* ============================================================
-   COMPONENTE: CARRUSEL DE IMÁGENES (.fac-carousel)
+   BLOQUE 4 — LISTA DE PLATOS
+   list-style y padding reseteados para usar exclusivamente
+   el line-height como elemento de separación visual entre platos,
+   siguiendo la estética minimalista del diseño.
    ============================================================ */
 
-/* position: relative establece el contexto de apilamiento para
-   los slides en position: absolute. aspect-ratio: 16/10 fija las
-   proporciones del carrusel independientemente del ancho del
-   contenedor, garantizando una caja consistente sin altura fija.
-   overflow: hidden recorta cualquier imagen que desborde durante
-   las transiciones. cursor: pointer señala al usuario que el
-   carrusel es interactivo (avance manual por clic). */
-.fac-carousel {
-    width: 77%;
-    position: relative; 
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    cursor: pointer;
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px 0;
 }
 
-/* Todas las imágenes se apilan en la misma posición (top:0, left:0)
-   mediante position: absolute. El sistema de crossfade funciona
-   únicamente con opacidad: todos los slides parten de opacity: 0
-   y solo el que tenga la clase "active" es visible (opacity: 1).
-   La transición de 1.3s crea el fundido suave entre imágenes.
-   pointer-events: none en los slides inactivos evita que capturen
-   el clic destinado al contenedor .fac-carousel. */
-.fac-carousel .slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 1.3s ease-in-out;
-    pointer-events: none;
+.menu-list li {
+    font-size: 15px;
+	font-weight: 500;
+    line-height: 2; /* Espaciado amplio como en el diseño */
+    color: var(--color-black);
 }
 
-/* El slide activo es el único visible. La clase "active" es gestionada
-   por facilities.js, que la mueve al siguiente slide cada 4s o al
-   hacer clic. El primer slide recibe "active" desde el servidor
-   mediante th:classappend en sections.html (iterStat.first). */
-.fac-carousel .slide.active {
-    opacity: 1;
+
+/* ============================================================
+   BLOQUE 5 — UPGRADES E ICONOS
+   Los .upgrade-item usan display: flex para alinear el icono
+   (ancho fijo) con el texto multilínea. align-items: flex-start
+   ancla el icono al inicio del texto cuando este ocupa más de
+   una línea, evitando que quede centrado verticalmente.
+   ============================================================ */
+
+.menu-upgrades {
+    margin-bottom: 30px;
+}
+
+/* max-width: 900px limita la longitud de línea del texto de
+   las condiciones de mejora para mantener la legibilidad */
+.upgrade-item {
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 2;
+	margin: 0;
+	display: flex;
+	align-items: flex-start;
+	max-width: 900px;
+}
+
+/* !important necesario para sobreescribir el font-weight: 500
+   heredado de .upgrade-item en los títulos de opción de mejora */
+.bold-item {
+    font-weight: 700 !important;
+}
+
+/* width: 28px fijo + flex-shrink: 0 garantiza que el icono nunca
+   se comprima cuando el texto adyacente es largo, manteniendo
+   la alineación de columna en toda la lista de condiciones */
+.menu-icon {
+    display: inline-flex;
+	line-height: 1;
+    width: 28px;
+	flex-shrink: 0;
+    font-size: 20px;
+	padding-top: 5px;
+}
+
+/* El círculo negro (●) requiere un tamaño mayor y un ajuste vertical
+   manual (translateY) porque su glifo tipográfico tiene un centro
+   óptico diferente al del resto de iconos circulares (◎) */
+.circle-black {
+	font-size: 32px;
+	line-height: 0;
+	transform: translateY(10px);
+}
+
+
+/* ============================================================
+   MEDIA QUERIES — MENÚS DE TEMPORADA
+   En pantallas ≤ 1024px las dos columnas mantienen el layout
+   flex pero se redistribuyen al 48/48 con gap reducido al 4%,
+   de modo que 48% + 4% + 48% = 100% sin desbordamiento.
+   ============================================================ */
+
+@media (max-width: 1024px) {
+    
+    .menu-group {
+        /* Reducimos el espacio vacío del medio del 10% al 4% */
+        gap: 4%; 
+        /* Aseguramos que los elementos se estiren hacia los bordes */
+        justify-content: space-between; 
+    }
+
+    /* Le damos a ambas columnas exactamente el mismo ancho */
+    .menu-col-left, 
+    .menu-col-right {
+        /* 48% (izq) + 48% (der) + 4% (gap) = 100% del espacio total */
+        width: 48%; 
+    }
+    
+    .menu-title {
+        /* Quitamos el margen superior para que el título quede perfectamente 
+           alineado con la primera línea de la lista de la derecha */
+        margin-top: 0; 
+    }
 }

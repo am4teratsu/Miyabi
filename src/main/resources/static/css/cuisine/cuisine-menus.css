@@ -1,0 +1,145 @@
+/* ============================================================
+   SECCIÓN: MENÚS DE TEMPORADA
+   ============================================================ */
+
+.seasonal-menus-section {
+    margin: 100px 0 50px 0;
+}
+
+/* --- TABS --- */
+.season-tabs-container {
+    display: flex;
+    justify-content: start;
+    gap: 80px;
+    margin-bottom: 80px;
+}
+
+.season-tab {
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 24px;
+    letter-spacing: 2px;
+    color: #BABAB9; 
+    cursor: pointer;
+    padding-bottom: 5px;
+    transition: color 0.3s ease;
+}
+
+.season-tab.active {
+    color: var(--color-black);
+    border-bottom: 1px solid var(--color-black);
+}
+
+/* --- CONTENIDO --- */
+.season-content {
+    display: none; /* Ocultamos por defecto */
+}
+
+.season-content .menu-group:last-child {
+    margin-bottom: 0;
+}
+
+.season-content.active {
+    display: block; /* Mostramos el activo */
+}
+
+/* Diseño de Grupo (Fila de 2 columnas) */
+.menu-group {
+    display: flex;
+	justify-content: flex-start;
+	gap: 10%;
+    margin-bottom: 80px; /* Separación entre bloques de menú */
+}
+
+/* Columna Izquierda (Título) */
+.menu-col-left {
+    width: 15%;
+}
+
+.menu-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+	margin-top: 20px;
+}
+
+/* Columna Derecha (Lista) */
+.menu-col-right {
+    width: 55%;
+}
+
+.menu-col-right > :last-child {
+    margin-bottom: 0;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px 0;
+}
+
+.menu-list li {
+    font-size: 15px;
+	font-weight: 500;
+    line-height: 2; /* Espaciado amplio como en el diseño */
+    color: var(--color-black);
+}
+
+/* Bloque de opciones extra / iconos */
+.menu-upgrades {
+    margin-bottom: 30px;
+}
+
+.upgrade-item {
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 2;
+	margin: 0;
+	display: flex;
+	align-items: flex-start;
+	max-width: 900px;
+}
+
+.bold-item {
+    font-weight: 700 !important; /* Texto más grueso para títulos de opciones */
+}
+
+/* Iconos de círculos */
+.menu-icon {
+    display: inline-flex;
+	line-height: 1;
+    width: 28px;
+	flex-shrink: 0;
+    font-size: 20px;
+	padding-top: 5px;
+}
+
+.circle-black {
+	font-size: 32px;
+	line-height: 0;
+	transform: translateY(10px);
+}
+
+@media (max-width: 1024px) {
+    
+    .menu-group {
+        /* Reducimos el espacio vacío del medio del 10% al 4% */
+        gap: 4%; 
+        /* Aseguramos que los elementos se estiren hacia los bordes */
+        justify-content: space-between; 
+    }
+
+    /* Le damos a ambas columnas exactamente el mismo ancho */
+    .menu-col-left, 
+    .menu-col-right {
+        /* 48% (izq) + 48% (der) + 4% (gap) = 100% del espacio total */
+        width: 48%; 
+    }
+    
+    .menu-title {
+        /* Quitamos el margen superior para que el título quede perfectamente 
+           alineado con la primera línea de la lista de la derecha */
+        margin-top: 0; 
+    }
+}
