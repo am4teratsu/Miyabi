@@ -1,12 +1,34 @@
 /* ============================================================
-   SECCIÓN: MENÚS DE TEMPORADA
+   CUISINE-MENUS.CSS — Estilos de la sección de menús de temporada
+   Controla el sistema de tabs estacionales (primavera/verano/otoño/invierno),
+   la visibilidad de cada panel de contenido y el layout de dos columnas
+   (título + lista de platos) de cada grupo de menú.
+   Depende de global.css para las variables CSS (--color-black).
    ============================================================ */
 
+
+/* ============================================================
+   LAYOUT / ESTRUCTURA PRINCIPAL
+   ============================================================ */
+
+/* Margen superior amplio para separar visualmente esta sección
+   de los bloques de contenido anteriores de la página de cocina. */
 .seasonal-menus-section {
     margin: 100px 0 50px 0;
 }
 
-/* --- TABS --- */
+
+/* ============================================================
+   COMPONENTE: TABS DE TEMPORADA
+   ============================================================ */
+
+/*
+   Barra de navegación horizontal de las cuatro temporadas.
+   justify-content: start mantiene los tabs alineados al margen izquierdo,
+   coherente con la maquetación asimétrica del resto del sitio.
+   El gap amplio (80px) crea aire visual entre temporadas sin necesidad
+   de márgenes individuales en cada tab.
+*/
 .season-tabs-container {
     display: flex;
     justify-content: start;
@@ -14,49 +36,103 @@
     margin-bottom: 80px;
 }
 
+/*
+   Reset del botón nativo: se elimina fondo, borde y se hereda la fuente
+   para que el tab se integre como texto de la página, no como elemento de UI.
+   El color atenuado (#BABAB9) indica el estado inactivo sin desaparecer del todo.
+*/
 .season-tab {
     background: transparent;
     border: none;
     font-family: inherit;
     font-size: 24px;
     letter-spacing: 2px;
-    color: #BABAB9; 
+    color: #BABAB9;
     cursor: pointer;
     padding-bottom: 5px;
     transition: color 0.3s ease;
 }
 
+/*
+   Estado activo del tab: el subrayado de 1px actúa como indicador
+   de selección en lugar de un fondo o borde completo, manteniendo
+   la estética minimalista japonesa del diseño.
+   La clase .active es toggleada por el JS de la página de cocina.
+*/
 .season-tab.active {
     color: var(--color-black);
     border-bottom: 1px solid var(--color-black);
 }
 
-/* --- CONTENIDO --- */
+
+/* ============================================================
+   COMPONENTE: PANELES DE CONTENIDO DE TEMPORADA
+   ============================================================ */
+
+/*
+   Todos los paneles de temporada están ocultos por defecto.
+   La visibilidad se controla añadiendo/quitando la clase .active via JS,
+   evitando que todos los menús sean renderizados visibles simultáneamente.
+*/
 .season-content {
-    display: none; /* Ocultamos por defecto */
+    display: none;
 }
 
+/* Elimina el margen inferior del último grupo de menú para evitar
+   espacio extra al final del panel antes del siguiente bloque de página. */
 .season-content .menu-group:last-child {
     margin-bottom: 0;
 }
 
+/* Panel activo: se muestra como bloque al recibir la clase .active del JS. */
 .season-content.active {
-    display: block; /* Mostramos el activo */
+    display: block;
 }
 
-/* Diseño de Grupo (Fila de 2 columnas) */
+
+/* ============================================================
+   COMPONENTE: GRUPO DE MENÚ (LAYOUT DE DOS COLUMNAS)
+   ============================================================ */
+
+/*
+   Cada grupo de menú (ej. "Kaiseki", "Yakitori") se divide en dos columnas
+   mediante Flexbox: columna izquierda con el título y columna derecha con
+   la lista de platos. El gap del 10% crea separación proporcional al ancho
+   del contenedor en lugar de un valor fijo, adaptándose mejor a pantallas intermedias.
+   margin-bottom: 80px separa grupos de menú consecutivos con amplitud japonesa.
+*/
 .menu-group {
     display: flex;
 	justify-content: flex-start;
 	gap: 10%;
-    margin-bottom: 80px; /* Separación entre bloques de menú */
+    margin-bottom: 80px;
 }
 
-/* Columna Izquierda (Título) */
+/* Elimina el margen inferior del último elemento de la columna derecha
+   para que el grupo no acumule espacio extra al final. */
+.menu-col-right > :last-child {
+    margin-bottom: 0;
+}
+
+
+/* ============================================================
+   COMPONENTE: COLUMNA IZQUIERDA (TÍTULO DEL MENÚ)
+   ============================================================ */
+
+/*
+   Ancho fijo del 15% para la columna del título, creando una proporción
+   estrecha intencionada: el título actúa como etiqueta lateral,
+   dejando el protagonismo visual a la lista de platos de la derecha.
+*/
 .menu-col-left {
     width: 15%;
 }
 
+/*
+   margin-top: 20px alinea ópticamente el título con la primera línea
+   de texto de la lista de platos, compensando el line-height extendido (2)
+   que añade espacio sobre el primer ítem de .menu-list.
+*/
 .menu-title {
     font-size: 18px;
     font-weight: 500;
@@ -64,33 +140,58 @@
 	margin-top: 20px;
 }
 
-/* Columna Derecha (Lista) */
+
+/* ============================================================
+   COMPONENTE: COLUMNA DERECHA (LISTA DE PLATOS)
+   ============================================================ */
+
+/*
+   Ancho del 55% para la columna de contenido: junto con el 15% de la columna
+   izquierda y el 10% de gap, el layout ocupa el 80% del contenedor padre,
+   dejando margen respirable a la derecha de la página.
+*/
 .menu-col-right {
     width: 55%;
 }
 
-.menu-col-right > :last-child {
-    margin-bottom: 0;
-}
-
+/* Reset de la lista: se eliminan viñetas y padding nativo para
+   controlar el espaciado exclusivamente con line-height y gap. */
 .menu-list {
     list-style: none;
     padding: 0;
     margin: 0 0 30px 0;
 }
 
+/*
+   line-height: 2 (doble del tamaño de fuente) actúa como separador
+   entre platos sin necesidad de margin entre ítems, manteniendo
+   el código HTML más limpio y el espaciado visualmente uniforme.
+*/
 .menu-list li {
     font-size: 15px;
 	font-weight: 500;
-    line-height: 2; /* Espaciado amplio como en el diseño */
+    line-height: 2;
     color: var(--color-black);
 }
 
-/* Bloque de opciones extra / iconos */
+
+/* ============================================================
+   COMPONENTE: UPGRADES / OPCIONES EXTRA
+   ============================================================ */
+
+/* Bloque de opciones premium o complementos del menú;
+   el margen inferior lo separa del siguiente grupo de lista. */
 .menu-upgrades {
     margin-bottom: 30px;
 }
 
+/*
+   Cada ítem de upgrade combina un icono (.menu-icon) con texto descriptivo.
+   display: flex + align-items: flex-start alinea el icono con la primera línea
+   de texto cuando la descripción ocupa varias líneas.
+   max-width: 900px limita la longitud de línea para preservar la legibilidad
+   en pantallas muy anchas.
+*/
 .upgrade-item {
 	font-size: 15px;
 	font-weight: 500;
@@ -101,11 +202,24 @@
 	max-width: 900px;
 }
 
+/* Modificador de énfasis para ítems destacados dentro de un upgrade;
+   !important sobrescribe el font-weight heredado del componente padre. */
 .bold-item {
-    font-weight: 700 !important; /* Texto más grueso para títulos de opciones */
+    font-weight: 700 !important;
 }
 
-/* Iconos de círculos */
+
+/* ============================================================
+   COMPONENTE: ICONOS DE CÍRCULO
+   ============================================================ */
+
+/*
+   Contenedor del icono alineado con el texto del upgrade.
+   flex-shrink: 0 impide que el icono se comprima si el texto adyacente
+   es largo, manteniendo siempre el ancho fijo de 28px.
+   padding-top: 5px compensa el line-height del texto para alinear
+   ópticamente el icono con la primera línea del contenido.
+*/
 .menu-icon {
     display: inline-flex;
 	line-height: 1;
@@ -115,31 +229,47 @@
 	padding-top: 5px;
 }
 
+/*
+   El círculo negro (•) usa font-size: 32px para alcanzar el tamaño visual
+   deseado, pero line-height: 0 y transform: translateY(10px) son necesarios
+   para compensar el espacio vertical que genera ese tamaño de fuente grande
+   y alinear el círculo con el centro óptico del texto adyacente.
+*/
 .circle-black {
 	font-size: 32px;
 	line-height: 0;
 	transform: translateY(10px);
 }
 
-@media (max-width: 1024px) {
-    
+
+/* ============================================================
+   MEDIA QUERIES — Adaptación responsive (≤ 1250px)
+   ============================================================ */
+
+@media (max-width: 1250px) {
+
+    /*
+       En pantallas intermedias (tablets y laptops pequeños) el layout de dos
+       columnas asimétricas (15% / 55%) se convierte en dos columnas iguales (48%)
+       con espacio mínimo entre ellas. justify-content: space-between distribuye
+       las columnas en los extremos del contenedor, aprovechando el ancho disponible.
+    */
     .menu-group {
-        /* Reducimos el espacio vacío del medio del 10% al 4% */
-        gap: 4%; 
-        /* Aseguramos que los elementos se estiren hacia los bordes */
-        justify-content: space-between; 
+        gap: 4%;
+        justify-content: space-between;
     }
 
-    /* Le damos a ambas columnas exactamente el mismo ancho */
-    .menu-col-left, 
+    .menu-col-left,
     .menu-col-right {
-        /* 48% (izq) + 48% (der) + 4% (gap) = 100% del espacio total */
-        width: 48%; 
+        width: 48%;
     }
-    
+
+    /*
+       Se elimina el margin-top del título porque en el nuevo layout de columnas
+       iguales ya no es necesario el desplazamiento óptico que compensaba la
+       diferencia de proporción del layout original de escritorio.
+    */
     .menu-title {
-        /* Quitamos el margen superior para que el título quede perfectamente 
-           alineado con la primera línea de la lista de la derecha */
-        margin-top: 0; 
+        margin-top: 0;
     }
 }

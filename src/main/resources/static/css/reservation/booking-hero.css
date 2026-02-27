@@ -1,0 +1,116 @@
+/* ============================================================
+   BOOKING HERO — Banner principal de reservas
+   ============================================================ */
+
+
+/* ============================================================
+   SECCIÓN HERO
+   Ocupa el ancho completo de la ventana y actúa como banner
+   de cabecera de la página de reservas. Usa flex con
+   align-items: flex-end para anclar la tarjeta de info al
+   borde inferior del banner sobre la imagen de fondo.
+   ============================================================ */
+.booking-hero-section {
+    width: 100%;
+    height: 380px; /* Altura del banner, puedes ajustarla */
+    
+    background-image: url('https://be-cms-api.synxis.com/assets/chain/8565/hotel/23382/fileStorage/image/hero_img.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Posicionamiento para empujar la tarjeta hacia abajo */
+    display: flex;
+    align-items: flex-end; 
+    padding-bottom: 0;
+}
+
+
+/* ============================================================
+   TARJETA DE INFORMACIÓN DEL HOTEL
+   Se superpone al hero con fondo semitransparente para
+   garantizar legibilidad del texto sobre cualquier imagen
+   de fondo. max-width limita el ancho en pantallas grandes
+   sin necesidad de posicionamiento absoluto.
+   ============================================================ */
+.hotel-info-card {
+    background-color: rgba(247, 247, 245, 0.8); /* Blanco cálido semitransparente */
+    width: 100%;
+    max-width: 350px;
+    padding: 13px;
+}
+
+
+/* ============================================================
+   TIPOGRAFÍA Y DETALLES DE CONTACTO
+   ============================================================ */
+
+/* Nombre del establecimiento: tamaño y espaciado controlados
+   para mantener jerarquía visual dentro de la tarjeta */
+.hotel-name {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0 0 10px 0;
+    color: var(--color-black);
+    letter-spacing: 1px;
+}
+
+/* Cada fila de detalle (dirección, teléfono, web) usa flex
+   para alinear el icono SVG con el texto, incluso cuando
+   el texto ocupa varias líneas (align-items: flex-start) */
+.hotel-detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: var(--color-black);
+    line-height: 1.5;
+}
+
+/* Elimina el margen inferior del último detalle para evitar
+   espacio extra al final de la tarjeta */
+.hotel-detail:last-child {
+    margin-bottom: 0;
+}
+
+/* flex-shrink: 0 evita que el icono se comprima cuando el
+   texto adyacente es largo. margin-top: 2px lo alinea
+   ópticamente con la primera línea del texto. */
+/* NOTA: width tiene un typo ('18x' en lugar de '18px'),
+   corregir para que el icono se renderice con el tamaño correcto */
+.detail-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--color-black);
+}
+
+/* El enlace hereda el color del contenedor para mantener
+   consistencia visual con el resto de los detalles */
+.hotel-detail a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+
+/* ============================================================
+   RESPONSIVE — Móvil (≤ 768px)
+   En pantallas pequeñas se reduce la altura del hero y la
+   tarjeta pasa a centrarse vertical y horizontalmente en
+   lugar de anclarse al borde inferior.
+   ============================================================ */
+@media (max-width: 768px) {
+    .booking-hero-section {
+        height: 300px;
+        align-items: center;    /* Centra verticalmente la tarjeta */
+        justify-content: center; /* Centra horizontalmente la tarjeta */
+    }
+    
+    .hotel-info-card {
+        padding: 20px;
+        max-width: 90%; /* Ocupa casi todo el ancho en móvil */
+    }
+}

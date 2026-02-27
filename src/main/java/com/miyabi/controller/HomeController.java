@@ -6,19 +6,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller 
 public class HomeController {
 
-    // Ruta para la página principal 
     @GetMapping("/")
     public String index() {
-        return "index"; 
+        return "index/Index"; 
     }
 
     @GetMapping("/facilities")
     public String facilities() {
-        return "facilities"; 
+        return "facilities/Facilities"; 
     }
 
     @GetMapping("/cuisine")
     public String cuisine() {
-        return "cuisine"; 
+        return "cuisine/Cuisine"; 
+    }
+    
+    @GetMapping("/reservation")
+    public String reservation() {
+        return "reservation/Reservation"; 
+    }
+    
+    @GetMapping("/register")
+    public String showRegisterPage() {
+        return "auth/Register"; 
+    }
+    
+    @GetMapping("/profile")
+    public String showProfilePage() {
+        return "auth/Profile"; 
     }
 }

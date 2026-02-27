@@ -1,0 +1,251 @@
+/* ============================================================
+   RESERVATION PAGE — Reservation.css
+   Estilos específicos de la página de presentación de reservas
+   (Reservation.html). Controla el layout de políticas del hotel
+   y actúa como antesala visual al motor de reservas (booking.html).
+   Depende de global.css para variables CSS (--color-black, etc.)
+   y clases de contenedor (.miyabi-container).
+   ============================================================ */
+
+
+/* ============================================================
+   LAYOUT / ESTRUCTURA PRINCIPAL
+   ============================================================ */
+
+/*
+   Contenedor raíz de la sección. Se alinea intencionadamente
+   a la izquierda (margin-left: 0, margin-right: auto) en lugar
+   de centrarse, para seguir la maquetación asimétrica del diseño
+   Miyabi. max-width limita la legibilidad en pantallas anchas.
+*/
+.reservation-section {
+    padding-top: 100px;
+    padding-bottom: 100px;
+    max-width: 1000px;
+	margin-left: 0;       
+	margin-right: auto;
+}
+
+
+/* ============================================================
+   COMPONENTE: ENCABEZADO
+   ============================================================ */
+
+/*
+   Flexbox horizontal que alinea la imagen decorativa en japonés
+   (.reservation-jp-img) junto al título principal. align-items:
+   flex-start evita que la imagen se estire verticalmente si el
+   título ocupa más de una línea.
+*/
+.reservation-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+/*
+   La imagen SVG actúa como elemento decorativo vertical (caligrafía
+   japonesa). El ancho fijo de 20px la mantiene estrecha y proporcional
+   sin importar la resolución; height: auto preserva su aspect-ratio.
+*/
+.reservation-jp-img {
+    width: 20px;
+    height: auto;
+}
+
+/*
+   margin-top: 15px desplaza el título hacia abajo para alinearlo
+   ópticamente con el centro visual de la imagen SVG, compensando
+   el espacio en blanco superior propio del glifo japonés.
+*/
+.reservation-title {
+    font-size: 20px;
+    margin-top: 15px;
+    letter-spacing: 1px;
+	font-weight: 500;
+}
+
+
+/* ============================================================
+   COMPONENTE: BLOQUE DE POLÍTICAS
+   ============================================================ */
+
+/*
+   Columna flexible que agrupa todos los .policy-group. El gap de
+   30px separa visualmente cada política sin necesidad de márgenes
+   individuales, facilitando la animación de entrada escalonada
+   (stagger) gestionada por Reservation.js con GSAP.
+*/
+.reservation-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-bottom: 60px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Texto introductorio "Por favor, tenga en cuenta:". Se resetea
+   el margen por defecto del <p> para mantener el ritmo vertical
+   controlado exclusivamente por el gap del padre. */
+.policy-note {
+    margin: 0;
+	font-weight: 500;
+}
+
+/*
+   Cada grupo de política (título + lista/párrafo) se apila en
+   columna. El gap de 15px crea separación interna consistente
+   entre el subtítulo y su contenido asociado.
+*/
+.policy-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/*
+   letter-spacing amplio (2px) sobre mayúsculas refuerza la
+   estética tipográfica japonesa del proyecto. font-size
+   ligeramente menor que el cuerpo (15px vs 16px) compensa
+   visualmente el peso extra del espaciado.
+*/
+.policy-subtitle {
+    font-size: 15px;
+	font-weight: 600;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+/* Reset del margen por defecto del <p> dentro del grupo
+   para respetar el sistema de espaciado por gap. */
+.policy-group p {
+	font-weight: 500;
+}
+
+/*
+   Se elimina el list-style y el padding nativo del <ul> para
+   obtener una lista de políticas sin viñetas, alineada al mismo
+   margen que el resto del contenido. El gap reemplaza los
+   márgenes entre ítems.
+*/
+.policy-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+	font-weight: 500;
+}
+
+/*
+   Modificador aplicado a la lista de cancelación. Reduce el
+   tamaño de fuente y colapsa el gap a 0 para presentar los
+   porcentajes escalonados como una tabla compacta, diferenciándola
+   visualmente de las listas de texto más largas.
+*/
+.policy-list-small {
+	font-size: 14px;
+	gap: 0 !important;
+	letter-spacing: 0.5px;
+}
+
+
+/* ============================================================
+   COMPONENTE: BOTÓN DE RESERVA (CTA PRINCIPAL)
+   ============================================================ */
+
+/* Espacio inferior que separa el CTA de los enlaces de consulta. */
+.reservation-action {
+    margin-bottom: 60px;
+}
+
+/*
+   display: inline-block permite aplicar padding completo a un
+   elemento <a> sin que ocupe el 100% del ancho. El borde utiliza
+   la variable --color-black definida en global.css, con fallback
+   a #333 para entornos que no carguen las variables correctamente.
+   La transición suaviza el hover de fondo gestionado externamente.
+*/
+.reservation-btn-booking {
+    display: inline-block;
+    padding: 16px 80px;
+    border: 1px solid var(--color-black, #333);
+    border-radius: 6px;
+    text-decoration: none;
+    color: inherit;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+
+/* ============================================================
+   COMPONENTE: ENLACES DE CONSULTA (SPA / EXPERIENCIAS)
+   ============================================================ */
+
+/*
+   Columna flexible con gap uniforme entre los dos enlaces de
+   consulta. Cada enlace se anima de forma escalonada desde la
+   izquierda por Reservation.js, por lo que el layout en columna
+   facilita que GSAP calcule posiciones individuales.
+*/
+.reservation-enquiries {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/*
+   Flexbox horizontal que alinea el texto del enlace con el ícono
+   SVG de flecha (.reservation-arrow). color: inherit hereda el
+   color del texto del documento, manteniendo coherencia con el
+   tema global sin necesidad de redefinirlo aquí.
+*/
+.enquiry-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+/* Color atenuado para la flecha decorativa, diferenciándola del
+   texto del enlace sin necesidad de un elemento wrapper adicional. */
+.enquiry-link .arrow {
+    font-size: 18px;
+    font-weight: 300;
+    color: #B9B9B7;
+}
+
+
+/* ============================================================
+   MEDIA QUERIES — Adaptación responsive (≤ 768px)
+   ============================================================ */
+
+@media (max-width: 768px) {
+    /*
+       En móvil se reduce el padding vertical para aprovechar mejor
+       el espacio disponible en pantallas pequeñas.
+    */
+    .reservation-section {
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+    
+    /*
+       El botón pasa a ocupar el ancho completo del contenedor para
+       mejorar la usabilidad táctil. box-sizing: border-box evita
+       que el padding desborde el ancho del 100%.
+       Nota: el selector correcto es .reservation-btn-booking;
+       .btn-booking parece un residuo de refactorización previa.
+    */
+    .btn-booking {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+}

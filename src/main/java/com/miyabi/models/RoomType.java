@@ -57,6 +57,7 @@ public class RoomType {
     private String amenities;
 
     // Relación con las imágenes del carrusel
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RoomImage> images;
 

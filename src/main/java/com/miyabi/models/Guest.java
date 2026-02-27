@@ -62,7 +62,7 @@ public class Guest {
         return idGuest;
     }
 
-    public void setIdCliente(Integer idGuest) {
+    public void setIdGuest(Integer idGuest) {
         this.idGuest = idGuest;
     }
 

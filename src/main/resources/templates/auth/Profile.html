@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!-- Vista "Tu Perfil": permite al huésped autenticado consultar y actualizar
+     sus datos personales, correo electrónico y contraseña.
+     El formulario se precarga con los datos actuales desde la API mediante Profile.js. -->
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Miyabi Ryokan - Your Profile</title>
+
+	<!-- Estilos base del sitio: tipografía, variables CSS y reset global -->
+	<link rel="stylesheet" th:href="@{/css/base/global.css}">
+	<!-- Estilos de layout del checkout: grid de formulario, cajas separadas y secciones -->
+	<link rel="stylesheet" th:href="@{/css/reservation/Checkout.css}">
+	<!-- Navbar específica del flujo de reservas, compartida con booking, checkout y my-reservations -->
+	<link rel="stylesheet" th:href="@{/css/reservation/booking-navbar.css}">
+	<!-- NOTA: Checkout.css está importado dos veces; la segunda importación es redundante y puede eliminarse -->
+	<link rel="stylesheet" th:href="@{/css/reservation/Checkout.css}">
+	<!-- Estilos del formulario de registro reutilizados en la vista de perfil:
+	     layout de columnas, input-box, etiquetas y botones de autenticación -->
+	<link rel="stylesheet" th:href="@{/css/auth/Register.css}">
+</head>
+
+<body>
+
+	<!-- Navbar del flujo de reservas: componente Thymeleaf compartido entre booking,
+	     checkout y my-reservations. Incluye el badge de perfil del huésped autenticado. -->
+	<div th:replace="~{reservation/booking-navbar :: bookingNavbar}"></div>
+
+	<!-- Contenedor principal del formulario de perfil.
+	     Combina el sistema de layout de .miyabi-booking-container con .register-container
+	     para reutilizar la maquetación del formulario de registro. -->
+	<div class="miyabi-booking-container register-container">
+		<h1 class="checkout-main-title register-page-title">Tu Perfil</h1>
+
+		<!-- Sección 1: Información personal del huésped.
+		     Profile.js precarga estos campos con los datos actuales del perfil desde la API. -->
+		<div class="checkout-form-container box-separated">
+			<div class="checkout-section-header">
+				<h2 class="checkout-section-title register-section-title">Información del Perfil</h2>
+				<p class="checkout-required-text">* Obligatorio</p>
+			</div>
+
+			<!-- Grid de dos columnas para nombre/apellidos y correo/confirmación.
+			     Los campos de email se duplican para forzar que el usuario confirme
+			     el cambio activamente, reduciendo errores tipográficos. -->
+			<div class="form-grid">
+				<div class="form-col half-col" style="display: flex; gap: 15px;">
+					<div class="input-box">
+						<label>Nombre<span class="req-star">*</span></label>
+						<input type="text" id="pro-firstname" class="form-input" required>
+					</div>
+				</div>
+
+				<div class="form-col half-col">
+					<div class="input-box">
+						<label>Apellidos <span class="req-star">*</span></label>
+						<input type="text" id="pro-lastname" class="form-input" required>
+					</div>
+				</div>
+
+				<div class="form-col full-col">
+					<div class="input-box">
+						<label>Teléfono</label>
+						<input type="text" id="pro-phone" class="form-input">
+					</div>
+				</div>
+
+				<div class="form-col half-col">
+					<div class="input-box">
+						<label>Correo electrónico  <span class="req-star">*</span></label>
+						<input type="email" id="pro-email" class="form-input" required>
+					</div>
+				</div>
+				<div class="form-col half-col">
+					<div class="input-box">
+						<label>Confirmar Correo electrónico<span class="req-star">*</span></label>
+						<input type="email" id="pro-confirm-email" class="form-input" required>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Sección 2: Cambio de contraseña.
+		     Campos opcionales: si se dejan vacíos, Profile.js omite la actualización
+		     de la contraseña y conserva la existente. El helper describe las reglas de seguridad. -->
+		<div class="checkout-form-container box-separated">
+			<h2 class="checkout-section-title section-title-spaced register-section-title">Password</h2>
+
+			<div class="form-grid">
+				<div class="form-col half-col">
+					<div class="input-box">
+						<label>Crear Contraseña</label>
+						<input type="password" id="pro-password" class="form-input">
+					</div>
+					<!-- Texto de ayuda con los requisitos de seguridad de la contraseña -->
+					<span class="form-helper">Al menos 8 caracteres, distingue entre mayúsculas y minúsculas, puede contener !S#%, sin espacios, no puede ser igual a la contraseña o nombre de usuario anteriores.</span>
+				</div>
+				<div class="form-col half-col">
+					<div class="input-box fit-height">
+						<label>Confirmar Contraseña</label>
+						<input type="password" id="pro-confirm-password" class="form-input">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Sección 3: Consentimiento de privacidad.
+		     Checkbox obligatorio para que el usuario reconfirme la aceptación
+		     de los términos antes de guardar cualquier cambio en su perfil. -->
+		<div class="checkout-form-container box-separated box-light-gray">
+			<h2 class="checkout-section-title section-title-spaced register-section-title">Agradecimiento</h2>
+			<div class="acknowledgement-group">
+				<label class="checkbox-label">
+					<input type="checkbox" id="chk-privacy" class="custom-checkbox" required>
+					<span class="checkbox-text"><strong>* Acepto los Términos de privacidad.</strong></span>
+				</label>
+			</div>
+		</div>
+
+		<!-- Acciones del formulario: CANCELAR navega hacia atrás en el historial del navegador;
+		     ACTUALIZAR invoca processUpdate() en Profile.js para validar y enviar los cambios a la API. -->
+		<div class="auth-buttons-container">
+			<button class="btn-auth-dark" onclick="window.history.back()">CANCELAR</button>
+			<button class="btn-auth-dark" id="btn-update-account" onclick="processUpdate()">ACTUALIZAR</button>
+		</div>
+
+	</div>
+
+	<!-- Footer global: componente Thymeleaf compartido entre todas las páginas del sitio -->
+	<div th:replace="~{fragments/layout/components :: footer}"></div>
+
+	<!-- GSAP y ScrollTrigger: librería de animaciones disponible para Profile.js si se requieren
+	     transiciones de entrada o feedback visual en el formulario -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+	<!-- Scripts cargados en orden de dependencia:
+	     global.js        → utilidades base del sitio
+	     globalBooking.js → utilidades compartidas del flujo de reservas (showToast, getInitials, etc.)
+	     booking-logic.js → gestión del estado de sesión y autenticación en la navbar
+	     Profile.js       → precarga del formulario, validación y envío de la actualización a la API -->
+	<script th:src="@{/js/base/global.js}"></script>
+	<script th:src="@{/js/reservation/globalBooking.js}"></script>
+	<script th:src="@{/js/reservation/booking-logic.js}"></script>
+	<script th:src="@{/js/auth/Profile.js}"></script>
+</body>
+
+</html>

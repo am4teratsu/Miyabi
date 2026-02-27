@@ -1,222 +1,204 @@
 /* ============================================================
-   COMPONENTE: MENÚS DE TEMPORADA
-   Estilos del sistema de pestañas estacionales y la cuadrícula
-   de grupos de menú. La arquitectura se divide en tres bloques:
-     1. Pestañas de navegación (.season-tab)
-     2. Paneles de contenido (.season-content / .menu-group)
-     3. Elementos de detalle (listas, upgrades e iconos)
+   COMPONENTE 1 — FAC-INTRO
+   Bloque de presentación de cada instalación/página.
+   Combina un identificador visual (logo JP + título) anclado
+   a la esquina superior izquierda con un párrafo de descripción
+   centrado horizontalmente.
    ============================================================ */
 
-.seasonal-menus-section {
-    margin: 100px 0 50px 0;
-}
-
-
-/* ============================================================
-   BLOQUE 1 — PESTAÑAS DE TEMPORADA
-   Las tabs controlan qué panel .season-content se muestra.
-   El estado visual activo/inactivo se gestiona combinando
-   color y border-bottom; no se usan pseudo-elementos para
-   mantener el marcado lo más simple posible.
-   ============================================================ */
-
-.season-tabs-container {
-    display: flex;
-    justify-content: start;
-    gap: 80px;
-    margin-bottom: 80px;
-}
-
-/* Estado inactivo: color gris neutro para comunicar que la tab
-   existe pero no está seleccionada, sin usar opacity (que
-   afectaría también al border-bottom del estado activo) */
-.season-tab {
-    background: transparent;
-    border: none;
-    font-family: inherit;
-    font-size: 24px;
-    letter-spacing: 2px;
-    color: #BABAB9; 
-    cursor: pointer;
-    padding-bottom: 5px;
-    transition: color 0.3s ease;
-}
-
-/* Estado activo: el border-bottom actúa como indicador de selección
-   alineado con el texto gracias al padding-bottom de la tab */
-.season-tab.active {
-    color: var(--color-black);
-    border-bottom: 1px solid var(--color-black);
-}
-
-
-/* ============================================================
-   BLOQUE 2 — PANELES DE CONTENIDO Y GRUPOS DE MENÚ
-   Solo el panel con la clase .active es visible; el cambio de
-   display none → block lo gestiona JS añadiendo/quitando la
-   clase .active en el elemento .season-content correspondiente.
-   ============================================================ */
-
-.season-content {
-    display: none; /* Ocultamos por defecto */
-}
-
-/* Elimina el margin-bottom del último .menu-group para evitar
-   espacio extra al final de cada panel antes del siguiente componente */
-.season-content .menu-group:last-child {
-    margin-bottom: 0;
-}
-
-.season-content.active {
-    display: block; /* Mostramos el activo */
-}
-
-/* Cada grupo de menú es una fila de dos columnas (título + contenido).
-   gap: 10% crea un espacio proporcional al ancho del contenedor en lugar
-   de un valor fijo, manteniendo la separación consistente en pantallas anchas.
-   justify-content: flex-start deja el espacio sobrante a la derecha
-   sin distribuirlo entre las columnas. */
-.menu-group {
-    display: flex;
-	justify-content: flex-start;
-	gap: 10%;
-    margin-bottom: 80px; /* Separación entre bloques de menú */
-}
-
-
-/* ============================================================
-   BLOQUE 3 — COLUMNAS DE TÍTULO Y CONTENIDO
-   La proporción 15% (izquierda) + 10% (gap) + 55% (derecha) = 80%
-   deja un 20% de espacio en blanco a la derecha, creando la
-   asimetría editorial característica del diseño.
-   ============================================================ */
-
-/* Columna Izquierda (Título) */
-.menu-col-left {
-    width: 15%;
-}
-
-/* margin-top: 20px alinea visualmente el título con la primera
-   línea de contenido de la columna derecha, compensando el
-   line-height amplio de los ítems de la lista */
-.menu-title {
-    font-size: 18px;
-    font-weight: 500;
-    margin: 0;
-	margin-top: 20px;
-}
-
-/* Columna Derecha (Lista) */
-.menu-col-right {
-    width: 55%;
-}
-
-/* Evita que el último bloque hijo (.menu-list o .menu-upgrades)
-   añada margin-bottom extra al final de la columna */
-.menu-col-right > :last-child {
-    margin-bottom: 0;
-}
-
-
-/* ============================================================
-   BLOQUE 4 — LISTA DE PLATOS
-   list-style y padding reseteados para usar exclusivamente
-   el line-height como elemento de separación visual entre platos,
-   siguiendo la estética minimalista del diseño.
-   ============================================================ */
-
-.menu-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 30px 0;
-}
-
-.menu-list li {
-    font-size: 15px;
-	font-weight: 500;
-    line-height: 2; /* Espaciado amplio como en el diseño */
-    color: var(--color-black);
-}
-
-
-/* ============================================================
-   BLOQUE 5 — UPGRADES E ICONOS
-   Los .upgrade-item usan display: flex para alinear el icono
-   (ancho fijo) con el texto multilínea. align-items: flex-start
-   ancla el icono al inicio del texto cuando este ocupa más de
-   una línea, evitando que quede centrado verticalmente.
-   ============================================================ */
-
-.menu-upgrades {
-    margin-bottom: 30px;
-}
-
-/* max-width: 900px limita la longitud de línea del texto de
-   las condiciones de mejora para mantener la legibilidad */
-.upgrade-item {
-	font-size: 15px;
-	font-weight: 500;
-	line-height: 2;
-	margin: 0;
+/* position: relative actúa como contexto de posicionamiento para
+   .fac-intro-left, que se ancla en absolute dentro de este contenedor */
+.fac-intro {
+	position: relative;
 	display: flex;
-	align-items: flex-start;
-	max-width: 900px;
+	justify-content: center;
+	padding: 60px 0 70px 0;
 }
 
-/* !important necesario para sobreescribir el font-weight: 500
-   heredado de .upgrade-item en los títulos de opción de mejora */
-.bold-item {
-    font-weight: 700 !important;
+/* Etiqueta compuesta (imagen SVG japonesa + título) posicionada en absolute
+   para que flote en la esquina superior izquierda sin afectar al flujo
+   del contenido central (.fac-intro-right) */
+.fac-intro-left {
+	position: absolute;
+	top: 30px;
+	left: 0;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 20px;
 }
 
-/* width: 28px fijo + flex-shrink: 0 garantiza que el icono nunca
-   se comprima cuando el texto adyacente es largo, manteniendo
-   la alineación de columna en toda la lista de condiciones */
-.menu-icon {
-    display: inline-flex;
-	line-height: 1;
-    width: 28px;
-	flex-shrink: 0;
-    font-size: 20px;
-	padding-top: 5px;
+/* Ideograma japonés decorativo en SVG/PNG; width fijo + height: auto
+   preserva la proporción vertical del carácter */
+.fac-jp-img {
+	width: 20px;
+	height: auto;
 }
 
-/* El círculo negro (●) requiere un tamaño mayor y un ajuste vertical
-   manual (translateY) porque su glifo tipográfico tiene un centro
-   óptico diferente al del resto de iconos circulares (◎) */
-.circle-black {
-	font-size: 32px;
-	line-height: 0;
-	transform: translateY(10px);
+.fac-title {
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: 2px;
+	margin: 0;
+}
+
+/* Columna de texto descriptivo centrada en el área disponible.
+   max-width: 700px limita la longitud de línea para mejorar la
+   legibilidad en pantallas anchas.
+   margin-top: 60px añade separación respecto a .fac-intro-left
+   que está posicionado en absolute y no ocupa espacio en el flujo. */
+.fac-intro-right {
+	width: 100%;
+	max-width: 700px;
+	margin-top: 60px;
+}
+
+.fac-intro-right p {
+	font-size: 20px;
+	font-weight: 500;
+	letter-spacing: 1px;
+	line-height: 1.6;
 }
 
 
 /* ============================================================
-   MEDIA QUERIES — MENÚS DE TEMPORADA
-   En pantallas ≤ 1024px las dos columnas mantienen el layout
-   flex pero se redistribuyen al 48/48 con gap reducido al 4%,
-   de modo que 48% + 4% + 48% = 100% sin desbordamiento.
+   MEDIA QUERIES — FAC-INTRO
    ============================================================ */
 
-@media (max-width: 1024px) {
-    
-    .menu-group {
-        /* Reducimos el espacio vacío del medio del 10% al 4% */
-        gap: 4%; 
-        /* Aseguramos que los elementos se estiren hacia los bordes */
-        justify-content: space-between; 
-    }
+/* En tablets y pantallas menores a 1200px, el texto descriptivo
+   se desplaza a la derecha (justify-content: flex-end) para crear
+   una composición asimétrica que evita solapamiento con la
+   etiqueta JP posicionada en absolute a la izquierda */
+@media (max-width: 1200px) {
 
-    /* Le damos a ambas columnas exactamente el mismo ancho */
-    .menu-col-left, 
-    .menu-col-right {
-        /* 48% (izq) + 48% (der) + 4% (gap) = 100% del espacio total */
-        width: 48%; 
-    }
-    
-    .menu-title {
-        /* Quitamos el margen superior para que el título quede perfectamente 
-           alineado con la primera línea de la lista de la derecha */
-        margin-top: 0; 
-    }
+	.fac-intro {
+		justify-content: flex-end;
+		padding-right: 20px;
+	}
+
+	/* Se reduce el max-width y se aumenta el margin-top para
+	   compensar el mayor espacio que necesita la etiqueta JP
+	   al reducirse el ancho total del contenedor */
+	.fac-intro-right {
+		width: 100%;
+		max-width: 500px;
+		margin-top: 80px;
+	}
+}
+
+
+/* ============================================================
+   COMPONENTE 2 — FAC-SECTION (TEXTO + CARRUSEL)
+   Sección de dos columnas: texto informativo a la izquierda
+   (23% del ancho) y carrusel de imágenes a la derecha (77%).
+   La proporción 23/77 da protagonismo visual a las imágenes
+   manteniendo el texto como apoyo contextual.
+   ============================================================ */
+
+/* align-items: start evita que la columna de texto se estire
+   hasta la altura del carrusel cuando este es más alto */
+.fac-section {
+	display: flex;
+	justify-content: space-between;
+	align-items: start;
+	padding: 100px 0;
+	gap: 80px;
+}
+
+/* padding-top: 50px baja el texto para alinearlo visualmente con
+   el área central del carrusel en lugar de con su borde superior */
+.fac-text-col {
+	width: 23%;
+	display: flex;
+	padding-top: 50px;
+	flex-direction: column;
+}
+
+.fac-section-title {
+	font-size: 22px;
+	font-weight: 500;
+	letter-spacing: 1px;
+}
+
+/* Separador tipográfico minimalista entre el título y el cuerpo
+   de texto; width: 30px lo mantiene discreto y proporcional
+   al tamaño del título */
+.fac-divider {
+	width: 30px;
+	height: 1px;
+	background-color: var(--color-black);
+	margin: 25px 0;
+}
+
+.fac-text-col p {
+	font-size: 16px;
+	line-height: 1.7;
+	font-weight: 500;
+}
+
+/* Contenedor del carrusel de imágenes.
+   aspect-ratio: 16/10 mantiene la proporción horizontal en
+   escritorio independientemente del ancho real del elemento.
+   overflow: hidden recorta las imágenes que sobresalen durante
+   las transiciones de opacidad entre slides. */
+.fac-carousel {
+	width: 77%;
+	position: relative;   /* Contexto de posicionamiento para los slides en absolute */
+	aspect-ratio: 16 / 10;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+/* Cada slide se apila sobre los demás mediante position: absolute.
+   La visibilidad se controla exclusivamente con opacity para que
+   la transición sea suave (cross-fade); pointer-events: none en
+   los slides inactivos evita clics accidentales sobre imágenes ocultas. */
+.fac-carousel .slide {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	opacity: 0;
+	transition: opacity 1.3s ease-in-out;
+	pointer-events: none;
+}
+
+/* El slide activo se muestra con opacity: 1; el cambio de clase
+   .active vía JS dispara la transición de cross-fade */
+.fac-carousel .slide.active {
+	opacity: 1;
+}
+
+
+/* ============================================================
+   MEDIA QUERIES — FAC-SECTION
+   ============================================================ */
+
+/* En tablets, el layout de dos columnas pasa a una sola columna
+   (ambos elementos al 100% de ancho), con el texto encima y el
+   carrusel debajo. El carrusel cambia a proporción vertical
+   (10/14) para adaptarse mejor a la orientación portrait. */
+@media (max-width: 1200px) {
+
+	.fac-section {
+		gap: 60px;
+		padding: 60px 20px 60px 60px;
+	}
+
+	/* Al pasar a una sola columna, ambos elementos ocupan el
+	   100% del ancho disponible */
+	.fac-text-col,
+	.fac-carousel {
+		width: 100%;
+	}
+
+	/* aspect-ratio vertical (10/14) en mobile para que el carrusel
+	   muestre más altura y las imágenes tengan mayor impacto visual
+	   en orientación portrait */
+	.fac-carousel {
+		aspect-ratio: 10/14;
+		width: 100%;
+	}
 }

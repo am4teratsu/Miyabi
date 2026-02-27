@@ -50,6 +50,16 @@
     margin: 0 auto;
 }
 
+.miyabi-booking-container {
+	padding: 0 17%;
+}
+
+@media (max-width: 1250px) {
+    .miyabi-booking-container {
+		padding: 0 3%;
+	}
+}
+
 
 /* ============================================================
    BASE — BODY

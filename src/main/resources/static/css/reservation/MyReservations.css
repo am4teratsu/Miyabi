@@ -1,0 +1,204 @@
+/* ============================================================
+   MYRESERVATIONS.CSS — Estilos de la página "Mis Reservas"
+   Controla el layout de la cuadrícula de tarjetas y la anatomía
+   visual completa de cada tarjeta de reserva (cabecera, cuerpo y pie).
+   Depende de global.css para variables y de Checkout.css para el
+   sistema de contenedor (.miyabi-booking-container).
+   ============================================================ */
+
+
+/* ============================================================
+   LAYOUT / ESTRUCTURA PRINCIPAL
+   ============================================================ */
+
+/* Ajusta los márgenes verticales del contenedor raíz de la página
+   dentro del sistema de layout heredado de .miyabi-booking-container. */
+.my-reservation-container {
+	margin-top: 20px;
+	margin-bottom: 40px;
+}
+
+/* Espacio inferior de la cabecera de página para separarla visualmente
+   de la cuadrícula de tarjetas sin recurrir a márgenes en el grid. */
+.checkout-page-header {
+	padding-bottom: 20px;
+}
+
+/*
+   Cuadrícula responsive de tarjetas de reserva.
+   auto-fill + minmax(350px, 1fr) permite que el número de columnas
+   se ajuste automáticamente al ancho del viewport: una columna en móvil,
+   dos o más en escritorio, sin necesidad de media queries explícitas.
+   align-items: stretch fuerza a todas las tarjetas de una fila a tener
+   la misma altura, independientemente de su contenido interno.
+*/
+.reservations-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+	align-items: stretch;
+}
+
+
+/* ============================================================
+   COMPONENTE: TARJETA DE RESERVA
+   ============================================================ */
+
+/*
+   Contenedor principal de cada tarjeta. El borde usa #DDCFB2 (dorado suave)
+   para mantener la identidad visual del ryokan sin usar variables CSS.
+   flex-direction: column permite que el pie de tarjeta (.res-card-footer)
+   se empuje siempre hacia el fondo mediante flex-grow en el cuerpo,
+   logrando tarjetas de altura uniforme con contenido de longitud variable.
+*/
+.reservation-card {
+    border: 1px solid #DDCFB2;
+    background-color: #fff;
+    padding: 30px;
+	display: flex;
+	flex-direction: column;
+}
+
+
+/* ============================================================
+   SUBCOMPONENTE: CABECERA DE TARJETA
+   ============================================================ */
+
+/*
+   Flexbox horizontal que enfrenta el código de reserva y el badge de estado.
+   El borde inferior negro actúa como separador visual entre la cabecera
+   y el cuerpo de la tarjeta.
+*/
+.res-card-header {
+    display: flex;
+    justify-content: space-between;
+	align-items: flex-start;
+    flex-wrap: wrap;
+	gap: 15px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+/* Código de reserva: tamaño y peso destacados para que sea el primer
+   elemento que el usuario identifique en la tarjeta. */
+.res-code {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+	white-space: nowrap;
+}
+
+/* Base compartida por los tres modificadores de estado (.status-pending,
+   .status-paid, .status-cancelled). Define el contenedor del badge;
+   el color de fondo y texto se aplican en cada modificador. */
+.res-status {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+	flex-shrink: 0;
+}
+
+/* === Modificadores de estado ===
+   Cada variante comunica el estado de la reserva mediante contraste de color:
+   - Pendiente: gris neutro, sin implicación positiva ni negativa
+   - Confirmada: negro sobre blanco, máximo contraste para mayor relevancia
+   - Cancelada: rojo suave, señal de alerta sin ser agresivo visualmente */
+.status-pending  { background-color: #f4f4f4; color: #666; }
+.status-paid     { background-color: #000; color: #fff; }
+.status-cancelled{ background-color: #ffebee; color: #d32f2f; }
+
+
+/* ============================================================
+   SUBCOMPONENTE: CUERPO DE TARJETA
+   ============================================================ */
+
+/*
+   Flexbox con flex-wrap: wrap para que los grupos de detalle (check-in,
+   check-out, habitación, huéspedes) se reorganicen en varias filas en
+   tarjetas de ancho reducido.
+   flex-grow: 1 es clave para el layout de columna de la tarjeta padre:
+   hace que el cuerpo ocupe todo el espacio disponible entre la cabecera
+   y el pie, manteniendo el pie siempre anclado al fondo de la tarjeta.
+*/
+.res-card-body {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+	flex-grow: 1;
+}
+
+/* Cada grupo apila la etiqueta sobre el valor en columna,
+   con un gap reducido que los mantiene visualmente asociados. */
+.res-detail-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Etiqueta secundaria en gris y mayúsculas para crear jerarquía visual
+   respecto al valor principal sin usar diferencias de tamaño excesivas. */
+.res-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.res-value {
+    font-size: 15px;
+    color: #000;
+}
+
+
+/* ============================================================
+   SUBCOMPONENTE: PIE DE TARJETA (RESUMEN ECONÓMICO)
+   ============================================================ */
+
+/*
+   El borde superior punteado diferencia visualmente el resumen económico
+   del contenido informativo del cuerpo. Flexbox en columna con gap uniforme
+   alinea verticalmente las filas de desglose (habitación, consumos, total).
+*/
+.res-card-footer {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px dashed #e0e0e0;
+    display: flex;
+    flex-direction: column;
+	gap: 8px;
+}
+
+/* Tamaño y peso del importe total destacados para que sea el dato
+   económico más visible al escanear la tarjeta. */
+.res-total {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Filas de desglose (habitación y consumos extra): tamaño reducido y color
+   atenuado para subordinarlas visualmente respecto a la fila del total. */
+.res-breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #666;
+}
+
+/*
+   Fila del total: separada del desglose por un borde sólido (más visible
+   que el punteado del footer) para reforzar su importancia.
+   align-items: center garantiza que la etiqueta "TOTAL A PAGAR" y el importe
+   queden alineados verticalmente aunque tengan tamaños de fuente distintos.
+*/
+.res-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #f4f4f4;
+}

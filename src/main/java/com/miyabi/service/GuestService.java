@@ -30,4 +30,13 @@ public class GuestService {
     public Guest save(Guest guest) {
         return guestRepository.save(guest);
     }
+    
+	public Guest authenticate(String email, String password) {
+		Guest guest = guestRepository.findByEmail(email).orElse(null);
+
+		if (guest != null && guest.getPassword().equals(password)) {
+			return guest;
+		}
+		return null; 
+	}
 }

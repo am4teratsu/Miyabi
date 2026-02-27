@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Fragmento Thymeleaf reutilizable: widget del carrito de reserva (sidebar).
+     Acepta el parámetro booleano `hideSidebarBtn` para controlar la visibilidad
+     del botón de checkout según la vista desde la que se invoca:
+       · hideSidebarBtn=false → muestra el botón (página de booking)
+       · hideSidebarBtn=true  → oculta el botón (página de checkout, donde ya no es necesario)
+     Se invoca con: th:replace="~{reservation/fragments/cart-widget :: cartWidget(hideSidebarBtn=false)}" -->
+<div th:fragment="cartWidget(hideSidebarBtn)" class="cart-card">
+
+    <!-- Cabecera del carrito -->
+    <div class="cart-header">
+        <h3>Su reserva</h3>
+    </div>
+
+    <!-- Cuerpo del carrito: muestra el resumen de criterios de búsqueda seleccionados.
+         Los valores de cada ítem son actualizados dinámicamente por updateCartUI()
+         en booking-logic.js cada vez que el usuario modifica fechas, huéspedes o habitación. -->
+    <div class="cart-body">
+
+        <!-- Rango de fechas seleccionado (check-in → check-out) -->
+        <div class="cart-item">
+            <span class="cart-label">Fechas</span>
+            <p id="cart-dates">Seleccione fechas</p>
+        </div>
+
+        <!-- Número de adultos seleccionados -->
+        <div class="cart-item">
+            <span class="cart-label">Huéspedes</span>
+            <p id="cart-guests">2 adultos</p>
+        </div>
+
+        <!-- Habitación seleccionada: permanece oculta (.hidden) hasta que el usuario
+             elige una habitación; entonces JS elimina la clase para mostrarla -->
+        <div class="cart-item hidden" id="cart-room-wrapper">
+            <span class="cart-label">Habitación</span>
+            <p id="cart-room-name">-</p>
+        </div>
+
+    </div>
+
+    <!-- Pie del carrito: precio total calculado y botón de acción hacia el checkout.
+         El total se recalcula en JS como: precio base × nº adultos × nº noches. -->
+    <div class="cart-footer">
+        <div class="total-line">
+            <span>Total</span>
+            <!-- Precio total actualizado dinámicamente; arranca en ¥0 hasta tener selección completa -->
+            <span class="total-price" id="cart-total">¥0</span>
+        </div>
+        <p class="tax-info">Incluye impuestos y tasas</p>
+
+        <!-- Botón de checkout: permanece disabled hasta que fechas + habitación estén seleccionadas.
+             th:classappend añade 'cart-btn-hidden' si hideSidebarBtn=true, ocultándolo visualmente
+             sin eliminarlo del DOM (permite reutilizar el fragmento en la vista de checkout).
+             onclick delega en handleCartAction() que verifica sesión antes de redirigir. -->
+        <button th:classappend="${hideSidebarBtn} ? 'cart-btn-hidden' : ''"
+                class="btn-checkout-final" 
+                id="btn-continue" 
+                disabled 
+                onclick="handleCartAction()">
+            CHECKOUT
+        </button>
+    </div>
+
+</div>
+
+</html>

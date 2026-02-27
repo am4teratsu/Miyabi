@@ -1,0 +1,206 @@
+/* ============================================================
+   BOOKING LAYOUT — Estructura principal de la página de reservas
+   Cubre: grid de dos columnas (contenido + sidebar), barra del
+   widget de búsqueda y carrito de reserva sticky.
+   ============================================================ */
+
+
+/* ============================================================
+   1. GRID PRINCIPAL DE LA PÁGINA
+   ============================================================ */
+
+/* Layout de dos columnas: la columna de contenido crece de forma
+   flexible (1fr) mientras el sidebar mantiene un ancho fijo de 300px.
+   align-items: start evita que el sidebar se estire hasta la altura
+   de la columna de contenido, permitiendo que su posición sticky funcione. */
+.booking-main-grid {
+    padding-left: 0;   
+    padding-right: 0;
+    display: grid;
+    grid-template-columns: 1fr 300px; 
+    gap: 30px;
+    margin-top: 15px;
+    align-items: start;
+}
+
+/* Columna izquierda: apila verticalmente el widget de búsqueda
+   y el listado de habitaciones con separación uniforme entre ellos */
+.booking-content-column {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Sidebar derecho: position sticky mantiene el carrito visible
+   mientras el usuario hace scroll por el listado de habitaciones.
+   Requiere que el padre (.booking-main-grid) tenga align-items: start
+   para que el sidebar no ocupe toda la altura del grid. */
+.booking-sidebar-column {
+    position: sticky;
+    top: 20px;
+    margin-bottom: 40px;
+}
+
+
+/* ============================================================
+   2. BARRA DEL WIDGET DE BÚSQUEDA
+   ============================================================ */
+
+/* Contenedor de los tres bloques del widget (huéspedes, check-in, check-out)
+   dispuestos en fila con borde perimetral compartido */
+.search-widget-bar {
+    display: flex;
+    border: 1px solid #AEB3B7;
+    width: 100%;
+}
+
+/* Cada bloque ocupa el mismo ancho proporcional (flex: 1) y se separa
+   de su vecino mediante un borde derecho que actúa como divisor visual */
+.widget-block {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
+    border-right: 1px solid #AEB3B7;
+    cursor: pointer;
+}
+
+/* Elimina el borde derecho del último bloque para evitar duplicar
+   el borde perimetral del contenedor padre */
+.widget-block:last-child {
+    border-right: none;
+}
+
+/* Icono SVG del bloque: tamaño fijo para mantener alineación
+   consistente con el texto informativo a su derecha */
+.widget-icon {
+    width: 32px;
+    height: 32px;
+    color: #000000;
+    margin-right: 12px;
+}
+
+/* Columna de texto dentro del bloque: apila etiqueta y valor verticalmente */
+.widget-info {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Etiqueta del criterio de búsqueda (ej. "Huéspedes", "Check-in"):
+   color dorado corporativo para jerarquía visual sobre el valor */
+.widget-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #7A5D23;
+    margin-bottom: 1px;
+}
+
+/* Valor seleccionado del criterio: actualizado dinámicamente por JS */
+.widget-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000;
+}
+
+
+/* ============================================================
+   3. RESPONSIVE — Tablet y móvil (≤ 992px)
+   El grid pasa a una sola columna y los bloques del widget
+   se apilan verticalmente en lugar de mostrarse en fila.
+   ============================================================ */
+@media (max-width: 992px) {
+    /* Colapsa el grid de dos columnas a una sola para pantallas medianas y pequeñas */
+    .booking-main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Los bloques del widget pasan de fila horizontal a columna vertical */
+    .search-widget-bar {
+        flex-direction: column;
+    }
+
+    /* En orientación vertical, el separador cambia de borde derecho a borde inferior */
+    .widget-block {
+        border-right: none;
+        border-bottom: 1px solid #dcdcdc;
+    }
+}
+
+
+/* ============================================================
+   4. CARRITO DE RESERVA (SIDEBAR)
+   ============================================================ */
+
+/* Tarjeta del carrito: position sticky duplicada aquí como fallback
+   para contextos en los que .cart-card se use fuera de .booking-sidebar-column */
+.cart-card {
+    background-color: #FFF; 
+    border: 1px solid #DDCFB2;
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+}
+
+/* Título del carrito con separador inferior que delimita la cabecera del cuerpo */
+.cart-header h3 {
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    font-weight: 600;
+    border-bottom: 1px solid #000;
+    padding-bottom: 10px;
+}
+
+/* Ítem del resumen de reserva (fechas, huéspedes, habitación) */
+.cart-item { margin-bottom: 20px; }
+
+/* Etiqueta del ítem en mayúsculas y color dorado para diferenciarla
+   visualmente del valor que aparece debajo */
+.cart-label { font-size: 12px; color: #7A5D23; font-weight: 800; text-transform: uppercase; }
+.cart-item p { margin: 5px 0 0 0; font-size: 15px; font-weight: 600; color: #000; }
+
+/* Pie del carrito: separador superior doble que refuerza visualmente
+   la división entre el resumen de ítems y el bloque de precio total */
+.cart-footer {
+    border-top: 2px solid #000;
+    padding-top: 15px;
+    margin-top: 10px;
+}
+
+/* Fila de total: etiqueta "Total" y precio en los extremos opuestos del contenedor */
+.total-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Texto de soporte bajo el total (impuestos incluidos) */
+.tax-info { font-size: 13px; color: #666; margin: 5px 0 20px 0; }
+
+/* Botón de checkout: ocupa el ancho completo del carrito para maximizar
+   el área clicable en el sidebar */
+.btn-checkout-final {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    padding: 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Estado deshabilitado: el botón permanece en este estado hasta que
+   fechas y habitación estén seleccionadas (gestionado por updateCartUI() en JS) */
+.btn-checkout-final:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Clase utilitaria aplicada por Thymeleaf cuando hideSidebarBtn=true:
+   oculta el botón de checkout en vistas donde no debe mostrarse (ej. página de checkout),
+   sin eliminarlo del DOM para preservar la estructura del fragmento reutilizable */
+.cart-btn-hidden {
+    display: none;
+}

@@ -2,22 +2,14 @@
    FACILITIES.CSS
    Estilos específicos para la página de instalaciones (facilities).
    Arquitectura:
-     1. Barra indicadora lateral (Scroll Spy)
-     2. Sección de introducción
-     3. Secciones de instalaciones repetibles
-     4. Componente reutilizable: enlace con flecha (miyabi-link-btn)
+     1. Componente reutilizable: enlace con flecha (miyabi-link-btn)
    Depende de las variables globales definidas en global.css
    (--color-black, --font-main).
    ============================================================================= */
 
 
-
-
-
-
-
 /* =============================================================================
-   4. COMPONENTE REUTILIZABLE — Enlace con flecha (miyabi-link-btn)
+   1. COMPONENTE REUTILIZABLE — Enlace con flecha (miyabi-link-btn)
    Botón de navegación de estilo editorial, compuesto por texto + icono SVG.
    Diseñado para reutilizarse en cualquier sección que necesite un CTA sutil.
    La animación del icono (hover) debe activarse desde JS o con :hover en CSS.

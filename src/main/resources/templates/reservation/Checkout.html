@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Miyabi Ryokan - Checkout</title>
+
+    <!-- Estilos globales base (tipografía, reset, variables CSS) -->
+    <link rel="stylesheet" th:href="@{/css/base/global.css}">
+    <!-- Navbar compartida con la página de booking -->
+    <link rel="stylesheet" th:href="@{/css/reservation/booking-navbar.css}">
+    <!-- Grid de dos columnas y estilos del carrito lateral (reutilizados desde booking) -->
+    <link rel="stylesheet" th:href="@{/css/reservation/booking-layout.css}">
+    <!-- Estilos específicos del formulario de checkout -->
+    <link rel="stylesheet" th:href="@{/css/reservation/Checkout.css}">
+</head>
+
+<body>
+
+    <!-- Navbar compartida con la página de reservas (componente Thymeleaf reutilizable) -->
+    <div th:replace="~{reservation/booking-navbar :: bookingNavbar}"></div>
+
+    <!-- Grid principal de dos columnas: formulario (izquierda) + carrito resumen (derecha).
+         Reutiliza la misma estructura de booking-layout para consistencia visual. -->
+    <div class="checkout-main-grid miyabi-booking-container">
+
+        <!-- ── COLUMNA PRINCIPAL: FORMULARIO DE CHECKOUT ─────────────────────── -->
+        <section class="booking-content-column">
+
+            <!-- Cabecera de la página: flecha de retorno a la selección de habitación
+                 y título principal del paso de checkout -->
+            <div class="checkout-page-header">
+                <a href="/reservation/booking" class="btn-back">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="21" y1="12" x2="3" y2="12"></line>
+                        <polyline points="10 19 3 12 10 5"></polyline>
+                    </svg>
+                </a>
+                <h1 class="checkout-main-title">Checkout</h1>
+            </div>
+
+            <!-- ── BLOQUE 1: INFORMACIÓN DE CONTACTO Y DIRECCIÓN ─────────────── -->
+            <div class="checkout-form-container">
+
+                <div class="checkout-section-header">
+                    <h2 class="checkout-section-title">Información de contacto</h2>
+                    <p class="checkout-required-text">* Obligatorio</p>
+                </div>
+
+                <!-- Grid de campos de contacto: nombre, apellidos, teléfonos y email.
+                     Los campos con required son validados antes de habilitar el botón de confirmación. -->
+                <div class="form-grid">
+                    <div class="form-col half-col">
+                        <div class="input-box">
+                            <label for="chk-names">Nombre <span class="req-star">*</span></label>
+                            <input type="text" id="chk-names" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="form-col half-col">
+                        <div class="input-box">
+                            <label for="chk-surnames">Apellidos <span class="req-star">*</span></label>
+                            <input type="text" id="chk-surnames" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-col half-col">
+                        <div class="input-box">
+                            <label for="chk-phone">Teléfono <span class="req-star">*</span></label>
+                            <input type="text" id="chk-phone" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="form-col half-col">
+                        <div class="input-box">
+                            <!-- Campo opcional: no lleva required ni req-star -->
+                            <label for="chk-mobile">Teléfono movil</label>
+                            <input type="text" id="chk-mobile" class="form-input">
+                        </div>
+                    </div>
+
+                    <!-- Email a ancho completo: es el destinatario del correo de confirmación -->
+                    <div class="form-col full-col">
+                        <div class="input-box">
+                            <label for="chk-email">Dirección de correo electrónico <span
+                                    class="req-star">*</span></label>
+                            <input type="email" id="chk-email" class="form-input" required>
+                        </div>
+                        <span class="form-helper">Este es el correo electrónico al que le enviaremos su
+                            confirmación.</span>
+                    </div>
+                </div>
+
+                <!-- Subsección de dirección postal del huésped -->
+                <h3 class="checkout-subsection-title">DIRECCIÓN</h3>
+
+                <div class="form-grid">
+
+                    <!-- Selector de país: implementado como dropdown personalizado.
+                         #country-display es el input visible (readonly) que muestra el texto seleccionado;
+                         #chk-country es el input hidden que almacena el valor real enviado al servidor.
+                         #country-list es el desplegable generado y poblado dinámicamente por Checkout.js. -->
+                    <div class="form-col half-col">
+                        <div class="input-box select-wrapper" id="country-wrapper" style="cursor: pointer;">
+                            <label>Pais</label>
+                            <input type="text" id="country-display" class="form-input" readonly placeholder="Selecciona un pais..."
+                                style="cursor: pointer;">
+                            <input type="hidden" id="chk-country" required>
+                            <div class="custom-dropdown-list hidden" id="country-list">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna vacía intencional para mantener el alineamiento del grid de dos columnas -->
+                    <div class="form-col half-col"></div>
+
+                    <div class="form-col half-col">
+                        <div class="input-box">
+                            <label for="chk-address">Dirección 1 <span class="req-star">*</span></label>
+                            <input type="text" id="chk-address" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="form-col half-col">
+                        <div class="input-box">
+                            <!-- Dirección 2 opcional (piso, puerta, etc.) -->
+                            <label for="chk-address2">Dirección 2</label>
+                            <input type="text" id="chk-address2" class="form-input">
+                        </div>
+                    </div>
+
+                    <div class="form-col half-col">
+                        <div class="input-box">
+                            <label for="chk-city">Ciudad</label>
+                            <input type="text" id="chk-city" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-col half-col">
+                        <div class="input-box">
+                            <label for="chk-zip">Codigo Postal</label>
+                            <input type="text" id="chk-zip" class="form-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── DETALLES DE LA RESERVA ────────────────────────────────── -->
+                <h2 class="checkout-section-title section-title-spaced">Detalles de la reserva</h2>
+
+                <div class="form-grid">
+                    <!-- Acordeón de peticiones especiales: oculto por defecto y expandible.
+                         #special-requests-toggle actúa como trigger; Checkout.js gestiona
+                         el toggle de la clase .hidden en #special-requests-content -->
+                    <div class="form-col full-col">
+                        <div class="accordion-box" id="special-requests-toggle">
+                            <span>Peticiones Especiales</span>
+                            <!-- Icono de chevron que Checkout.js rota al expandir/colapsar -->
+                            <svg id="sr-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="accordion-content hidden" id="special-requests-content">
+                            <div class="accordion-inner-padding">
+                                <!-- Campo de observaciones: restricciones alimentarias, edad de niños, etc. -->
+                                <textarea id="chk-observations" class="form-input" rows="3"
+                                    placeholder="Restricciones alimentarias, niños de entre 7 y 12 años (no se admiten niños menores de 7 años, incluidos bebés)."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── MÉTODO DE PAGO ─────────────────────────────────────────── -->
+                <!-- Cabecera con icono de candado para reforzar la percepción de seguridad -->
+                <div class="icon-header-wrapper">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <h2 class="checkout-section-title icon-header-title">Pago</h2>
+                </div>
+                <p class="security-notice">Utilizamos transmisión segura y almacenamiento cifrado para proteger su información personal.</p>
+
+                <!-- Selector de método de pago: mismo patrón que el selector de país.
+                     #payment-display muestra el texto visible; #chk-payment-method almacena
+                     el valor (Card/Cash/Transfer) enviado al servidor. Valor por defecto: "Card". -->
+                <div class="form-grid">
+                    <div class="form-col full-col">
+                        <div class="input-box select-wrapper clickable-box" id="payment-wrapper">
+                            <label>Método de pago <span class="req-star">*</span></label>
+                            <input type="text" id="payment-display" class="form-input clickable-box" readonly value="Tarjeta de crédito/débito">
+                            <input type="hidden" id="chk-payment-method" required value="Card">
+                        
+                            <!-- Opciones del dropdown de pago generadas estáticamente (no requieren API) -->
+                            <div class="custom-dropdown-list hidden" id="payment-list">
+                                <div class="custom-option" data-value="Card">Tarjeta de crédito/débito</div>
+                                <div class="custom-option" data-value="Cash">Efectivo (Pago en la propiedad)</div>
+                                <div class="custom-option" data-value="Transfer">Transferencia bancaria</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- FIN BLOQUE 1: INFORMACIÓN DE CONTACTO Y PAGO -->
+
+            <!-- ── BLOQUE 2: POLÍTICAS DEL HOTEL ─────────────────────────────── -->
+            <div class="checkout-form-container box-separated">
+                <h2 class="checkout-section-title section-title-spaced" style="margin-top: 0;">Políticas:</h2>
+            
+                <div class="policies-box">
+                    <!-- Horarios de check-in y check-out del establecimiento -->
+                    <div class="policies-times">
+                        <div class="time-block">
+                            <strong>Check-in</strong><br>
+                            <span>después de las 3:00 pm</span>
+                        </div>
+                        <div class="time-block">
+                            <strong>Check-out</strong><br>
+                            <span>antes de las 11:00 am</span>
+                        </div>
+                    </div>
+            
+                    <!-- Nombre de la habitación seleccionada: inyectado dinámicamente por Checkout.js
+                         a partir del valor almacenado en sessionStorage -->
+                    <p class="policy-room-name" id="policy-room-name"></p>
+            
+                    <!-- Política de garantía: informa que el prepago no es obligatorio
+                         pero se requiere número de tarjeta de crédito válido -->
+                    <p class="policy-text">
+                        <strong>Política de Garantía</strong><br>
+                        Paga en el alojamiento. No se requiere prepago. Se necesita un número de tarjeta de crédito con fecha de caducidad válida y código de seguridad. 
+                    </p>
+            
+                    <!-- Política de cancelación escalonada: porcentajes aplicables según
+                         la antelación con la que se cancele la reserva -->
+                    <p class="policy-text last-policy">
+                        <strong>Política de Cancelación</strong><br>
+                        Cancelación/modificación gratuita hasta 22 días antes de la llegada. Gastos de cancelación/modificación 21 días antes de la llegada: 20 % del importe total de la estancia, impuestos incluidos. 14 días: 30 %. 7 días: 50 %. 5 días: 70 %. 3 días antes o en caso de no presentarse o salida anticipada: 100 %.
+                    </p>
+                </div>
+            </div>
+            <!-- FIN BLOQUE 2: POLÍTICAS -->
+
+            <!-- ── BLOQUE 3: CONFIRMACIONES Y CONSENTIMIENTOS ─────────────────── -->
+            <!-- El botón de confirmación permanece disabled hasta que los dos checkboxes
+                 obligatorios (chk-ack-details y chk-ack-conditions) estén marcados.
+                 Checkout.js gestiona esta validación mediante listeners en los checkboxes. -->
+            <div class="checkout-form-container box-separated">
+                <h2 class="checkout-section-title section-title-spaced" style="margin-top: 0;">Agradecimiento</h2>
+            
+                <div class="acknowledgement-group">
+                    <!-- Suscripción al boletín: opcional, no bloquea el botón de confirmación -->
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="chk-newsletter" class="custom-checkbox">
+                        <span class="checkbox-text">Sí, deseo recibir el boletín informativo de Relais & Châteaux.</span>
+                    </label>
+            
+                    <!-- Confirmación obligatoria de que el huésped ha revisado los datos de la reserva -->
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="chk-ack-details" class="custom-checkbox" required>
+                        <span class="checkbox-text">
+                            * Confirme que ha comprobado su reserva y que todos los datos son correctos.<br>
+                            <a href="#" class="policy-link">Política de privacidad</a>
+                        </span>
+                    </label>
+            
+                    <!-- Aceptación obligatoria de las condiciones de reserva -->
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="chk-ack-conditions" class="custom-checkbox" required>
+                        <span class="checkbox-text">* Estoy de acuerdo con las Condiciones de Reserva.</span>
+                    </label>
+                </div>
+            </div>
+            <!-- FIN BLOQUE 3: CONFIRMACIONES -->
+
+            <!-- Botón de confirmación final: disabled por defecto y habilitado por Checkout.js
+                 cuando todos los campos obligatorios y checkboxes están completados.
+                 onclick delega en processFinalReservation() que envía la reserva a la API. -->
+            <div class="confirm-action-container">
+                <button class="btn-checkout-final" id="btn-confirm-booking" disabled onclick="processFinalReservation()">
+                    CONFIRM BOOKING
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </button>
+            </div>
+
+        </section>
+        <!-- FIN COLUMNA PRINCIPAL -->
+
+        <!-- ── COLUMNA SIDEBAR: CARRITO RESUMEN ──────────────────────────────── -->
+        <!-- hideSidebarBtn=true oculta el botón de checkout dentro del widget,
+             ya que en esta vista el CTA de confirmación está en la columna principal -->
+        <div class="booking-sidebar-column">
+            <div th:replace="~{reservation/fragments/cart-widget :: cartWidget(hideSidebarBtn=true)}"></div>
+        </div>
+
+    </div>
+    <!-- FIN checkout-main-grid -->
+
+    <!-- Footer global compartido con el resto del sitio -->
+    <div th:replace="~{fragments/layout/components :: footer}"></div>
+
+    <!-- GSAP y ScrollTrigger: necesarios para las animaciones de entrada del formulario -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Utilidades globales del flujo de reservas (showToast, etc.) -->
+    <script th:src="@{/js/reservation/globalBooking.js}"></script>
+    <!-- Lógica específica del checkout: validación de formulario, dropdowns,
+         acordeón de peticiones especiales y envío final de la reserva a la API -->
+    <script th:src="@{/js/reservation/Checkout.js}"></script>
+
+</body>
+</html>

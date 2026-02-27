@@ -1,0 +1,131 @@
+/* ============================================================
+   REGISTER.CSS — Estilos de las páginas de registro y perfil
+   Este archivo es compartido por Register.html y Profile.html.
+   Define la estructura del formulario, los modificadores que adaptan
+   los componentes reutilizados de Checkout.css y los botones de
+   autenticación.
+   Depende de global.css para variables (--background) y de
+   Checkout.css para los componentes base (.checkout-form-container,
+   .form-grid, .input-box, etc.).
+   ============================================================ */
+
+
+/* ============================================================
+   LAYOUT / ESTRUCTURA PRINCIPAL
+   ============================================================ */
+
+/*
+   Contenedor raíz del formulario de registro y perfil.
+   A diferencia de la mayoría de páginas del sitio que se alinean
+   a la izquierda, aquí se centra con margin: auto para dar al
+   formulario un aspecto de tarjeta focalizada en pantalla.
+   max-width: 850px limita la longitud de las líneas de los campos
+   de texto para preservar la legibilidad y la proporción visual.
+*/
+.register-container {
+    max-width: 850px;
+    width: 100%;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* Reduce el margen inferior entre cajas del formulario heredado de Checkout.css,
+   ya que el formulario de registro es más compacto que el de checkout. */
+.register-container .checkout-form-container {
+    margin-bottom: 20px;
+}
+
+
+/* ============================================================
+   MODIFICADORES — Sobreescritura de componentes de Checkout.css
+   ============================================================ */
+
+/* Espacio inferior del título de página para separarlo de la primera
+   caja del formulario sin alterar el componente base en Checkout.css. */
+.register-page-title {
+    margin-bottom: 30px;
+}
+
+/*
+   Reduce el tamaño del título de sección y elimina su margen superior.
+   Se usa !important para sobrescribir los valores definidos en Checkout.css,
+   ya que este componente fue diseñado originalmente para el checkout
+   y aquí requiere una escala tipográfica más contenida.
+*/
+.register-section-title {
+    font-size: 18px !important;
+    margin-top: 0 !important;
+}
+
+/* Fondo gris claro aplicado a la sección de términos y consentimientos,
+   diferenciándola visualmente del resto de cajas del formulario. */
+.box-light-gray {
+    background-color: #F4F4F4;
+    padding: 30px;
+}
+
+/*
+   Utilidad para inputs cuyo contenedor padre tiene altura mayor a la necesaria.
+   height: max-content colapsa el .input-box al tamaño mínimo de su contenido,
+   evitando que se estire por el Flexbox del .form-grid cuando está junto a un
+   campo con texto de ayuda (.form-helper) que lo hace más alto.
+*/
+.fit-height {
+    height: max-content;
+}
+
+
+/* ============================================================
+   COMPONENTE: BOTONES DE AUTENTICACIÓN
+   ============================================================ */
+
+/*
+   Contenedor de los botones CANCELAR / CREAR (o CANCELAR / ACTUALIZAR).
+   justify-content: flex-end los empuja al margen derecho, siguiendo
+   la convención de UX de colocar la acción principal a la derecha.
+*/
+.auth-buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+/*
+   Botón de acción principal: fondo negro con texto blanco para máximo contraste.
+   border: 1px solid transparent reserva el espacio del borde desde el inicio
+   para que el hover (que activa border-color: #000) no desplace el layout
+   al aparecer el borde. La transición solo cubre background-color; el cambio
+   de color de texto y borde en hover es instantáneo.
+*/
+.btn-auth-dark {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid transparent;
+    padding: 15px 40px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/*
+   Hover invertido: fondo blanco (--background) con borde y texto negro.
+   Usa la variable --background de global.css para garantizar coherencia
+   con el fondo real de la página en caso de que cambie en el futuro.
+*/
+.btn-auth-dark:hover {
+    background-color: var(--background);
+	color: #000;
+	border-color: #000;
+}
+
+/* Estado deshabilitado durante el envío del formulario (ej. "CREATING...", "UPDATING..."):
+   el gris y el cursor not-allowed comunican visualmente que el botón no es interactivo,
+   complementando el disabled="true" que aplica el JS. */
+.btn-auth-dark:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}

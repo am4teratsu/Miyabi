@@ -1,0 +1,522 @@
+/* ============================================================
+   BOOKING WIDGET — Estilos del widget de búsqueda de reservas
+   Cubre: modal de huéspedes, modal de calendario doble,
+   estados de días del calendario y tarjetas de habitaciones.
+   ============================================================ */
+
+
+/* ============================================================
+   1. MODAL DE HUÉSPEDES
+   ============================================================ */
+
+/* position: relative es imprescindible para que el modal hijo
+   con position: absolute se ancle a este bloque y no al viewport */
+.widget-block {
+    position: relative; 
+}
+
+/* El modal flota justo debajo del bloque que lo dispara (top: 110%).
+   z-index: 1000 garantiza que se superponga al resto del contenido
+   de la página sin afectar al flujo del documento. */
+.guest-modal {
+    position: absolute;
+    top: 110%; 
+    left: 0;
+    width: 300px;
+    background: #fff;
+    border: 1px solid #dcdcdc;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 20px;
+    z-index: 1000;
+}
+
+/* Cabecera del modal: separa título y botón de cierre en extremos
+   opuestos mediante justify-content: space-between */
+.guest-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.guest-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+/* Botón de cierre sin estilos de navegador por defecto;
+   display: flex centra el SVG correctamente dentro del área clicable */
+.close-modal-btn {
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+}
+
+.close-modal-btn svg {
+    display: block;
+}
+
+/* Fila de selección de tipo de huésped: texto a la izquierda
+   y contador a la derecha usando space-between */
+.guest-selection-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+}
+
+/* Contador de huéspedes (−, número, +) alineado en fila con gap uniforme */
+.counter-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-step {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+}
+
+/* Botón de confirmación de huéspedes con inversión de colores en hover
+   para mantener consistencia con el sistema de botones del widget */
+.btn-confirm-guests {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: 1px solid transparent;
+    padding: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-confirm-guests:hover {
+    background-color: #fff;
+    border-color: #000;
+    color: #000;
+}
+
+/* Clase utilitaria global para ocultar/mostrar modales desde JS */
+.hidden { display: none; }
+
+
+/* ============================================================
+   2. LAYOUT GENERAL DEL WIDGET
+   ============================================================ */
+
+/* Columna principal del widget: apila la barra de búsqueda
+   y el modal de calendario verticalmente en el flujo del documento */
+.search-widget-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* El modal de calendario ocupa el 100% del ancho del widget y elimina
+   el borde superior para fusionarse visualmente con la barra de búsqueda */
+.calendar-modal {
+    display: block;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #dcdcdc;
+    border-top: none; 
+    padding: 30px;
+    transition: all 0.3s ease;
+}
+
+/* Sobreescribe display: block cuando JS aplica .hidden al modal de calendario */
+.calendar-modal.hidden {
+    display: none;
+}
+
+
+/* ============================================================
+   3. CALENDARIO DOBLE
+   ============================================================ */
+
+.calendar-helper-text { font-size: 13px; color: #555; margin-bottom: 25px; }
+
+/* Dos calendarios en fila con separación fija entre ellos */
+.dual-calendar-container { display: flex; gap: 40px; }
+
+/* Cada mes ocupa el mismo ancho proporcional dentro del contenedor flex */
+.calendar-month { flex: 1; }
+.calendar-month h4 { text-align: center; margin-bottom: 20px; font-weight: normal; font-size: 18px; }
+
+/* Grid de 7 columnas iguales para cabecera (S M T W T F S) y días del mes.
+   Ambas comparten la misma estructura para que las columnas se alineen entre sí. */
+.calendar-grid-header, .calendar-days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+/* Cada celda de día es cuadrada (aspect-ratio: 1) gracias a que las columnas
+   del grid tienen el mismo ancho; flex interno centra número y precio. */
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+
+/* ── ESTADOS DE LOS DÍAS DEL CALENDARIO ─────────────────────────────────── */
+
+/* Día seleccionado como check-in o check-out: fondo dorado con !important
+   para sobreescribir cualquier otro estado que pudiera coexistir */
+.day-selected { 
+    background-color: #94712A !important; 
+    color: #fff !important; 
+    border-radius: 2px;
+    border: 1px solid #ffffff;
+}
+
+/* Días dentro del rango seleccionado (entre check-in y check-out) */
+.day-in-range { 
+    background-color: #94712A;
+    color: #fff;
+    border: 1px solid #ffffff;
+}
+
+/* Día no disponible: cursor bloqueado y patrón de líneas cruzadas mediante
+   dos pseudoelementos (::before y ::after) con gradientes diagonales
+   que forman una X sobre la celda, sin afectar al texto del número. */
+.day-unavailable {
+    position: relative;
+    cursor: not-allowed;
+    color: #000111; 
+    overflow: hidden;
+    border: 4px solid #fff;
+}
+
+/* Diagonal de izquierda a derecha (↘) */
+.day-unavailable::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to bottom right, transparent calc(50% - 0.5px), #A0A0A0 calc(50% - 0.5px), #A0A0A0 calc(50% + 0.5px), transparent calc(50% + 0.5px));
+    z-index: 1;
+}
+
+/* Diagonal de derecha a izquierda (↙): se combina con ::before para formar la X */
+.day-unavailable::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to top right, transparent calc(50% - 0.5px), #A0A0A0 calc(50% - 0.5px), #A0A0A0 calc(50% + 0.5px), transparent calc(50% + 0.5px));
+    z-index: 1;
+}
+
+/* El número del día se eleva por encima de las diagonales (z-index: 2)
+   con un fondo blanco para que sea legible sobre las líneas */
+.day-unavailable span {
+    position: relative;
+    z-index: 2;
+    background: #fff; 
+    padding: 0 1px; 
+    font-size: 14px;
+}
+
+/* Días anteriores a la fecha actual: no seleccionables, fondo gris claro */
+.day-past {
+    background-color: #EEEEEE;
+    color: #000;
+    cursor: not-allowed;
+    border: 1px solid #ffffff; 
+}
+
+/* Día actual: usa !important para sobreescribir .day-past si coinciden */
+.day-today {
+    background-color: #8b6508 !important; 
+    color: #ffffff !important;
+    border-radius: 2px;
+}
+
+/* El precio dentro del día hoy también debe ser blanco para ser legible */
+.day-today .day-price {
+    color: #ffffff !important;
+}
+
+/* Cabecera de cada mes: flecha anterior — título — flecha siguiente
+   distribuidos en los extremos del contenedor */
+.month-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.month-header h4 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 18px;
+    color: #000;
+}
+
+/* Botón de navegación entre meses sin estilos de navegador;
+   opacity en hover indica interactividad de forma sutil */
+.btn-month-nav {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: opacity 0.2s ease;
+}
+
+.btn-month-nav:hover {
+    opacity: 0.5;
+}
+
+/* Sobreescribe el margin-bottom heredado del selector anterior del mismo elemento */
+.calendar-month h4 { margin-bottom: 0; }
+
+/* Pie del calendario: alinea los botones de acción a la derecha
+   con margin-left: auto como refuerzo del alineamiento en contextos flex */
+.calendar-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+    margin-top: 25px;
+    font-family: "EB Garamond", serif !important;
+}
+
+/* Botón de cancelar sin fondo, con color dorado corporativo */
+.btn-calendar-cancel { 
+    background: none;
+    border: none; 
+    cursor: pointer; 
+    color: #7A5D23; 
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 25px; 
+    transition: color 0.3s ease;
+}
+
+/* Botón de búsqueda con inversión de colores en hover,
+   consistente con el patrón del resto de CTAs del widget */
+.btn-calendar-search { 
+    background: #000; 
+    color: #fff; 
+    border: 1px solid transparent; 
+    padding: 15px 40px; 
+    font-size: 14px;
+    letter-spacing: 1px;
+    cursor: pointer; 
+    transition: background 0.3s, color 0.3s;
+}
+
+.btn-calendar-search:hover {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+}
+
+
+/* ============================================================
+   4. SECCIÓN Y TARJETAS DE HABITACIONES
+   ============================================================ */
+
+.room-results-section { margin-top: 40px; width: 100%; }
+.section-title { font-size: 24px; font-weight: normal; margin-bottom: 20px; color: #333; }
+
+/* Aviso de políticas del hotel: borde y fondo diferenciados del resto
+   del contenido para captar la atención del usuario antes de seleccionar */
+.hotel-policies-box {
+    display: flex;
+    gap: 15px;
+    border: 1px solid #DDCFB2;
+    padding: 15px;
+    margin-bottom: 30px;
+    background: #fff;
+}
+.policy-icon svg { width: 30px; height: 30px; }
+.policy-content h4 { margin: 0 0 10px 0; color: #925F0C; font-size: 18px; font-weight: 600; }
+.policy-content p { margin: 5px 0; color: #000; font-size: 16px; }
+
+/* Tarjeta de habitación: fila flex con imagen a la izquierda de ancho fijo
+   e información a la derecha que crece para ocupar el espacio restante */
+.room-card {
+    display: flex;
+    border: 1px solid #DDCFB2;
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 15px; 
+    gap: 20px;
+}
+
+/* Contenedor de imagen con ancho fijo y aspect-ratio 16:6 para mantener
+   proporciones consistentes entre habitaciones con diferentes imágenes.
+   flex-shrink: 0 evita que se comprima al reducirse el espacio disponible. */
+.room-card-img-wrapper {
+    position: relative;
+    width: 250px;
+    aspect-ratio: 16/6;
+    flex-shrink: 0;
+}
+
+.room-card-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+/* La columna de información ocupa todo el ancho restante de la tarjeta
+   y usa flex column para distribuir el contenido verticalmente */
+.room-card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.room-card-title { 
+    font-size: 20px; 
+    margin: 0 0 15px 0; 
+    color: #000; 
+    font-weight: 500;
+}
+
+/* Lista de características de la habitación sin viñetas nativas;
+   el separador inferior delimita visualmente esta sección del precio */
+.room-features { 
+    list-style: none; 
+    padding: 0 0 15px 0; 
+    margin: 0 0 10px 0; 
+    color: #000; 
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid #000;
+}
+.room-features li { 
+    margin-bottom: 10px; 
+    display: flex; 
+    align-items: flex-start; 
+    line-height: 1.4;
+}
+
+/* Viñeta personalizada con bullet tipográfico para mayor control visual */
+.room-features li::before { 
+    content: "•"; 
+    margin-right: 8px; 
+    font-weight: bold; 
+}
+
+/* Footer de la tarjeta: empuja el precio y el CTA al fondo de la columna
+   usando margin-top: auto, y los separa en extremos opuestos con space-between */
+.room-card-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.room-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Enlace al detalle de la tarifa: estilo dorado con subrayado para indicar
+   que es interactivo sin usar el estilo de enlace por defecto del navegador */
+.rate-type {
+    color: #7A5D23;
+    font-size: 16px;
+    margin: 0 0 5px 0;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Beneficio incluido en la tarifa: icono SVG + texto en fila.
+   flex-shrink: 0 en el SVG evita que se distorsione si el texto es largo. */
+.room-benefits p.black { 
+    color: #000; 
+    font-weight: 600;
+    font-size: 14px;
+    margin: 0;
+    display: flex;
+    align-items: center; 
+    gap: 8px; 
+}
+
+.room-benefits p.black svg {
+    flex-shrink: 0; 
+}
+
+/* Bloque de precio: alineado a la derecha para seguir la convención
+   de mostrar el precio en el extremo opuesto a los beneficios */
+.room-price-box { text-align: right; }
+
+.room-price { 
+    font-size: 24px; 
+    font-weight: bold; 
+    margin: 0; 
+}
+
+/* Texto de soporte bajo el precio (impuestos, política de cancelación, etc.) */
+.room-price-sub { 
+    font-size: 11px;
+    font-weight: 600;
+    color: #9C9B97; 
+    margin: 2px 0 10px 0; 
+    line-height: 1.3;
+}
+
+/* CTA de reserva: mismo patrón de inversión de colores en hover
+   que el resto de botones primarios del widget */
+.btn-book-now {
+    background: #000; 
+    color: #fff; 
+    padding: 12px 30px; 
+    border: 1px solid transparent; 
+    cursor: pointer; 
+    font-size: 13px; 
+    letter-spacing: 1px; 
+    transition: 0.3s;
+}
+
+.btn-book-now:hover { 
+    background: #fff; 
+    color: #000;
+    border-color: #000;
+}
+
+
+/* ============================================================
+   5. RESPONSIVE — Móvil (≤ 768px)
+   En pantallas pequeñas las tarjetas de habitación pasan de
+   fila (imagen + info en horizontal) a columna (imagen encima,
+   info debajo). El precio se centra para mejor lectura en móvil.
+   ============================================================ */
+@media (max-width: 768px) {
+    .room-card { flex-direction: column; padding: 10px; gap: 15px; }
+
+    /* La imagen ocupa el 100% del ancho en móvil al eliminarse el ancho fijo */
+    .room-card-img-wrapper { width: 100%; }
+
+    /* El footer también apila beneficios y precio en columna,
+       estirando cada bloque al ancho completo */
+    .room-card-footer { flex-direction: column; align-items: stretch; gap: 20px; }
+    .room-price-box { text-align: center; }
+}

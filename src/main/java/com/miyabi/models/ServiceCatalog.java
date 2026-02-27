@@ -23,6 +23,9 @@ public class ServiceCatalog {
 
     @Column(length = 50)
     private String category;
+    
+    @Column(name = "season", nullable = false)
+    private String season = "All year";
 
     @Column(columnDefinition = "TINYINT DEFAULT 1")
     private Integer available = 1;
@@ -71,6 +74,14 @@ public class ServiceCatalog {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+    
+    public String getSeason() {
+        return season;
+    }
+
+    public void setSeason(String season) {
+        this.season = season;
     }
 
     public Integer getAvailable() {
