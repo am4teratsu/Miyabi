@@ -121,4 +121,17 @@ public class ReservationService {
 
         return this.createReservation(res);
     }
+
+    public Reservation saveFromEmployee(Reservation reservation) {
+        return reservationRepository.save(reservation);
+    }
+
+    public void deleteById(Integer id) {
+        reservationRepository.deleteById(id);
+    }
+
+    // ── Buscar por código único de reserva ──────────────────────────────────
+    public Reservation findByCode(String code) {
+        return reservationRepository.findByReservationCode(code);
+    }
 }

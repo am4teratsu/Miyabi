@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Edit Reservation – Miyabi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+    <style>
+        :root{--ink:#1a1410;--ivory:#faf8f4;--gold:#b8965a;--muted:#7a6e62;
+              --surface:#fff;--border:#e8e2d9;--radius:8px;--shadow:0 2px 16px rgba(26,20,16,.07)}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
+
+        .topbar{background:var(--ink);display:flex;align-items:center;justify-content:space-between;
+            padding:0 2rem;height:58px;position:sticky;top:0;z-index:100}
+        .topbar-brand{font-family:'Cormorant Garamond',serif;font-size:1.35rem;letter-spacing:.08em;color:#d4b483}
+        .topbar-brand span{color:#fff}
+        .btn-back{color:#ccc;text-decoration:none;font-size:.82rem;border:1px solid #444;
+            padding:.4rem .9rem;border-radius:6px;transition:all .2s}
+        .btn-back:hover{border-color:var(--gold);color:var(--gold)}
+
+        .page{max-width:680px;margin:3rem auto;padding:0 1.5rem}
+
+        .card{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:2.5rem}
+        .card-header{margin-bottom:1.8rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border)}
+        .card-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400}
+        .card-title small{display:block;font-family:'DM Sans',sans-serif;font-size:.73rem;
+            text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.2rem}
+
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+        .form-group{display:flex;flex-direction:column;gap:.35rem}
+        .form-group.full{grid-column:1/-1}
+        label{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:500}
+
+        input,select,textarea{padding:.6rem .9rem;border:1px solid var(--border);border-radius:var(--radius);
+            font-family:'DM Sans',sans-serif;font-size:.875rem;color:var(--ink);
+            background:var(--surface);outline:none;width:100%;transition:border-color .2s,box-shadow .2s}
+        input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,150,90,.12)}
+        textarea{resize:vertical;min-height:80px}
+
+        .price-preview{background:#fdf9f4;border:1px solid #e8d9bf;border-radius:var(--radius);
+            padding:1rem 1.2rem;grid-column:1/-1}
+        .price-preview-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;
+            color:var(--muted);margin-bottom:.4rem}
+        .price-preview-value{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600}
+        .price-preview-detail{font-size:.8rem;color:var(--muted);margin-top:.2rem}
+
+        .form-actions{display:flex;justify-content:flex-end;gap:.6rem;
+            margin-top:1.8rem;padding-top:1.4rem;border-top:1px solid var(--border)}
+        .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.4rem;border-radius:var(--radius);
+            font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;
+            cursor:pointer;text-decoration:none;border:none;transition:all .2s}
+        .btn-gold{background:var(--gold);color:#fff}
+        .btn-gold:hover{background:#a07840}
+        .btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+        .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+    </style>
+</head>
+<body>
+<nav class="topbar">
+    <div class="topbar-brand"><span>Miyabi</span> Hotel</div>
+    <a href="/users/reservations" class="btn-back">← Back to Reservations</a>
+</nav>
+
+<div class="page">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <small>Employee Panel</small>
+                Edit Reservation
+                <span style="font-size:1rem;color:var(--muted);font-family:'DM Sans',sans-serif"
+                      th:text="'· ' + ${reservation.reservationCode}"></span>
+            </div>
+        </div>
+
+        <form th:action="@{/users/reservations/update/{id}(id=${reservation.reservationId})}"
+              method="post">
+
+            <div class="form-grid">
+
+                <!-- GUEST -->
+                <div class="form-group">
+                    <label>Guest</label>
+                    <select name="guestId" required>
+                        <option value="">Select guest…</option>
+                        <option th:each="g : ${guests}"
+                                th:value="${g.idGuest}"
+                                th:selected="${reservation.guest != null and reservation.guest.idGuest == g.idGuest}"
+                                th:text="${g.names + ' ' + g.surnames + ' (' + g.dni + ')'}"></option>
+                    </select>
+                </div>
+
+                <!-- ROOM -->
+                <div class="form-group">
+                    <label>Room</label>
+                    <select name="roomId" id="roomSel" required onchange="calcPrice()">
+                        <option value="">Select room…</option>
+                        <option th:each="r : ${rooms}"
+                                th:value="${r.idRoom}"
+                                th:selected="${reservation.room != null and reservation.room.idRoom == r.idRoom}"
+                                th:data-price="${r.roomType.basePrice}"
+                                th:text="${'#' + r.roomNumber + ' – ' + r.roomType.nameType + ' (S/' + r.roomType.basePrice + '/n)'}"></option>
+                    </select>
+                </div>
+
+                <!-- DATES -->
+                <div class="form-group">
+                    <label>Check-In Date</label>
+                    <input type="date" name="entryDate" id="inDate" required
+                           th:value="${reservation.entryDate}" onchange="calcPrice()"/>
+                </div>
+                <div class="form-group">
+                    <label>Check-Out Date</label>
+                    <input type="date" name="departureDate" id="outDate" required
+                           th:value="${reservation.departureDate}" onchange="calcPrice()"/>
+                </div>
+
+                <!-- ADULTS / CHILDREN -->
+                <div class="form-group">
+                    <label>Adults (min. 1)</label>
+                    <input type="number" name="numAdults" min="1" max="6" required
+                           th:value="${reservation.numAdults ?: 1}"/>
+                </div>
+                <div class="form-group">
+                    <label>Children</label>
+                    <input type="number" name="numChildren" min="0" max="5"
+                           th:value="${reservation.numChildren ?: 0}"/>
+                </div>
+
+                <!-- STATUS -->
+                <div class="form-group">
+                    <label>Status</label>
+                    <select name="state">
+                        <option value="Pending"    th:selected="${reservation.state=='Pending'}">Pending</option>
+                        <option value="Confirmed"  th:selected="${reservation.state=='Confirmed'}">Confirmed</option>
+                        <option value="CheckedIn"  th:selected="${reservation.state=='CheckedIn'}">Checked In</option>
+                        <option value="CheckedOut" th:selected="${reservation.state=='CheckedOut'}">Checked Out</option>
+                        <option value="Cancelled"  th:selected="${reservation.state=='Cancelled'}">Cancelled</option>
+                    </select>
+                </div>
+
+                <!-- PRICE PREVIEW -->
+                <div class="price-preview">
+                    <div class="price-preview-label">Estimated Total</div>
+                    <div class="price-preview-value" id="totalPreview">S/ —</div>
+                    <div class="price-preview-detail" id="detailPreview">Select room and dates to calculate</div>
+                </div>
+
+                <!-- OBSERVATIONS -->
+                <div class="form-group full">
+                    <label>Observations</label>
+                    <textarea name="observations"
+                              placeholder="Special requests, notes…"
+                              th:text="${reservation.observations}"></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="/users/reservations" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-gold">Update Reservation</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function calcPrice() {
+        const sel  = document.getElementById('roomSel');
+        const inD  = document.getElementById('inDate').value;
+        const outD = document.getElementById('outDate').value;
+        if (!sel.value || !inD || !outD) return reset();
+
+        const price  = parseFloat(sel.options[sel.selectedIndex].dataset.price || 0);
+        const nights = Math.round((new Date(outD) - new Date(inD)) / 86400000);
+        if (nights <= 0) return reset('Check-out must be after check-in');
+
+        document.getElementById('totalPreview').textContent  = 'S/ ' + (price*nights).toFixed(2);
+        document.getElementById('detailPreview').textContent =
+            nights + ' night' + (nights>1?'s':'') + ' × S/ ' + price.toFixed(2) + '/night';
+    }
+    function reset(msg) {
+        document.getElementById('totalPreview').textContent  = 'S/ —';
+        document.getElementById('detailPreview').textContent = msg || 'Select room and dates to calculate';
+    }
+    calcPrice(); // run on load for edit mode
+</script>
+</body>
+</html>
