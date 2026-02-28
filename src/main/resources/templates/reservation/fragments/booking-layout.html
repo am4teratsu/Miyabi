@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Fragmento Thymeleaf reutilizable: grid principal de la página de reservas.
+     Define la estructura de dos columnas (contenido + sidebar) e integra
+     los subcomponentes del flujo mediante th:replace.
+     Se invoca desde booking.html con: th:replace="~{reservation/fragments/booking-layout :: bookingMainGrid}" -->
+<div th:fragment="bookingMainGrid" class="booking-main-grid miyabi-booking-container">
+
+    <!-- Columna principal (izquierda): contiene el widget de búsqueda y
+         el área donde se renderizan dinámicamente las tarjetas de habitaciones -->
+    <section class="booking-content-column">
+
+        <!-- Widget de búsqueda: selector de huéspedes, fechas y listado de habitaciones.
+             Definido en reservation/fragments/search-widget.html -->
+        <div th:replace="~{reservation/fragments/search-widget :: searchWidget}"></div>
+
+        <!-- Contenedor vacío reservado para la selección de habitación.
+             Su contenido es inyectado dinámicamente por booking-logic.js -->
+        <div id="room-selection-area">
+        </div>
+
+    </section>
+
+    <!-- Columna sidebar (derecha): resumen del carrito de reserva.
+         hideSidebarBtn=false muestra el botón de colapso del sidebar en esta vista. -->
+    <div class="booking-sidebar-column">
+        <!-- Widget del carrito: muestra fechas, huéspedes, habitación seleccionada y total.
+             Definido en reservation/fragments/cart-widget.html -->
+        <div th:replace="~{reservation/fragments/cart-widget :: cartWidget(hideSidebarBtn=false)}"></div>
+    </div>
+
+</div>
+
+</html>

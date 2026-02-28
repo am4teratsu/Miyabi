@@ -1,0 +1,308 @@
+/* ============================================================
+   BOOKING NAVBAR — Estilos para la cabecera del motor de reservas
+   Cubre: barra de navegación sticky, modal de login y
+   modal de perfil para usuarios autenticados.
+   ============================================================ */
+
+
+/* ============================================================
+   1. ESTRUCTURA DE LA NAVBAR
+   ============================================================ */
+
+/* La navbar se ancla al tope de la ventana al hacer scroll (sticky).
+   z-index: 1000 garantiza que quede por encima del contenido de la página
+   pero por debajo de los modales que flotan sobre ella (z-index: 2000). */
+.booking-header {
+    width: 100%;
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+    padding: 0;
+    z-index: 1000;
+}
+
+/* Distribuye logo y enlaces en los extremos opuestos de la barra
+   con una altura fija que mantiene la navbar compacta */
+.booking-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+}
+
+
+/* ============================================================
+   2. LOGO
+   ============================================================ */
+
+/* Altura fija con ancho automático preserva las proporciones
+   originales de la imagen del logo sin deformarla */
+.booking-logo img {
+    height: 35px;
+    width: auto;
+    display: block;
+}
+
+
+/* ============================================================
+   3. ENLACES DE NAVEGACIÓN
+   ============================================================ */
+
+/* Agrupa los enlaces y botones de acción de la navbar en fila
+   con separación uniforme entre ellos */
+.booking-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+/* Estilo base compartido por todos los enlaces de la navbar:
+   tipografía en mayúsculas con espaciado de letras para un look
+   elegante acorde con la identidad visual del ryokan */
+.booking-link {
+    text-decoration: none;
+    color: var(--color-black, #333);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+/* Botón del carrito/reserva en la navbar: sin estilos de navegador
+   para integrarse visualmente como un icono más de la barra */
+.booking-cart-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-black, #333);
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin-left: 10px;
+    transition: opacity 0.3s ease;
+}
+
+
+/* ============================================================
+   4. MODAL DE LOGIN
+   ============================================================ */
+
+/* position: relative en el wrapper es el ancla necesaria para que
+   el modal hijo con position: absolute se posicione relativo a él
+   y no al viewport */
+.login-wrapper {
+    position: relative;
+}
+
+/* El modal flota debajo del enlace de login (top: 40px) alineado
+   a la derecha de su contenedor. z-index: 2000 lo sitúa por encima
+   de la navbar sticky (z-index: 1000) para evitar que quede oculto */
+.login-modal {
+    position: absolute;
+    top: 40px; 
+    right: -20px;
+    width: 280px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 20px;
+    z-index: 2000;
+    font-family: serif;
+}
+
+/* Oculta el modal cuando JS añade la clase; sobreescrito por la
+   clase utilitaria .hidden definida al final del archivo */
+.login-modal.hidden {
+    display: none;
+}
+
+/* Cabecera del modal: título y botón de cierre en extremos opuestos */
+.login-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.login-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: normal;
+    color: #333;
+}
+
+/* Botón de cierre con borde punteado para diferenciarlo visualmente
+   de los botones de acción del formulario */
+.close-login-btn {
+    background: none;
+    border: 1px dashed #999;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 6px;
+    color: #666;
+}
+
+/* Grupo de campo de formulario: etiqueta + input apilados verticalmente */
+.input-group {
+    margin-bottom: 15px;
+}
+
+/* box-sizing: border-box evita que el padding desborde el ancho del 100%
+   del contenedor del modal */
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+/* Botón de submit con estilo neutro (gris claro) para no competir
+   visualmente con el CTA principal del flujo de reservas */
+.btn-sign-in {
+    width: 100%;
+    padding: 12px;
+    background-color: #f0f0f0;
+    border: none;
+    color: #555;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: background-color 0.3s;
+}
+
+.btn-sign-in:hover {
+    background-color: #e0e0e0;
+}
+
+/* Enlace de recuperación de contraseña: color dorado corporativo
+   para mantener la coherencia visual con el resto de enlaces de acción */
+.forgot-link {
+    display: block;
+    font-size: 13px;
+    color: #8b6508;
+    text-decoration: underline;
+    margin-bottom: 15px;
+}
+
+/* Separador visual entre el formulario de login y la sección
+   de creación de cuenta */
+.login-divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+}
+
+.create-account-text {
+    font-size: 13px;
+    line-height: 1.4;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Enlace de registro: mismo color dorado corporativo que .forgot-link
+   para unificar el estilo de todos los enlaces de acción secundarios */
+.create-link {
+    font-size: 14px;
+    color: #8b6508;
+    text-decoration: underline;
+}
+
+/* Mensaje de error de credenciales: margen negativo superior para
+   reducir el espacio visual entre el input y el mensaje de error */
+.error-msg {
+    color: red;
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+
+/* ============================================================
+   5. PERFIL DE USUARIO AUTENTICADO
+   ============================================================ */
+
+/* Wrapper del badge de perfil: position: relative ancla el modal
+   de perfil que flota debajo de él */
+.profile-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Badge circular con las iniciales del usuario: reemplaza la foto
+   de perfil cuando no hay imagen disponible. Usa border en lugar
+   de background para que el fondo blanco de la navbar sea visible
+   a través de él, dando un aspecto de contorno limpio */
+.profile-badge {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 2px solid #333;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+    font-family: inherit;
+}
+
+/* Modal de perfil: flota debajo del badge (top: 50px) con z-index: 2000
+   para superponerse a la navbar sticky. Usa flex column para que cada
+   enlace del menú ocupe el ancho completo del modal */
+.profile-modal {
+    position: absolute;
+    top: 50px;
+    right: -10px;
+    width: 275px;
+    background-color: #FFFFFF;
+    border: 1px solid #AEB3B7;
+    display: flex;
+    flex-direction: column;
+    z-index: 2000;
+    font-family: serif;
+}
+
+.profile-modal.hidden {
+    display: none;
+}
+
+/* Cada opción del menú de perfil (Mi cuenta, Mis reservas, Cerrar sesión, etc.)
+   con separador inferior para delimitar visualmente las opciones */
+.profile-link {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #000000;
+    font-size: 15px;
+    border-bottom: 1px solid #EEEEEE;
+    transition: background-color 0.2s;
+}
+
+/* Elimina el borde del último ítem para no duplicar el borde
+   inferior del contenedor del modal */
+.profile-link:last-child {
+    border-bottom: none;
+}
+
+.profile-link:hover {
+    background-color: #F2F2F2;
+}
+
+
+/* ============================================================
+   6. UTILIDADES GLOBALES
+   ============================================================ */
+
+/* Clase utilitaria de ocultación global: !important garantiza que
+   sobreescriba cualquier display definido en reglas más específicas,
+   incluyendo el display: flex de modales y wrappers */
+.hidden {
+    display: none !important;
+}

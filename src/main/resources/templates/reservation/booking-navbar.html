@@ -1,0 +1,98 @@
+<!-- Fragmento Thymeleaf reutilizable: navbar del motor de reservas.
+     Compartida por booking.html y Checkout.html mediante:
+     th:replace="~{reservation/booking-navbar :: bookingNavbar}"
+     Gestiona dos estados de autenticación mutuamente excluyentes:
+       · No autenticado → muestra #login-wrapper con modal de login
+       · Autenticado    → muestra #profile-wrapper con badge y menú de perfil
+     El estado activo es controlado por booking-logic.js / Checkout.js
+     a través de updateNavbarState() y renderCheckoutNavbar(). -->
+<div th:fragment="bookingNavbar">
+
+    <!-- Cabecera sticky de la página de reservas (ver posicionamiento en booking-navbar.css) -->
+    <header class="booking-header">
+        <div class="booking-navbar miyabi-booking-container">
+
+            <!-- Logo del ryokan: enlace al inicio del sitio público -->
+            <div class="booking-logo">
+                <a href="/">
+                    <img src="/img/logo.png" alt="Miyabi Ryokan">
+                </a>
+            </div>
+
+            <!-- Barra de navegación derecha: enlaces de acción y controles de sesión -->
+            <nav class="booking-nav-links">
+
+                <!-- Enlace a "Mis Reservas": handleMyReservationsClick() verifica si hay sesión activa;
+                     si no, intercepta la navegación y abre el modal de login en su lugar -->
+                <a href="#" class="booking-link" onclick="handleMyReservationsClick(event)">Mis Reservas</a>
+
+                <!-- ── ESTADO NO AUTENTICADO ──────────────────────────────────────────
+                     Visible por defecto; ocultado por JS al detectar sesión activa.
+                     Contiene el enlace trigger y el modal de login anidado. -->
+                <div class="login-wrapper" id="login-wrapper">
+                    <!-- Trigger del modal de login: preventDefault gestionado dentro de toggleLoginModal() -->
+                    <a href="#" class="booking-link" onclick="toggleLoginModal(event)">Iniciar Sesión</a>
+
+                    <!-- Modal de login: oculto por defecto (.hidden); toggle gestionado por toggleLoginModal().
+                         Se posiciona como dropdown bajo el enlace "Iniciar Sesión" (ver booking-navbar.css). -->
+                    <div class="login-modal hidden" id="login-modal">
+                        <div class="login-modal-header">
+                            <h3>Account Sign In</h3>
+                            <!-- Botón de cierre del modal -->
+                            <button class="close-login-btn" onclick="toggleLoginModal(event)">✕</button>
+                        </div>
+
+                        <!-- Formulario de login: onsubmit delega en handleLogin(event) que realiza
+                             la autenticación vía POST /api/auth/login y actualiza sessionStorage -->
+                        <form id="login-form" onsubmit="handleLogin(event)">
+                            <div class="input-group">
+                                <input type="email" id="login-email" placeholder="Email" required>
+                            </div>
+                            <div class="input-group">
+                                <input type="password" id="login-password" placeholder="Password" required>
+                            </div>
+                            <!-- Mensaje de error de credenciales: oculto por defecto;
+                                 mostrado por handleLogin() si la API devuelve un error de autenticación -->
+                            <p id="login-error-msg" class="error-msg hidden">Credenciales incorrectas.</p>
+                            <button type="submit" class="btn-sign-in">INICAR SESION</button>
+                        </form>
+
+                        <a href="/forgot-password" class="forgot-link">Olvidó su contraseña?</a>
+                        <hr class="login-divider">
+                        <p class="create-account-text">¿No tienes cuenta? Guarda tu historial de pedidos y disfruta de un proceso de pago más rápido creando una cuenta.</p>
+                        <a href="/register" class="create-link">Crear una cuenta</a>
+                    </div>
+                </div>
+                <!-- ── FIN ESTADO NO AUTENTICADO ──────────────────────────────────── -->
+
+                <!-- ── ESTADO AUTENTICADO ─────────────────────────────────────────────
+                     Oculto por defecto (.hidden); mostrado por JS al detectar sesión activa.
+                     El badge muestra las iniciales del nombre del huésped autenticado,
+                     generadas por getInitials() en globalBooking.js. -->
+                <div class="profile-wrapper hidden" id="profile-wrapper">
+
+                    <!-- Badge circular con iniciales: "--" como placeholder hasta que JS
+                         inyecte las iniciales reales del huésped. Actúa como trigger del
+                         menú desplegable de perfil mediante toggleProfileModal(). -->
+                    <button class="profile-badge" id="profile-badge" onclick="toggleProfileModal(event)">
+                        --
+                    </button>
+
+                    <!-- Menú desplegable del perfil autenticado: oculto por defecto;
+                         toggle gestionado por toggleProfileModal() en booking-logic.js -->
+                    <div class="profile-modal hidden" id="profile-modal">
+                        <!-- Navegación al formulario de edición del perfil del huésped -->
+                        <a href="/profile" class="profile-link">Actualizar perfil</a>
+                        <!-- Cierre de sesión: handleLogout() invalida la sesión en servidor
+                             y limpia sessionStorage antes de redirigir -->
+                        <a href="#" class="profile-link" onclick="handleLogout(event)">Finalizar la sesión</a>
+                    </div>
+                </div>
+                <!-- ── FIN ESTADO AUTENTICADO ─────────────────────────────────────── -->
+
+            </nav>
+
+        </div>
+    </header>
+
+</div>

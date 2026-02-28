@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Fragmento Thymeleaf reutilizable: widget de búsqueda de disponibilidad.
+     Incluye selector de huéspedes, fechas de check-in/check-out y listado de habitaciones.
+     Se invoca desde otras plantillas mediante th:replace="~{... :: searchWidget}" -->
+<div th:fragment="searchWidget" class="search-widget-container">
+
+    <!-- Barra principal del widget: agrupa los tres bloques de criterios de búsqueda
+         (huéspedes, check-in, check-out) en una fila horizontal -->
+    <div class="search-widget-bar">
+
+        <!-- ── BLOQUE 1: SELECTOR DE HUÉSPEDES ──────────────────────────────────
+             Al hacer clic abre el modal de huéspedes (toggleGuestModal).
+             El valor seleccionado se refleja en #criteria-guests-val. -->
+        <div class="widget-block" id="guests-trigger" onclick="toggleGuestModal(event)">
+            <div class="widget-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div class="widget-info">
+                <span class="widget-label">Huéspedes</span>
+                <!-- Muestra dinámicamente el número de huéspedes seleccionados -->
+                <span class="widget-value" id="criteria-guests-val">2 adultos</span>
+            </div>
+
+            <!-- Modal de selección de huéspedes.
+                 Oculto por defecto (.hidden); se activa/desactiva con toggleGuestModal().
+                 El stopPropagation evita que clics internos cierren el modal. -->
+            <div class="guest-modal hidden" id="guest-modal" onclick="event.stopPropagation()">
+                <div class="guest-modal-header">
+                    <h3>Huéspedes</h3>
+                    <button type="button" class="close-modal-btn" onclick="toggleGuestModal(event)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <line x1="5" y1="5" x2="19" y2="19" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+                            <line x1="19" y1="5" x2="5" y2="19" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Contador de adultos: los botones +/− llaman a updateGuestCount()
+                     que actualiza #modal-guest-number y sincroniza #criteria-guests-val -->
+                <div class="guest-selection-row">
+                    <span class="guest-type-text">Adultos (13 años o más)</span>
+                    <div class="counter-box">
+                        <button type="button" class="btn-step" onclick="updateGuestCount(-1)">−</button>
+                        <span id="modal-guest-number">2</span>
+                        <button type="button" class="btn-step" onclick="updateGuestCount(1)">+</button>
+                    </div>
+                </div>
+                <button type="button" class="btn-confirm-guests" onclick="toggleGuestModal(event)">HECHO</button>
+            </div>
+        </div>
+        <!-- ── FIN BLOQUE HUÉSPEDES ───────────────────────────────────────────── -->
+
+        <!-- ── BLOQUE 2: FECHA DE CHECK-IN ───────────────────────────────────────
+             Al hacer clic abre el modal de calendario (toggleCalendarModal).
+             La fecha seleccionada se muestra dinámicamente en #display-checkin. -->
+        <div class="widget-block" id="checkin-trigger" onclick="toggleCalendarModal(event)">
+            <div class="widget-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </div>
+            <div class="widget-info">
+                <span class="widget-label">Check-in</span>
+                <span class="widget-value" id="display-checkin">Seleccionar fecha</span>
+            </div>
+        </div>
+        <!-- ── FIN BLOQUE CHECK-IN ────────────────────────────────────────────── -->
+
+        <!-- ── BLOQUE 3: FECHA DE CHECK-OUT ──────────────────────────────────────
+             Comparte el mismo modal de calendario que check-in.
+             La fecha seleccionada se muestra dinámicamente en #display-checkout. -->
+        <div class="widget-block" id="checkout-trigger" onclick="toggleCalendarModal(event)">
+            <div class="widget-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </div>
+            <div class="widget-info">
+                <span class="widget-label">Check-out</span>
+                <span class="widget-value" id="display-checkout">Seleccionar fecha</span>
+            </div>
+        </div>
+        <!-- ── FIN BLOQUE CHECK-OUT ───────────────────────────────────────────── -->
+
+    </div>
+    <!-- FIN search-widget-bar -->
+
+    <!-- ── MODAL DE CALENDARIO ────────────────────────────────────────────────────
+         Oculto por defecto (.hidden); compartido por check-in y check-out.
+         Muestra dos meses en paralelo (mes actual y siguiente) para selección
+         de rango. stopPropagation evita que clics internos lo cierren. -->
+    <div class="calendar-modal hidden" id="calendar-modal" onclick="event.stopPropagation()">
+        <p class="calendar-helper-text">Mostramos el mejor precio disponible por habitación (en JPY) para 1 noche, según
+            el número de huéspedes.</p>
+
+        <!-- Contenedor de doble calendario: mes izquierdo y mes derecho navegables
+             de forma independiente mediante prevMonth() y nextMonth() -->
+        <div class="dual-calendar-container">
+
+            <!-- Mes 1 (izquierdo): navegación hacia el mes anterior con prevMonth() -->
+            <div class="calendar-month">
+                <div class="month-header">
+                    <button type="button" class="btn-month-nav" onclick="prevMonth()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <!-- El nombre del mes se actualiza dinámicamente desde JS -->
+                    <h4 id="month1-name">Febrero 2026</h4>
+                    <div style="width: 24px;"></div> <!-- Espaciador para centrar el título -->
+                </div>
+                <!-- Cabecera de días de la semana (Domingo a Sábado) -->
+                <div class="calendar-grid-header">
+                    <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                </div>
+                <!-- Grid de días inyectado dinámicamente por JS -->
+                <div class="calendar-days-grid" id="grid-month-1"></div>
+            </div>
+
+            <!-- Mes 2 (derecho): navegación hacia el mes siguiente con nextMonth() -->
+            <div class="calendar-month">
+                <div class="month-header">
+                    <div style="width: 24px;"></div> <!-- Espaciador para centrar el título -->
+                    <h4 id="month2-name">Marzo 2026</h4>
+                    <button type="button" class="btn-month-nav" onclick="nextMonth()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <div class="calendar-grid-header">
+                    <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                </div>
+                <div class="calendar-days-grid" id="grid-month-2"></div>
+            </div>
+
+        </div>
+        <!-- FIN dual-calendar-container -->
+
+        <!-- Pie del calendario: acciones de cancelar o confirmar el rango de fechas.
+             confirmDates() valida el rango y lanza la búsqueda de disponibilidad. -->
+        <div class="calendar-footer">
+            <div class="calendar-actions">
+                <button type="button" class="btn-calendar-cancel" onclick="toggleCalendarModal(event)">Cancelar</button>
+                <button type="button" class="btn-calendar-search" onclick="confirmDates(event)">BUSCAR</button>
+            </div>
+        </div>
+    </div>
+    <!-- FIN calendar-modal -->
+
+    <!-- ── SECCIÓN DE RESULTADOS DE HABITACIONES ──────────────────────────────────
+         Se muestra tras confirmar fechas y huéspedes. Contiene las políticas del
+         hotel y el listado de habitaciones disponibles inyectado dinámicamente. -->
+    <div class="room-results-section" id="room-results-section">
+        <h2 class="section-title">Seleccione una habitación</h2>
+
+        <!-- Aviso de políticas del hotel: restricciones de edad y tamaño de grupo
+             que el usuario debe conocer antes de seleccionar una habitación -->
+        <div class="hotel-policies-box">
+            <div class="policy-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#b08d55" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            </div>
+            <div class="policy-content">
+                <h4>Políticas del hotel</h4>
+                <p>※Política de niños: No se admiten niños menores de 7 años, incluidos bebés. Los niños mayores de 12 años se considerarán adultos.</p>
+                <p>※Política de grupo: No aceptamos reservas para más de 6 personas en un grupo.</p>
+            </div>
+        </div>
+
+        <!-- Contenedor vacío en el que JS inyecta dinámicamente las tarjetas
+             de habitaciones disponibles tras la búsqueda de disponibilidad -->
+        <div id="room-list-container" class="room-list-container">
+        </div>
+    </div>
+    <!-- FIN room-results-section -->
+
+</div>
+<!-- FIN searchWidget -->
+
+</html>

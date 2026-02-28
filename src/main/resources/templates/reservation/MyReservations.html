@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- Vista "Mis Reservas": lista las reservas activas e históricas del huésped autenticado.
+     El contenido se renderiza dinámicamente mediante MyReservations.js tras consultar la API. -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Miyabi Ryokan - My Reservations</title>
+
+    <!-- Estilos base del sitio: tipografía, variables CSS y reset global -->
+    <link rel="stylesheet" th:href="@{/css/base/global.css}">
+    <!-- Navbar específica del flujo de reservas (distinta a la navbar principal del sitio) -->
+    <link rel="stylesheet" th:href="@{/css/reservation/booking-navbar.css}">
+    <!-- Estilos exclusivos de la página "Mis Reservas": tarjetas de reserva, estados, layout -->
+    <link rel="stylesheet" th:href="@{/css/reservation/MyReservations.css}">
+</head>
+<body>
+
+    <!-- Navbar del flujo de reservas: componente Thymeleaf compartido entre las páginas
+         de booking, checkout y my-reservations. Incluye el badge de perfil del huésped. -->
+    <div th:replace="~{reservation/booking-navbar :: bookingNavbar}"></div>
+
+    <!-- Contenedor principal de la página: centra y limita el ancho del contenido
+         siguiendo el sistema de layout de .miyabi-booking-container definido en global.css -->
+    <div class="my-reservation-container miyabi-booking-container">
+
+        <!-- Cabecera de página: título principal de la sección -->
+        <div class="checkout-page-header">
+            <h1 class="checkout-main-title">Mis Reservas</h1>
+        </div>
+
+        <!-- Zona de renderizado dinámico: MyReservations.js reemplaza este contenido
+             con las tarjetas de reserva una vez que la API responde.
+             El párrafo interior actúa como estado de carga inicial visible para el usuario. -->
+        <div id="reservations-container" class="reservations-list">
+            <p style="text-align: center; color: #666;">Cargando tus reservas...</p>
+        </div>
+
+    </div>
+
+    <!-- Footer global: componente Thymeleaf compartido entre todas las páginas del sitio -->
+    <div th:replace="~{fragments/layout/components :: footer}"></div>
+
+    <!-- GSAP y ScrollTrigger: librería de animaciones usada para las transiciones
+         de entrada de las tarjetas de reserva gestionadas por MyReservations.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Scripts cargados en orden de dependencia:
+         globalBooking.js  → utilidades compartidas del flujo de reservas (showToast, getInitials, etc.)
+         booking-logic.js  → gestión del estado de sesión y autenticación en la navbar
+         MyReservations.js → consulta la API, renderiza las tarjetas y gestiona las acciones del usuario -->
+	<script th:src="@{/js/reservation/globalBooking.js}"></script>
+	<script th:src="@{/js/reservation/booking-logic.js}"></script>
+    <script th:src="@{/js/reservation/MyReservations.js}"></script>
+</body>
+</html>

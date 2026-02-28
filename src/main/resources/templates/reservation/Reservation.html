@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miyabi</title>
+
+    <!-- Estilos globales base (tipografía, reset, variables CSS) -->
+    <link rel="stylesheet" th:href="@{/css/base/global.css}">
+    <!-- Estilos específicos de la página de presentación de reservas -->
+    <link rel="stylesheet" th:href="@{/css/reservation/Reservation.css}">
+</head>
+
+<body>
+
+    <!-- Navbar global del sitio (componente Thymeleaf compartido entre páginas) -->
+    <div th:replace="~{fragments/layout/components :: navbar}"></div>
+
+    <!-- Página de presentación de reservas: muestra las políticas del hotel
+         y actúa como puerta de entrada al motor de reservas (booking.html).
+         Las animaciones de entrada de cada bloque son gestionadas por Reservation.js con GSAP. -->
+    <main>
+        <section class="reservation-section miyabi-container">
+
+            <!-- Cabecera de la sección: imagen decorativa en japonés + título principal.
+                 Ambos son el primer objetivo de la animación de entrada de la timeline GSAP. -->
+            <div class="reservation-header">
+                <img src="https://mukayu.com/wp-content/themes/corporate/img/reservation_jp.svg" alt="Reservas"
+                    class="reservation-jp-img">
+                <h2 class="reservation-title">Reserva de Habitaciones</h2>
+            </div>
+
+            <!-- Bloque de políticas del hotel: cada .policy-group se anima de forma
+                 escalonada (stagger) al entrar en el viewport, según Reservation.js -->
+            <div class="reservation-content">
+                <p class="policy-note">Por favor, tenga en cuenta:</p>
+
+                <!-- Política de edad de niños: restricciones de acceso según tramos de edad -->
+                <div class="policy-group">
+                    <h3 class="policy-subtitle">POLÍTICA DE NIÑOS</h3>
+                    <ul class="policy-list">
+                        <li>No se permiten niños menores de 7 años</li>
+                        <li>Los niños de entre 7 y 12 años son bienvenidos con una tarifa especial para niños; por favor, contáctenos directamente para más detalles</li>
+                        <li>Los niños mayores de 12 años se consideran adultos</li>
+                    </ul>
+                </div>
+
+                <!-- Política de grupos: límite máximo de personas por reserva -->
+                <div class="policy-group">
+                    <h3 class="policy-subtitle">POLÍTICA DE GRUPOS</h3>
+                    <p>No aceptamos reservas para más de 6 personas por grupo</p>
+                </div>
+
+                <!-- Política de cancelación escalonada: porcentajes de penalización
+                     según los días de antelación con los que se cancele la reserva -->
+                <div class="policy-group">
+                    <h3 class="policy-subtitle">POLÍTICA DE CANCELACIÓN</h3>
+                    <ul class="policy-list policy-list-small">
+                        <li>21 días: 20%</li>
+                        <li>14 días: 30%</li>
+                        <li>7 días: 50%</li>
+                        <li>5 días: 70%</li>
+                        <li>3 días antes de la estancia: 100%</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CTA principal: enlace al motor de reservas (booking.html).
+                 Usa th:href para que Thymeleaf resuelva la ruta correcta según el entorno. -->
+            <div class="reservation-action">
+                <a th:href="@{/reservation/booking}" class="reservation-btn-booking">Reserva de Habitaciones</a>
+            </div>
+
+            <!-- Enlaces de consulta para servicios complementarios (Spa y Experiencias).
+                 Cada .enquiry-link se anima de forma escalonada desde la izquierda por Reservation.js. -->
+            <div class="reservation-enquiries">
+                <a href="/spa" class="enquiry-link">
+                    SPA ENTEI - realizar una consulta
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        class="reservation-arrow">
+                        <polyline points="8 5 16 12 8 19" stroke="black" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
+                <a href="/experiences" class="enquiry-link">
+                    EXPERIENCIAS ÚNICAS PRIVADAS - realizar una consulta</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="reservation-arrow">
+                        <polyline points="8 5 16 12 8 19" stroke="black" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer global del sitio (componente Thymeleaf compartido entre páginas) -->
+    <div th:replace="~{fragments/layout/components :: footer}"></div>
+
+    <!-- GSAP y ScrollTrigger: librería de animaciones requerida por Reservation.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Scripts cargados en orden de dependencia:
+         global.js      → utilidades base del sitio
+         globalBooking.js → utilidades compartidas del flujo de reservas (showToast, etc.)
+         booking-logic.js → lógica de autenticación y estado de sesión de la navbar
+         Reservation.js  → animaciones GSAP específicas de esta página -->
+    <script th:src="@{/js/base/global.js}"></script>
+    <script th:src="@{/js/reservation/globalBooking.js}"></script>
+    <script th:src="@{/js/reservation/booking-logic.js}"></script>
+    <script th:src="@{/js/reservation/Reservation.js}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Miyabi Hotel – Reservations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --ink:#1a1410; --ivory:#faf8f4; --gold:#b8965a; --gold-lt:#d4b483;
+            --muted:#7a6e62; --surface:#fff; --border:#e8e2d9;
+            --pending:#e8a838; --confirmed:#4a9e6b; --checkedin:#3b82f6;
+            --checkedout:#6366f1; --cancelled:#e05252;
+            --radius:8px; --shadow:0 2px 16px rgba(26,20,16,.07);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
+
+        .topbar{background:var(--ink);display:flex;align-items:center;justify-content:space-between;
+            padding:0 2rem;height:58px;position:sticky;top:0;z-index:100}
+        .topbar-brand{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:500;
+            letter-spacing:.08em;color:var(--gold-lt)}
+        .topbar-brand span{color:var(--ivory)}
+        .topbar-nav a{color:#bbb;text-decoration:none;font-size:.82rem;letter-spacing:.04em;
+            text-transform:uppercase;margin-left:1.6rem;transition:color .2s}
+        .topbar-nav a:hover,.topbar-nav a.active{color:var(--gold-lt)}
+
+        .page{max-width:1300px;margin:0 auto;padding:2.5rem 2rem}
+        .page-header{display:flex;align-items:flex-end;justify-content:space-between;
+            margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+        .page-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;line-height:1.1}
+        .page-title small{display:block;font-family:'DM Sans',sans-serif;font-size:.78rem;
+            color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.2rem}
+
+        .btn{display:inline-flex;align-items:center;gap:.45rem;padding:.55rem 1.2rem;
+            border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:.83rem;
+            font-weight:500;cursor:pointer;text-decoration:none;border:none;transition:all .2s}
+        .btn-gold{background:var(--gold);color:#fff}
+        .btn-gold:hover{background:#a07840}
+        .btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+        .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+        .btn-danger{background:transparent;border:1px solid #fcc;color:var(--cancelled);
+            font-size:.78rem;padding:.35rem .8rem}
+        .btn-danger:hover{background:#fff0f0}
+        .btn-edit{background:transparent;border:1px solid var(--border);color:var(--muted);
+            font-size:.78rem;padding:.35rem .8rem}
+        .btn-edit:hover{border-color:var(--gold);color:var(--gold)}
+
+        .flash{padding:.85rem 1.2rem;border-radius:var(--radius);margin-bottom:1.5rem;
+            font-size:.875rem;display:flex;align-items:center;gap:.6rem}
+        .flash-success{background:#eefbf4;border:1px solid #a8e6c4;color:#2d7a50}
+        .flash-error{background:#fff3f3;border:1px solid #f5bcbc;color:#c0392b}
+
+        .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2rem}
+        .stat-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);
+            padding:1.1rem 1.3rem;border-left:3px solid var(--gold)}
+        .stat-card.c-pending{border-color:var(--pending)}
+        .stat-card.c-confirmed{border-color:var(--confirmed)}
+        .stat-card.c-checkin{border-color:var(--checkedin)}
+        .stat-card.c-checkout{border-color:var(--checkedout)}
+        .stat-card.c-cancelled{border-color:var(--cancelled)}
+        .stat-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.3rem}
+        .stat-value{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;line-height:1}
+
+        .filter-bar{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap}
+        .filter-bar input,.filter-bar select{padding:.5rem .9rem;border:1px solid var(--border);
+            border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:.845rem;
+            background:var(--surface);color:var(--ink);outline:none;transition:border-color .2s}
+        .filter-bar input:focus,.filter-bar select:focus{border-color:var(--gold)}
+        .filter-bar input{flex:1;min-width:200px}
+
+        .table-card{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+        .table-wrap{overflow-x:auto}
+        table{width:100%;border-collapse:collapse;font-size:.855rem}
+        thead{background:var(--ink);color:var(--ivory)}
+        thead th{padding:.9rem 1.1rem;text-align:left;font-size:.75rem;letter-spacing:.06em;
+            text-transform:uppercase;white-space:nowrap}
+        tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
+        tbody tr:last-child{border-bottom:none}
+        tbody tr:hover{background:#fdf9f4}
+        td{padding:.85rem 1.1rem;vertical-align:middle;white-space:nowrap}
+        .res-code{font-size:.8rem;color:var(--muted);letter-spacing:.03em}
+        .guest-name{font-weight:500}
+        .guest-doc{font-size:.75rem;color:var(--muted)}
+        .room-badge{display:inline-block;background:var(--ivory);border:1px solid var(--border);
+            border-radius:4px;padding:.18rem .55rem;font-size:.78rem;font-weight:500}
+        .nights{color:var(--muted);font-size:.82rem}
+        .amount{font-weight:600}
+
+        .status{display:inline-block;padding:.22rem .7rem;border-radius:99px;font-size:.73rem;font-weight:500}
+        .status-Pending{background:#fff8e6;color:#a07010;border:1px solid #f0d580}
+        .status-Confirmed{background:#eefbf4;color:#1e7a47;border:1px solid #a8e6c4}
+        .status-CheckedIn,.status-Check-in{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+        .status-CheckedOut,.status-Check-out{background:#f5f3ff;color:#5b21b6;border:1px solid #ddd6fe}
+        .status-Cancelled{background:#fff3f3;color:#c0392b;border:1px solid #f5bcbc}
+
+        .actions{display:flex;gap:.4rem}
+        .empty{text-align:center;padding:4rem 2rem;color:var(--muted)}
+        .empty-icon{font-size:2.5rem;margin-bottom:1rem;opacity:.4}
+        .empty h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:.4rem;color:var(--ink)}
+
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,20,16,.55);
+            z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+        .modal-overlay.open{display:flex}
+        .modal{background:var(--surface);border-radius:14px;
+            box-shadow:0 24px 60px rgba(26,20,16,.22);padding:2rem;width:100%;
+            max-width:520px;animation:slideUp .25s ease}
+        @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+        .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem}
+        .modal-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:500}
+        .modal-close{background:none;border:none;font-size:1.3rem;color:var(--muted);cursor:pointer}
+        .modal-close:hover{color:var(--ink)}
+
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        .form-group{display:flex;flex-direction:column;gap:.35rem}
+        .form-group.full{grid-column:1/-1}
+        label{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:500}
+        input[type=text],input[type=date],input[type=number],select,textarea{
+            padding:.55rem .85rem;border:1px solid var(--border);border-radius:var(--radius);
+            font-family:'DM Sans',sans-serif;font-size:.875rem;color:var(--ink);
+            background:var(--surface);outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+        input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,150,90,.12)}
+        textarea{resize:vertical;min-height:70px}
+        .form-actions{display:flex;justify-content:flex-end;gap:.6rem;margin-top:1.5rem;
+            padding-top:1.2rem;border-top:1px solid var(--border)}
+
+        .confirm-modal{max-width:380px;text-align:center}
+        .confirm-modal .modal-icon{font-size:2.5rem;margin:.5rem 0 1rem}
+        .confirm-modal p{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem}
+    </style>
+</head>
+<body>
+
+<nav class="topbar">
+    <div class="topbar-brand"><span>Miyabi</span> Hotel</div>
+    <div class="topbar-nav">
+        <a href="/users/reservations" class="active">Reservations</a>
+        <a href="/">Home</a>
+    </div>
+</nav>
+
+<div class="page">
+
+    <div th:if="${success}" class="flash flash-success">✓ <span th:text="${success}"></span></div>
+    <div th:if="${error}"   class="flash flash-error">✕ <span th:text="${error}"></span></div>
+
+    <div class="page-header">
+        <div class="page-title">
+            <small>Employee Panel</small>
+            Reservations
+        </div>
+        <button class="btn btn-gold" onclick="document.getElementById('createModal').classList.add('open')">
+            + New Reservation
+        </button>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-card c-pending">
+            <div class="stat-label">Pending</div>
+            <div class="stat-value" th:text="${#lists.size(reservations.?[state=='Pending'])}">0</div>
+        </div>
+        <div class="stat-card c-confirmed">
+            <div class="stat-label">Confirmed</div>
+            <div class="stat-value" th:text="${#lists.size(reservations.?[state=='Confirmed'])}">0</div>
+        </div>
+        <div class="stat-card c-checkin">
+            <div class="stat-label">Check-In</div>
+            <div class="stat-value" th:text="${#lists.size(reservations.?[state=='Check-in'])}">0</div>
+        </div>
+        <div class="stat-card c-checkout">
+            <div class="stat-label">Check-Out</div>
+            <div class="stat-value" th:text="${#lists.size(reservations.?[state=='Check-out'])}">0</div>
+        </div>
+        <div class="stat-card c-cancelled">
+            <div class="stat-label">Cancelled</div>
+            <div class="stat-value" th:text="${#lists.size(reservations.?[state=='Cancelled'])}">0</div>
+        </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+        <input type="text" id="searchInput" placeholder="Search by code, guest or room…" oninput="filterTable()"/>
+        <select id="statusFilter" onchange="filterTable()">
+            <option value="">All statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Check-in">Check-In</option>
+            <option value="Check-out">Check-Out</option>
+            <option value="Cancelled">Cancelled</option>
+        </select>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+        <div class="table-wrap">
+            <table id="resTable">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Guest</th>
+                        <th>Room</th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
+                        <th>Nights</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="res : ${reservations}"
+                        th:data-status="${res.state}"
+                        th:data-search="${res.reservationCode + ' ' + res.guest.names + ' ' + res.guest.surnames + ' ' + res.room.roomNumber}">
+
+                        <td class="res-code"  th:text="${res.reservationCode}"></td>
+                        <td>
+                            <div class="guest-name" th:text="${res.guest.names + ' ' + res.guest.surnames}"></div>
+                            <div class="guest-doc"  th:text="${res.guest.dni}"></div>
+                        </td>
+                        <td><span class="room-badge" th:text="${res.room.roomNumber}"></span></td>
+                        <td th:text="${#temporals.format(res.entryDate,'dd MMM yyyy')}"></td>
+                        <td th:text="${#temporals.format(res.departureDate,'dd MMM yyyy')}"></td>
+                        <td class="nights" th:text="${res.numberNights + 'n'}"></td>
+                        <td class="amount" th:text="${'S/ ' + #numbers.formatDecimal(res.totalPay,1,2)}"></td>
+                        <td>
+                            <span class="status"
+                                  th:classappend="'status-' + ${res.state}"
+                                  th:text="${res.state}"></span>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <!-- Edit: link normal sin th:onclick -->
+                                <a class="btn btn-edit"
+                                   th:href="@{/users/reservations/edit/{id}(id=${res.reservationId})}">Edit</a>
+
+                                <!-- Delete: usa data-* leídos por JS (NO th:onclick con strings) -->
+                                <button class="btn btn-danger delete-btn"
+                                        th:data-id="${res.reservationId}"
+                                        th:data-code="${res.reservationCode}">
+                                    Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(reservations)}">
+                        <td colspan="9">
+                            <div class="empty">
+                                <div class="empty-icon">📋</div>
+                                <h3>No reservations yet</h3>
+                                <p style="font-size:.875rem;margin-top:.4rem">Create the first one above.</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal-overlay" id="createModal">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">New Reservation</div>
+            <button class="modal-close" onclick="document.getElementById('createModal').classList.remove('open')">✕</button>
+        </div>
+        <form action="/users/reservations/save" method="post">
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Guest</label>
+                    <select name="guestId" required>
+                        <option value="">Select guest…</option>
+                        <option th:each="g : ${guests}"
+                                th:value="${g.idGuest}"
+                                th:text="${g.names + ' ' + g.surnames + ' (' + g.dni + ')'}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Room</label>
+                    <select name="roomId" required>
+                        <option value="">Select room…</option>
+                        <option th:each="r : ${rooms}"
+                                th:value="${r.idRoom}"
+                                th:text="${'#' + r.roomNumber + ' – ' + r.roomType.nameType}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Check-In</label>
+                    <input type="date" name="entryDate" required/>
+                </div>
+
+                <div class="form-group">
+                    <label>Check-Out</label>
+                    <input type="date" name="departureDate" required/>
+                </div>
+
+                <div class="form-group">
+                    <label>Adults</label>
+                    <input type="number" name="numAdults" value="1" min="1" max="6" required/>
+                </div>
+
+                <div class="form-group">
+                    <label>Children</label>
+                    <input type="number" name="numChildren" value="0" min="0" max="5"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select name="state">
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label>Observations</label>
+                    <textarea name="observations" placeholder="Special requests…"></textarea>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline"
+                        onclick="document.getElementById('createModal').classList.remove('open')">Cancel</button>
+                <button type="submit" class="btn btn-gold">Save Reservation</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal confirm-modal">
+        <div class="modal-icon">🗑️</div>
+        <div class="modal-title" style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.5rem">
+            Delete Reservation
+        </div>
+        <p id="deleteMsg">Are you sure?</p>
+        <form id="deleteForm" method="post">
+            <div class="form-actions" style="justify-content:center">
+                <button type="button" class="btn btn-outline"
+                        onclick="document.getElementById('deleteModal').classList.remove('open')">Cancel</button>
+                <button type="submit" class="btn btn-danger" style="padding:.55rem 1.2rem">Yes, Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Cerrar modal al hacer click en el fondo
+    document.querySelectorAll('.modal-overlay').forEach(o =>
+        o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); })
+    );
+
+    // Delete buttons leen data-* (sin th:onclick con strings — eso causa el error de Thymeleaf 3.1)
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id   = this.dataset.id;
+            const code = this.dataset.code;
+            document.getElementById('deleteMsg').textContent =
+                'Delete reservation ' + code + '? This cannot be undone.';
+            document.getElementById('deleteForm').action = '/users/reservations/delete/' + id;
+            document.getElementById('deleteModal').classList.add('open');
+        });
+    });
+
+    // Filtro de tabla
+    function filterTable() {
+        const q  = document.getElementById('searchInput').value.toLowerCase();
+        const st = document.getElementById('statusFilter').value;
+        document.querySelectorAll('#resTable tbody tr[data-status]').forEach(row => {
+            const txt = (row.dataset.search || '').toLowerCase();
+            const ok  = (!q || txt.includes(q)) && (!st || row.dataset.status === st);
+            row.style.display = ok ? '' : 'none';
+        });
+    }
+</script>
+</body>
+</html>

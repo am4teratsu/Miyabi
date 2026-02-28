@@ -55,9 +55,9 @@ public class Reservation {
     @Column(name = "reservation_date", insertable = false, updatable = false)
     private LocalDateTime reservationDate;
 
-    @Column(name = "chekin_date")
+    @Column(name = "checkin_date")
     private LocalDateTime chekinDate;
-
+    
     @Column(name = "checkout_date")
     private LocalDateTime checkOut;
 
