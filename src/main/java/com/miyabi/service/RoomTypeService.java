@@ -27,11 +27,6 @@ public class RoomTypeService {
     }
     
     // Agregado x Fabricio
-    public java.util.Optional<RoomType> findById(Integer id) {
-        return roomTypeRepository.findById(id);
-    }
-    
-    // Agregado x Fabricio
     public void deleteById(Integer id) {
         roomTypeRepository.deleteById(id);
     }

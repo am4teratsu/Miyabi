@@ -241,6 +241,13 @@
                                         th:data-code="${res.reservationCode}">
                                     Delete
                                 </button>
+								
+								<a th:if="${res.state == 'Check-out'}" 
+								   class="btn btn-gold" 
+								   style="padding:.35rem .8rem; font-size:.78rem;"
+								   th:href="@{/api/receipts/generate/{id}(id=${res.reservationId})}">
+								    Receipt
+								</a>
                             </div>
                         </td>
                     </tr>

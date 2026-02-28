@@ -8,17 +8,17 @@
     <!-- Estilos globales base (tipografía, reset, variables CSS) -->
     <link rel="stylesheet" th:href="@{/css/base/global.css}">
     <!-- Navbar compartida con la página de booking -->
-    <link rel="stylesheet" th:href="@{/css/reservation/booking-navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/booking-navbar.css}">
     <!-- Grid de dos columnas y estilos del carrito lateral (reutilizados desde booking) -->
-    <link rel="stylesheet" th:href="@{/css/reservation/booking-layout.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/booking-layout.css}">
     <!-- Estilos específicos del formulario de checkout -->
-    <link rel="stylesheet" th:href="@{/css/reservation/Checkout.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/Checkout.css}">
 </head>
 
 <body>
 
     <!-- Navbar compartida con la página de reservas (componente Thymeleaf reutilizable) -->
-    <div th:replace="~{reservation/booking-navbar :: bookingNavbar}"></div>
+    <div th:replace="~{fragments/booking-navbar :: bookingNavbar}"></div>
 
     <!-- Grid principal de dos columnas: formulario (izquierda) + carrito resumen (derecha).
          Reutiliza la misma estructura de booking-layout para consistencia visual. -->
@@ -293,7 +293,7 @@
         <!-- hideSidebarBtn=true oculta el botón de checkout dentro del widget,
              ya que en esta vista el CTA de confirmación está en la columna principal -->
         <div class="booking-sidebar-column">
-            <div th:replace="~{reservation/fragments/cart-widget :: cartWidget(hideSidebarBtn=true)}"></div>
+            <div th:replace="~{fragments/cart-widget :: cartWidget(hideSidebarBtn=true)}"></div>
         </div>
 
     </div>
@@ -306,10 +306,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <!-- Utilidades globales del flujo de reservas (showToast, etc.) -->
-    <script th:src="@{/js/reservation/globalBooking.js}"></script>
+    <script th:src="@{/js/fragments/globalBooking.js}"></script>
     <!-- Lógica específica del checkout: validación de formulario, dropdowns,
          acordeón de peticiones especiales y envío final de la reserva a la API -->
-    <script th:src="@{/js/reservation/Checkout.js}"></script>
+    <script th:src="@{/js/pages/Checkout.js}"></script>
 
 </body>
 </html>

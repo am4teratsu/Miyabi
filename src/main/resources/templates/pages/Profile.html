@@ -6,26 +6,26 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Miyabi Ryokan - Your Profile</title>
+	<title>Miyabi Ryokan - Tu Perfil</title>
 
 	<!-- Estilos base del sitio: tipografía, variables CSS y reset global -->
 	<link rel="stylesheet" th:href="@{/css/base/global.css}">
 	<!-- Estilos de layout del checkout: grid de formulario, cajas separadas y secciones -->
-	<link rel="stylesheet" th:href="@{/css/reservation/Checkout.css}">
+	<link rel="stylesheet" th:href="@{/css/pages/Checkout.css}">
 	<!-- Navbar específica del flujo de reservas, compartida con booking, checkout y my-reservations -->
-	<link rel="stylesheet" th:href="@{/css/reservation/booking-navbar.css}">
+	<link rel="stylesheet" th:href="@{/css/fragments/booking-navbar.css}">
 	<!-- NOTA: Checkout.css está importado dos veces; la segunda importación es redundante y puede eliminarse -->
-	<link rel="stylesheet" th:href="@{/css/reservation/Checkout.css}">
+	<link rel="stylesheet" th:href="@{/css/pages/Checkout.css}">
 	<!-- Estilos del formulario de registro reutilizados en la vista de perfil:
 	     layout de columnas, input-box, etiquetas y botones de autenticación -->
-	<link rel="stylesheet" th:href="@{/css/auth/Register.css}">
+	<link rel="stylesheet" th:href="@{/css/pages/Register.css}">
 </head>
 
 <body>
 
 	<!-- Navbar del flujo de reservas: componente Thymeleaf compartido entre booking,
 	     checkout y my-reservations. Incluye el badge de perfil del huésped autenticado. -->
-	<div th:replace="~{reservation/booking-navbar :: bookingNavbar}"></div>
+	<div th:replace="~{fragments/booking-navbar :: bookingNavbar}"></div>
 
 	<!-- Contenedor principal del formulario de perfil.
 	     Combina el sistema de layout de .miyabi-booking-container con .register-container
@@ -140,9 +140,9 @@
 	     booking-logic.js → gestión del estado de sesión y autenticación en la navbar
 	     Profile.js       → precarga del formulario, validación y envío de la actualización a la API -->
 	<script th:src="@{/js/base/global.js}"></script>
-	<script th:src="@{/js/reservation/globalBooking.js}"></script>
-	<script th:src="@{/js/reservation/booking-logic.js}"></script>
-	<script th:src="@{/js/auth/Profile.js}"></script>
+	<script th:src="@{/js/fragments/globalBooking.js}"></script>
+	<script th:src="@{/js/fragments/booking-logic.js}"></script>
+	<script th:src="@{/js/pages/Profile.js}"></script>
 </body>
 
 </html>

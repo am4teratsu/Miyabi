@@ -294,6 +294,36 @@ INSERT INTO room_type (name_type, description, short_description, capacity_peopl
     '["Estudio: Incluye un escritorio y sofá.", "Camas: 2 camas de tamaño completo (120x195 cm / 47x76 pulgadas cada una) que pueden combinarse.", "Equipamiento: Vestidor (walk-in closet)"]' 
 );
 
+-- IMAGENES DE LAS HABITACIONES
+INSERT INTO room_images (image_url, alt_text, display_order, is_main, type_id) VALUES 
+-- HABITACION 1
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wa_img_01.jpg', 'Carrusel', 1, 1, 1),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wa_img_02.jpg', 'Carrusel', 2, 0, 1),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wa_img_03.jpg', 'Carrusel', 3, 0, 1),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wa_img_04.jpg', 'Carrusel', 4, 0, 1),
+-- HABITACION 2
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/you_img_01.jpg', 'Carrusel', 1, 1, 2),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/you_img_02.jpg', 'Carrusel', 2, 0, 2),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/you_img_03.jpg', 'Carrusel', 3, 0, 2),
+-- HABITACION 3
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wayou-j_img_01.jpg', 'Carrusel', 1, 1, 3),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wayou-j_img_02.jpg', 'Carrusel', 2, 0, 3),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wayou-j_img_03.jpg', 'Carrusel', 3, 0, 3),
+-- HABITACION 4
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wayou_img_01.jpg', 'Carrusel', 1, 1, 4),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wayou_img_02.jpg', 'Carrusel', 2, 0, 4),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wayou_img_03.jpg', 'Carrusel', 3, 0, 4),
+-- HABITACION 5
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wakamurasaki_img_01.jpg', 'Carrusel', 1, 1, 5),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wakamurasaki_img_02.jpg', 'Carrusel', 2, 0, 5),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/wakamurasaki_img_03.jpg', 'Carrusel', 3, 0, 5),
+-- HABITACION 6
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/byakuroku_img_01.jpg', 'Carrusel', 1, 1, 6),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/byakuroku_img_02.jpg', 'Carrusel', 2, 0, 6),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/byakuroku_img_03.jpg', 'Carrusel', 3, 0, 6),
+('https://mukayu.com/wp-content/themes/corporate/img/rooms/byakuroku_img_04.jpg', 'Carrusel', 4, 0, 6);
+
+
 -- HABITACIONES FÍSICAS
 INSERT INTO rooms (room_number, floor, state, type_id) VALUES 
 ('101', 1, 'Available', 1), -- Puerta 101 es la Habitación Japonesa Premier
@@ -542,4 +572,16 @@ VALUES (98600.00, 'Transferencia', 'Paid', @res3, 'Pago previo y consumos cobrad
 SELECT * FROM reservations;
 SELECT * FROM guests;
 
+-- BOLETA DE JASPER
+SELECT c.amount, s.service_name, c.unit_price, c.subtotal 
+FROM consumption c 
+INNER JOIN services_catalog s ON c.service_id = s.service_id 
+WHERE c.reservation_id = ?;
 
+SELECT g.names, g.surnames, r.reservation_date, r.total_pay, 
+       r.number_nights, r.price_per_night, r.room_subtotal, rt.name_type
+FROM reservations r
+INNER JOIN guests g ON r.guest_id = g.guest_id
+INNER JOIN rooms rm ON r.room_id = rm.room_id
+INNER JOIN room_type rt ON rm.type_id = rt.type_id
+WHERE r.reservation_id = ?;

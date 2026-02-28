@@ -1,30 +1,50 @@
 /* =============================================================================
-   Rooms.css — Estilos de la página de Habitaciones
-   Arquitectura:
-     1. Layout principal del bloque por habitación
-     2. Columna izquierda: información textual y especificaciones
-     3. Columna derecha: carrusel de imágenes personalizado
-     4. Media Queries: adaptación a pantallas medianas/pequeñas
+   Rooms.css — Estilos de la página de Habitaciones | Proyecto: Miyabi Hotel
+   =============================================================================
+   Descripción  : Define el layout, tipografía, carrusel personalizado y tabla
+                  de información general de la página de Habitaciones.
+
+   Arquitectura de secciones:
+     1. Layout principal      → Fila flex por habitación (info + imágenes)
+     2. Columna izquierda     → Texto, especificaciones y CTA de reserva
+     3. Columna derecha       → Carrusel de imágenes con sistema de capas CSS
+     4. Información General   → Tabla premium de política y servicios del hotel
+     5. Media Queries         → Adaptación a pantallas medianas (≤ 1250px)
+
+   Sistema de capas del carrusel:
+     Todos los slides son position: absolute apilados en el mismo espacio.
+     La visibilidad se controla con opacity + visibility (no display) para
+     permitir transiciones CSS suaves. El slide '.active' sube a z-index: 2.
+
+   Convenciones de nomenclatura:
+     · .room-*           → Elementos específicos de cada bloque de habitación
+     · .info-*           → Elementos de la columna de texto y tabla general
+     · .btn-room-*       → Calls to action de reserva
+     · .general-info-*   → Sección estática de información del hotel
    ============================================================================= */
 
 
 /* =============================================================================
    1. LAYOUT PRINCIPAL
+   =============================================================================
    Cada habitación se representa como una fila flex que divide el espacio
    en dos columnas: información (28%) e imágenes (72%).
+   El margen superior generoso (160px) separa visualmente cada habitación
+   y evita sensación de saturación en páginas con múltiples entradas.
    ============================================================================= */
 
 .room-dynamic-layout {
     display: flex;
-    /* Separación generosa entre bloques de habitación para evitar sensación de saturación */
 	margin-top: 160px;
 }
 
 
 /* =============================================================================
    2. COLUMNA IZQUIERDA — Información de la Habitación
-   Contiene nombre, descripción, plano de planta, especificaciones y CTA.
-   El padding-right crea el gutter visual entre la columna de texto y la de imágenes.
+   =============================================================================
+   Ocupa el 28% del ancho del layout. El padding-right actúa como gutter
+   entre la columna de texto y la columna de imágenes, evitando que el
+   contenido toque visualmente el borde del carrusel.
    ============================================================================= */
 
 .room-info-side {
@@ -32,32 +52,35 @@
     display: flex;
     justify-content: center;
     padding: 0;
-	/* Crea el espacio interior (gutter) entre la columna de texto y la columna de imagen */
+	/* Gutter visual entre la columna de texto y la columna de imagen */
 	padding-right: 60px;
 }
 
-/* Contenedor interno que limita el ancho del texto para preservar la legibilidad
-   en pantallas anchas; max-width evita líneas de texto excesivamente largas */
+/* Limita el ancho del texto para preservar la legibilidad en pantallas anchas.
+   max-width: 500px previene líneas de texto excesivamente largas (> ~80 caracteres) */
 .info-content-wrapper {
     width: 85%;
     max-width: 500px;
+	margin-top: 50px;
 }
 
-/* --- Tipografía y elementos de texto --- */
+/* -----------------------------------------------------------------------
+   2a. Tipografía y elementos de texto
+   ----------------------------------------------------------------------- */
 
 .room-nametype {
     font-size: 20px;
     font-weight: 500;
-	/* word-spacing sutil para dar un aire más tipográfico/editorial al nombre */
+	/* word-spacing sutil aporta un aire tipográfico/editorial al nombre de habitación */
 	word-spacing: 4px;
     color: #1a1a1a;
     line-height: 1.3;
     margin-bottom: 15px;
 }
 
-/* Línea decorativa minimalista que actúa como separador visual
-   entre el título y el bloque de contenido. El 15% de ancho le da
-   un carácter más artístico que funcional, en línea con la estética del proyecto */
+/* Separador minimalista entre el título y el bloque de contenido.
+   El ancho reducido (15%) le confiere un carácter artístico en lugar de
+   estructural, alineado con la estética japonesa del proyecto */
 .separator-line {
     width: 15%;
     height: 1px;
@@ -73,8 +96,8 @@
     margin-bottom: 25px;
 }
 
-/* El plano de planta ocupa todo el ancho disponible del contenedor padre
-   para maximizar la legibilidad del diagrama */
+/* El plano de planta ocupa todo el ancho del contenedor para maximizar
+   la legibilidad del diagrama de distribución de la habitación */
 .room-floorplan {
     margin-bottom: 20px;
     width: 100%;
@@ -83,12 +106,12 @@
 .room-floorplan img {
     width: 100%;
     height: auto;
-    /* Borde sutil que enmarca el plano y lo distingue del fondo blanco */
+    /* Borde sutil que enmarca el plano y lo distingue visualmente del fondo blanco */
     border: 1px solid #1a1a1a;
 }
 
-/* La descripción corta actúa como subtítulo o tagline de la habitación;
-   la cursiva la diferencia visualmente de la descripción principal */
+/* La cursiva diferencia visualmente la descripción corta (tagline/subtítulo)
+   de la descripción principal, estableciendo una jerarquía sin cambiar el peso */
 .room-short-description {
     font-size: 14px;
 	font-weight: 500;
@@ -97,10 +120,14 @@
     margin-bottom: 15px;
 }
 
-/* --- Lista de especificaciones (ubicación, tamaño, amenidades, capacidad) --- */
+/* -----------------------------------------------------------------------
+   2b. Lista de especificaciones (ubicación, tamaño, amenidades, capacidad)
+   ----------------------------------------------------------------------- */
 
+/* list-style: none elimina el bullet nativo para sustituirlo por el
+   icono personalizado '◎' definido en .icon-bullet */
 .room-specs-list {
-    list-style: none; /* Eliminamos el bullet nativo para usar el icono '◎' personalizado */
+    list-style: none;
     padding: 0;
     margin: 0 0 20px 0;
     font-size: 14px;
@@ -108,8 +135,9 @@
     color: #000;
 }
 
-/* Flex en cada ítem para alinear el icono personalizado con el texto,
-   incluso cuando el texto ocupa múltiples líneas (align-items: flex-start) */
+/* Flex en cada ítem para alinear el icono con el texto, incluyendo
+   el caso donde el texto ocupa múltiples líneas (align-items: flex-start
+   ancla el icono a la primera línea en lugar de centrarlo verticalmente) */
 .room-specs-list li {
     display: flex;
     align-items: flex-start;
@@ -117,19 +145,22 @@
     line-height: 1.4;
 }
 
-/* Icono decorativo '◎' que reemplaza al bullet estándar de la lista.
-   El margin-right crea el espacio consistente entre icono y texto */
+/* Icono decorativo '◎' que reemplaza al bullet estándar.
+   El margin-right fija el espacio entre icono y texto de forma consistente
+   en todos los ítems, independientemente del contenido */
 .icon-bullet {
     font-size: 12px;
     margin-right: 10px;
     color: #000;
 }
 
-/* --- CTA de reserva --- */
+/* -----------------------------------------------------------------------
+   2c. CTA de reserva
+   ----------------------------------------------------------------------- */
 
-/* Botón de reserva de estilo "ghost" (fondo transparente con borde).
-   El padding horizontal amplio (60px) le da la proporción de botón tipo
-   "pill ancho" sin necesidad de un ancho fijo que rompería en textos largos */
+/* Botón de estilo "ghost": fondo transparente con borde, sin ancho fijo.
+   El padding horizontal amplio (60px) genera la proporción visual de
+   botón ancho sin depender de un width que podría romperse con textos distintos */
 .btn-room-booking {
     display: inline-block;
     padding: 10px 60px;
@@ -145,36 +176,48 @@
 
 /* =============================================================================
    3. COLUMNA DERECHA — Carrusel de Imágenes Personalizado
-   El sistema de capas se basa en position: absolute sobre todos los slides,
-   controlando la visibilidad mediante opacity + visibility en lugar de display,
-   para que las transiciones CSS (transition) puedan interpolarse suavemente.
+   =============================================================================
+   Sistema de capas CSS sin JavaScript para la transición entre slides:
+
+   · Todos los slides son position: absolute apilados sobre el mismo origen
+     (top: 0, left: 0), por lo que no alteran el flujo del documento.
+
+   · La visibilidad se controla con opacity + visibility, en lugar de
+     display: none/block, porque 'display' no es interpolable por CSS y no
+     permite animar el fundido. Con opacity la transición de 0.8s funciona.
+
+   · z-index: 1 (inactivo) / z-index: 2 (activo) garantiza que el slide
+     visible siempre quede por encima del resto durante la transición,
+     evitando parpadeos en el cruce entre slide saliente y entrante.
+
+   · El contenedor usa aspect-ratio: 1/1 para mantener proporciones cuadradas
+     independientemente del ancho disponible en pantalla.
    ============================================================================= */
 
 .room-images-side {
     width: 72%;
     position: relative;
     display: flex;
-    /* stretch asegura que el carrusel ocupe toda la altura del bloque de la habitación,
-       independientemente de la altura del contenido de texto de la columna izquierda */
-    align-items: stretch;
+    align-items: start;
 }
 
-/* El contenedor del carrusel establece el contexto de posicionamiento para los slides absolutos.
-   overflow: hidden recorta las imágenes que sobresalen durante las transiciones */
+/* position: relative establece el contexto de posicionamiento para los slides
+   con position: absolute. overflow: hidden recorta cualquier desbordamiento
+   de imagen durante las transiciones y mantiene el aspect-ratio definido */
 .room-custom-carousel {
     width: 100%;
-    height: 100%;
-    min-height: 700px; /* Altura mínima para garantizar impacto visual en pantallas grandes */
     position: relative;
+	aspect-ratio: 1/1;
     overflow: hidden;
-    cursor: pointer; /* Indica al usuario que puede hacer clic para cambiar de imagen */
+    cursor: pointer;
 }
 
-/* --- Sistema de capas del carrusel --- */
+/* -----------------------------------------------------------------------
+   3a. Estado base de los slides (ocultos, apilados)
+   ----------------------------------------------------------------------- */
 
-/* Estado base: todos los slides están apilados en la misma posición (absolute top/left 0)
-   y son invisibles. Se usa opacity + visibility en lugar de display:none para
-   poder animar la transición de fundido con CSS (display no es animable) */
+/* Todos los slides parten de este estado: apilados en la esquina superior
+   izquierda del carrusel, invisibles y fuera del flujo con position: absolute */
 .room-slide {
     position: absolute;
     top: 0;
@@ -183,42 +226,174 @@
     height: 100%;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.8s ease-in-out, visibility 0.8s; /* Fundido suave de 0.8s */
-    /* z-index base inferior: garantiza que el slide activo siempre quede por encima */
-    z-index: 1;
+    /* La transición de 'visibility' debe coincidir en duración con 'opacity'
+       para que el elemento no desaparezca abruptamente al final del fundido */
+    transition: opacity 0.8s ease-in-out, visibility 0.8s;
+    z-index: 1; /* Capa base: por debajo del slide activo */
 }
 
-/* El slide activo asciende en el orden de capas (z-index: 2) y se hace visible.
-   La transición en .room-slide se encarga de animar el cambio de estado */
+/* -----------------------------------------------------------------------
+   3b. Estado activo del slide (visible, capa superior)
+   ----------------------------------------------------------------------- */
+
+/* El slide activo asciende a z-index: 2 para quedar siempre por encima
+   del slide saliente durante el cruce de transición */
 .room-slide.active {
     opacity: 1;
     visibility: visible;
     z-index: 2;
 }
 
-/* object-fit: cover asegura que la imagen cubra todo el contenedor sin deformarse,
-   independientemente de la relación de aspecto original de cada foto */
+/* object-fit: cover asegura que la imagen cubra el contenedor sin deformarse,
+   recortando los bordes si es necesario según la relación de aspecto original.
+   display: block elimina el espacio de línea base que los navegadores añaden
+   bajo los elementos <img> cuando se tratan como inline */
 .room-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block; /* Elimina el espacio inferior de línea base que añaden los <img> inline */
+    display: block;
 }
 
 
 /* =============================================================================
-   4. MEDIA QUERIES — Adaptación Responsive
+   4. SECCIÓN DE INFORMACIÓN GENERAL
+   =============================================================================
+   Tabla premium de dos columnas (título | datos) que resume las políticas
+   y servicios del hotel: habitaciones, check-in/out, amenidades, pagos, etc.
+
+   Layout: flex horizontal con título a la izquierda (25%) y contenido a
+   la derecha (75%), manteniendo la misma proporción visual que la sección
+   de habitaciones (28% / 72%) para dar coherencia vertical a la página.
    ============================================================================= */
 
-/* En pantallas medianas (≤992px), el layout de dos columnas colapsa verticalmente.
-   La imagen pasa a la parte superior (order: -1) para mantener el impacto visual
-   antes que el texto, siguiendo la convención de scroll en móvil */
-@media (max-width: 992px) {
-    .room-images-side {
-        min-height: 50vh; /* Altura relativa al viewport para adaptarse a cualquier dispositivo */
-        order: -1;        /* Reordena la columna de imagen para que aparezca antes que el texto */
+.general-info-section {
+    margin-top: 100px;
+}
+
+.general-info-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* -----------------------------------------------------------------------
+   4a. Columna izquierda — Título de la sección
+   ----------------------------------------------------------------------- */
+
+/* Proporción cercana a la columna de texto de habitaciones (28%) para
+   alinear visualmente el título con los nombres de habitación superiores */
+.info-left-title {
+    width: 25%;
+}
+
+.info-main-heading {
+    font-size: 20px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-left: 15px;
+	margin-top: 25px;
+}
+
+/* -----------------------------------------------------------------------
+   4b. Columna derecha — Filas de datos
+   ----------------------------------------------------------------------- */
+
+.info-right-content {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cada fila separa categoría y valor con un borde inferior fino,
+   creando una apariencia de tabla minimalista sin usar <table> */
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 30px 0;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+/* La primera fila elimina su padding-top para que el borde superior
+   de la tabla quede alineado con el título de la columna izquierda */
+.info-right-content .info-row:first-child {
+    padding-top: 0;
+}
+
+/* Etiqueta de categoría: peso 700 para establecer jerarquía clara
+   frente al valor, que usa font-weight normal */
+.info-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+    width: 30%;
+}
+
+/* El valor se alinea a la derecha para crear tensión visual con la etiqueta
+   alineada a la izquierda, siguiendo la convención de tablas de datos premium */
+.info-value {
+    font-size: 13px;
+    color: #000;
+    width: 70%;
+    text-align: right;
+    line-height: 1.8;
+}
+
+/* Flex en cada <p> del listado de habitaciones para que el nombre y el
+   contador ("4 habs.") queden en extremos opuestos de la columna valor */
+.info-value p {
+    margin: 0 0 5px 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.info-value p:last-child {
+    margin-bottom: 0;
+}
+
+/* Ancho fijo en los contadores ("4 habs.", "2 habs."…) para que queden
+   alineados en columna vertical, independientemente del texto del nombre */
+.align-count {
+    display: inline-block;
+    width: 65px; 
+    text-align: right;
+}
+
+/* El total de habitaciones necesita separación extra para distinguirse
+   visualmente de las filas individuales del listado */
+.total-rooms {
+    margin-top: 40px !important;
+}
+
+
+/* =============================================================================
+   5. MEDIA QUERIES — Adaptación a pantallas medianas (≤ 1250px)
+   =============================================================================
+   A partir de este breakpoint el ratio 28/72 resulta demasiado estrecho para
+   la columna de texto. Se reequilibra a 40/60, se elimina el padding-right
+   del gutter (ya no es necesario con las nuevas proporciones) y se expande
+   info-content-wrapper al ancho completo disponible con padding interno.
+   ============================================================================= */
+
+@media (max-width: 1250px) {
+
+    /* Reequilibrio de columnas: más espacio para el texto en pantallas medianas */
+    .room-info-side {
+        width: 40%;
+		padding-right: 0; /* El gutter ya no es necesario con las nuevas proporciones */
     }
-    .room-custom-carousel {
-        min-height: 50vh;
+    
+    .room-images-side {
+        width: 60%;
+    }
+
+    /* Se elimina el max-width para aprovechar todo el espacio disponible,
+       y se usa padding interno para mantener los márgenes laterales del texto */
+    .info-content-wrapper {
+        width: 90%;
+        max-width: none; 
+        padding: 40px 5%;
     }
 }

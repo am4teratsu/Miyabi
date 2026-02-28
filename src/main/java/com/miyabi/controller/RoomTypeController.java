@@ -31,11 +31,5 @@ public class RoomTypeController {
         roomTypeService.deleteById(id);
     }
     
-    // Agregado x Fabricio
-    @GetMapping("/{id}")
-    public RoomType getById(@PathVariable Integer id) {
-        // Medoto del Service
-        return roomTypeService.findById(id).orElse(null);
-    }
 
 }

@@ -2,6 +2,7 @@ package com.miyabi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import com.miyabi.models.Reservation;
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,4 +21,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     
     // Obtener las últimas 5 reservas para la tabla de movimientos
     List<Reservation> findTop5ByOrderByReservationIdDesc();
+
+
+    @Query("SELECT r FROM Reservation r JOIN FETCH r.guest JOIN FETCH r.room WHERE r.reservationId = :reservationId")
+    Reservation getReceiptMainData(@Param("reservationId") Integer reservationId);
 }

@@ -11,13 +11,13 @@
 	<!-- Estilos base del sitio: tipografía, variables CSS y reset global -->
 	<link rel="stylesheet" th:href="@{/css/base/global.css}">
 	<!-- Navbar específica del flujo de reservas, compartida con booking, checkout y my-reservations -->
-	<link rel="stylesheet" th:href="@{/css/reservation/booking-navbar.css}">
+	<link rel="stylesheet" th:href="@{/css/fragments/booking-navbar.css}">
 	<!-- Estilos de layout del checkout reutilizados aquí: grid de formulario,
 	     cajas separadas (.box-separated) y cabeceras de sección -->
-	<link rel="stylesheet" th:href="@{/css/reservation/Checkout.css}">
+	<link rel="stylesheet" th:href="@{/css/pages/Checkout.css}">
 	<!-- Estilos propios del registro: columnas de formulario, input-box,
 	     checkboxes personalizados y botones de autenticación -->
-	<link rel="stylesheet" th:href="@{/css/auth/Register.css}">
+	<link rel="stylesheet" th:href="@{/css/pages/Register.css}">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
 	<!-- Navbar del flujo de reservas: componente Thymeleaf compartido entre booking,
 	     checkout y my-reservations. En el registro el usuario no está autenticado,
 	     por lo que booking-logic.js mostrará el botón de login en lugar del badge de perfil. -->
-	<div th:replace="~{reservation/booking-navbar :: bookingNavbar}"></div>
+	<div th:replace="~{fragments/booking-navbar :: bookingNavbar}"></div>
 
 	<!-- Contenedor principal del formulario de registro.
 	     Combina el sistema de layout de .miyabi-booking-container con .register-container
@@ -147,9 +147,9 @@
 	     Register.js      → validación del formulario, verificación de coincidencias
 	                        y envío del alta del nuevo huésped a la API -->
 	<script th:src="@{/js/base/global.js}"></script>
-	<script th:src="@{/js/reservation/globalBooking.js}"></script>
-	<script th:src="@{/js/reservation/booking-logic.js}"></script>
-	<script th:src="@{/js/auth/Register.js}"></script>
+	<script th:src="@{/js/fragments/globalBooking.js}"></script>
+	<script th:src="@{/js/fragments/booking-logic.js}"></script>
+	<script th:src="@{/js/pages/Register.js}"></script>
 </body>
 
 </html>

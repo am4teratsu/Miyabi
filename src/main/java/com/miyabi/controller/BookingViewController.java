@@ -10,16 +10,16 @@ public class BookingViewController {
 
     @GetMapping("/booking")
     public String showBookingPage() {
-        return "reservation/Booking"; 
+        return "pages/Booking"; 
     }
     
     @GetMapping("/checkout")
     public String showCheckoutPage() {
-        return "reservation/Checkout"; 
+        return "pages/Checkout"; 
     }
     
     @GetMapping("/my-reservations")
     public String showMyReservationsPage() {
-        return "reservation/MyReservations"; 
+        return "pages/MyReservations"; 
     }
 }

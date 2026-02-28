@@ -9,7 +9,7 @@
     <!-- Estilos globales base (tipografía, reset, variables CSS) -->
     <link rel="stylesheet" th:href="@{/css/base/global.css}">
     <!-- Estilos específicos de la página de presentación de reservas -->
-    <link rel="stylesheet" th:href="@{/css/reservation/Reservation.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/Reservation.css}">
 </head>
 
 <body>
@@ -105,9 +105,9 @@
          booking-logic.js → lógica de autenticación y estado de sesión de la navbar
          Reservation.js  → animaciones GSAP específicas de esta página -->
     <script th:src="@{/js/base/global.js}"></script>
-    <script th:src="@{/js/reservation/globalBooking.js}"></script>
-    <script th:src="@{/js/reservation/booking-logic.js}"></script>
-    <script th:src="@{/js/reservation/Reservation.js}"></script>
+    <script th:src="@{/js/fragments/globalBooking.js}"></script>
+    <script th:src="@{/js/fragments/booking-logic.js}"></script>
+    <script th:src="@{/js/pages/Reservation.js}"></script>
 
 </body>
 

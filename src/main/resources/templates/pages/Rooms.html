@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<!-- 
+  ============================================================
+  Rooms.html — Página de Habitaciones | Proyecto: Miyabi Hotel
+  ============================================================
+  Descripción : Muestra el catálogo dinámico de tipos de habitación
+                del hotel Miyabi, generado con Thymeleaf desde el back-end.
+                Incluye un carrusel de imágenes por habitación, especificaciones
+                técnicas, animaciones GSAP con ScrollTrigger y una sección
+                estática de información general del alojamiento.
+
+  Motor de plantillas : Thymeleaf (Spring Boot)
+  Dependencias JS     : GSAP 3.12.5 + ScrollTrigger, Swiper 11
+  Estructura           :
+    1. <head>         → Metadatos, hojas de estilo y librerías externas
+    2. Navbar         → Fragmento Thymeleaf reutilizable
+    3. <main>         → Contenido principal:
+         · Intro      → Fragmento fac-intro con título y descripción
+         · Scroll Indicator → Indicador de sección activa
+         · Rooms List → Listado dinámico de habitaciones (th:each)
+         · General Info → Tabla estática de información del hotel
+    4. Footer         → Fragmento Thymeleaf reutilizable
+    5. Scripts        → GSAP, utilidades globales y scripts de página
+  ============================================================
+-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Miyabi</title>
+
+	<!-- [CSS] Reset global, variables CSS y utilidades compartidas en todo el proyecto -->
+	<link rel="stylesheet" th:href="@{/css/base/global.css}">
+
+	<!-- [CSS] Indicador de scroll: barra/etiqueta que muestra la sección activa durante el scroll -->
+	<link rel="stylesheet" th:href="@{/css/fragments/scroll-indicator.css}">
+
+	<!-- [CSS] Estilos propios de la página de Habitaciones (layout, carrusel, specs) -->
+	<link rel="stylesheet" th:href="@{/css/pages/Rooms.css}" />
+
+	<!-- [CSS] Estilos de secciones reutilizables: intro, separadores y layouts comunes -->
+	<link rel="stylesheet" th:href="@{/css/fragments/sections.css}">
+
+	<!-- [CSS - Externo] Swiper.js v11: librería de carrusel/slider de imágenes -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+
+<body>
+
+	<!-- =====================================================
+	     NAVBAR
+	     Barra de navegación principal inyectada como fragmento
+	     Thymeleaf desde fragments/layout/components.html
+	     ===================================================== -->
+	<div th:replace="~{fragments/layout/components :: navbar}"></div>
+
+	<!-- =====================================================
+	     MAIN — Contenido principal de la página de Habitaciones
+	     Clase 'miyabi-container' aplica el ancho máximo y
+	     el padding horizontal definidos en global.css
+	     ===================================================== -->
+	<main class="rooms-page miyabi-container">
+
+		<!-- -----------------------------------------------
+		     SECCIÓN INTRO
+		     Fragmento reutilizable 'fac-intro' que renderiza:
+		       · Imagen SVG decorativa (logo japonés de sección)
+		       · Título de la página
+		       · Descripción general de las habitaciones
+		     Los parámetros se pasan directamente al fragmento.
+		     Definición en: fragments/sections.html
+		     ----------------------------------------------- -->
+		<div th:replace="~{fragments/sections :: fac-intro(
+						'https://mukayu.com/wp-content/themes/corporate/img/rooms_jp.svg', 
+						'Habitaciones', 
+						'Miyabi cuenta con 6 amplias habitaciones que ofrecen una atmósfera de serenidad y paz. 
+							Todas las habitaciones están orientadas hacia el Jardín del Bosque, donde los árboles 
+							disfrutan de la libertad de extender sus ramas. Los ventanales de cada habitación de invitados 
+							se abren ampliamente hacia el jardín para invitar a la naturaleza a fluir hacia el interior. 
+							Se anima a los huéspedes a sintonizar con los ritmos de la naturaleza. Cada habitación dispone 
+							de un baño privado de aguas termales al aire libre con vistas al jardín, permitiendo a los 
+							huéspedes sumergirse en las aguas termales en el momento que deseen y durante todo el tiempo 
+							que quieran.'	
+						)}"></div>
+
+		<!-- -----------------------------------------------
+		     SCROLL INDICATOR
+		     Componente que actualiza dinámicamente el nombre
+		     de la sección visible mientras el usuario hace scroll.
+		     El parámetro 'Habitaciones' es el label inicial.
+		     Controlado por: js/components/scroll-indicator.js
+		     Definición en: fragments/scroll-indicator.html
+		     ----------------------------------------------- -->
+		<div th:replace="~{fragments/scroll-indicator :: scroll-indicator('Habitaciones')}"></div>
+
+		<!-- =====================================================
+		     SECCIÓN: LISTADO DINÁMICO DE HABITACIONES
+		     Itera sobre la colección 'roomTypes' inyectada por
+		     el controlador Spring MVC. Cada elemento genera un
+		     bloque con layout de dos columnas:
+		       · Izquierda  → Información textual y specs
+		       · Derecha    → Carrusel de imágenes
+		     La clase 'scroll-tracked-section' permite que el
+		     scroll-indicator detecte la sección visible.
+		     ===================================================== -->
+		<section class="miyabi-rooms-section">
+
+			<!-- -----------------------------------------------
+			     BLOQUE DE HABITACIÓN (dinámico)
+			     Se genera uno por cada objeto 'room' en roomTypes.
+			     'data-name' expone el nombre del tipo de habitación
+			     al script de scroll para actualizar el indicador.
+			     ----------------------------------------------- -->
+			<div class="room-dynamic-layout scroll-tracked-section" th:data-name="${room.nameType}"
+				th:each="room : ${roomTypes}">
+
+				<!-- -------------------------------------------
+				     COLUMNA IZQUIERDA: Información de la habitación
+				     Contiene nombre, descripción, plano de planta,
+				     lista de especificaciones y CTA de reserva.
+				     ------------------------------------------- -->
+				<div class="room-info-side">
+					<div class="info-content-wrapper">
+
+						<!-- Título: nombre del tipo de habitación -->
+						<h1 class="room-nametype" th:text="${room.nameType}">Nombre de Habitación</h1>
+
+						<!-- Wrapper con animación reveal-on-scroll activada por GSAP ScrollTrigger -->
+						<div class="info-text-reveal">
+
+							<!-- Separador decorativo horizontal -->
+							<div class="separator-line"></div>
+
+							<!-- Descripción larga de la habitación -->
+							<p class="room-description" th:text="${room.description}">Descripción detallada...</p>
+
+							<!-- Plano de planta: se renderiza condicionalmente si la URL existe en el modelo -->
+							<div class="room-floorplan" th:if="${room.floorPlanUrl != null}">
+								<img th:src="@{${room.floorPlanUrl}}" alt="Plano de la habitación">
+							</div>
+
+							<!-- Descripción corta: subtítulo o resumen visible en vistas compactas -->
+							<p class="room-short-description" th:text="${room.shortDescription}">Descripción corta...</p>
+
+							<!-- -----------------------------------------------
+							     LISTA DE ESPECIFICACIONES
+							     Renderizado condicional por campo. Incluye:
+							       · Ubicación      (locationInfo)
+							       · Tamaño en m²   (roomSize)
+							       · Amenidades      (parsedAmenities — lista parseada)
+							       · Capacidad       (capacityPeople)
+							     ----------------------------------------------- -->
+							<ul class="room-specs-list">
+
+								<!-- Ubicación: visible solo si el campo no es null -->
+								<li th:if="${room.locationInfo != null}">
+									<span class="icon-bullet">◎</span>
+									<span th:text="${room.locationInfo}">Ubicación</span>
+								</li>
+
+								<!-- Tamaño de la habitación: visible solo si el campo no es null -->
+								<li th:if="${room.roomSize != null}">
+									<span class="icon-bullet">◎</span>
+									<span>Tamaño: <span th:text="${room.roomSize}">60 m²</span></span>
+								</li>
+
+								<!-- Amenidades: iteración sobre la lista 'parsedAmenities' del modelo -->
+								<li th:each="amenity : ${room.parsedAmenities}">
+									<span class="icon-bullet">◎</span>
+									<span th:text="${amenity}">Amenidad</span>
+								</li>
+
+								<!-- Capacidad máxima de huéspedes por habitación -->
+								<li>
+									<span class="icon-bullet">◎</span>
+									<span>Capacidad máxima <span th:text="${room.capacityPeople}">2</span>
+										huéspedes</span>
+								</li>
+							</ul>
+
+							<!-- CTA principal: redirige al flujo de reservas del hotel -->
+							<a href="/reservation/booking" class="btn-room-booking">Room Booking</a>
+						</div>
+
+					</div>
+				</div>
+
+				<!-- -------------------------------------------
+				     COLUMNA DERECHA: Carrusel de imágenes
+				     Itera sobre 'room.images'. El primer slide
+				     recibe la clase 'active' para ser visible por
+				     defecto. Lazy loading habilitado en cada imagen
+				     para optimizar el rendimiento de carga inicial.
+				     Controlado por: js/pages/Rooms.js
+				     ------------------------------------------- -->
+				<div class="room-images-side">
+					<div class="room-custom-carousel">
+
+						<!-- Slide individual: 'active' en el primero (index == 0) -->
+						<div th:each="img, iterStat : ${room.images}"
+							th:class="'room-slide ' + (${iterStat.index == 0 ? 'active' : ''})">
+
+							<!-- Imagen con lazy loading; usa altText si existe, si no usa el nombre del tipo -->
+							<img th:src="@{${img.imageUrl}}"
+								th:alt="${img.altText != null ? img.altText : room.nameType}" loading="lazy">
+
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+
+		</section>
+
+		<!-- =====================================================
+		     SECCIÓN: INFORMACIÓN GENERAL DEL HOTEL
+		     Contenido estático (no dinámico) que resume las
+		     políticas y servicios del alojamiento:
+		       · Tipología y número de habitaciones disponibles
+		       · Horarios de check-in / check-out
+		       · Gastronomía, baños termales, amenidades
+		       · Wi-Fi, minibar, estacionamiento y medios de pago
+		     Layout de dos columnas: etiqueta (izq.) + valor (der.)
+		     ===================================================== -->
+		<section class="general-info-section scroll-tracked-section" data-name="Información General">
+			<div class="general-info-layout">
+		
+				<!-- Título de la sección, columna izquierda -->
+				<div class="info-left-title">
+					<h2 class="info-main-heading">Información General</h2>
+				</div>
+		
+				<!-- Contenido de la sección, columna derecha -->
+				<div class="info-right-content">
+		
+					<!-- Fila: desglose de tipos de habitación y totales -->
+					<div class="info-row class rooms-border-top">
+						<div class="info-label">Habitaciones</div>
+						<div class="info-value">
+							<p><span>Habitación Japonesa Premier con Vistas al Jardín</span> <span class="align-count">4
+									habs.</span></p>
+							<p><span>Habitación Western Premier con Vistas al Jardín</span> <span class="align-count">2
+									habs.</span></p>
+							<p><span>Junior Suite Estilo Zen</span> <span class="align-count">2 habs.</span></p>
+							<p><span>Suite Ejecutiva Estilo Zen</span> <span class="align-count">6 habs.</span></p>
+							<p><span>Suite Wakamurasaki</span> <span class="align-count">1 hab.</span></p>
+							<p><span>Suite Terraza Byakuroku</span> <span class="align-count">1 hab.</span></p>
+							<!-- Fila de totales con estilo diferenciado -->
+							<p class="total-rooms"><span></span> <span class="align-count">Total 16 habs.</span></p>
+						</div>
+					</div>
+		
+					<!-- Fila: horario de entrada -->
+					<div class="info-row">
+						<div class="info-label">Check-in</div>
+						<div class="info-value single-line">15:00</div>
+					</div>
+		
+					<!-- Fila: horario de salida -->
+					<div class="info-row">
+						<div class="info-label">Check-out</div>
+						<div class="info-value single-line">11:00</div>
+					</div>
+		
+					<!-- Fila: información sobre el restaurante -->
+					<div class="info-row">
+						<div class="info-label">Gastronomía</div>
+						<div class="info-value single-line">Las comidas se sirven en el restaurante Kaiseki Horin.</div>
+					</div>
+		
+					<!-- Fila: política de baños termales (privados y comunitarios) -->
+					<div class="info-row">
+						<div class="info-label">Baños termales</div>
+						<div class="info-value single-line">
+							Todas las habitaciones y suites cuentan con baño privado de aguas termales al aire libre y cabina de
+							ducha.<br>
+							También están disponibles baños termales comunitarios (interiores y exteriores) y sauna, separados
+							por género.
+						</div>
+					</div>
+		
+					<!-- Fila: productos de baño de la marca Yakushiyama -->
+					<div class="info-row">
+						<div class="info-label">Amenidades Yakushiyama</div>
+						<div class="info-value single-line">
+							Champú, acondicionador, gel de baño, loción corporal, jabón de manos, desmaquillante, limpiador
+							facial, loción, emulsión.
+						</div>
+					</div>
+		
+					<!-- Fila: kit de amenidades generales de la habitación -->
+					<div class="info-row">
+						<div class="info-label">Amenidades</div>
+						<div class="info-value single-line">
+							Yukata, pijamas, toalla de baño, toalla de cara, toalla de mano, toalla corporal, gorro de ducha,
+							set de algodón, coletero, cepillo de pelo, cepillo de dientes, maquinilla de afeitar, secador de
+							pelo.
+						</div>
+					</div>
+					
+					<!-- Fila: política de Wi-Fi -->
+					<div class="info-row">
+						<div class="info-label">Internet</div>
+						<div class="info-value single-line">Hay Wi-Fi gratuito e ilimitado disponible en todo el hotel.</div>
+					</div>
+					
+					<!-- Fila: contenido del minibar -->
+					<div class="info-row">
+						<div class="info-label">Minibar</div>
+						<div class="info-value single-line">Refrescos y bebidas alcohólicas disponibles.</div>
+					</div>
+					
+					<!-- Fila: climatización -->
+					<div class="info-row">
+						<div class="info-label">Aire acondicionado y calefacción</div>
+						<div class="info-value single-line">Disponible</div>
+					</div>
+					
+					<!-- Fila: estacionamiento -->
+					<div class="info-row">
+						<div class="info-label">Estacionamiento</div>
+						<div class="info-value single-line">Disponible</div>
+					</div>
+					
+					<!-- Fila: tarjetas de crédito aceptadas -->
+					<div class="info-row">
+						<div class="info-label">Tarjetas de crédito</div>
+						<div class="info-value single-line">VISA, JCB, AMEX, DINERS, UC, DC, MASTER</div>
+					</div>
+		
+				</div>
+			</div>
+		</section>
+
+	</main>
+
+	<!-- =====================================================
+	     FOOTER
+	     Pie de página global inyectado como fragmento Thymeleaf
+	     desde fragments/layout/components.html
+	     ===================================================== -->
+	<div th:replace="~{fragments/layout/components :: footer}"></div>
+
+	<!-- =====================================================
+	     SCRIPTS — Orden de carga relevante
+	     ===================================================== -->
+
+	<!-- [JS - Externo] GSAP Core 3.12.5: motor de animaciones de alto rendimiento -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+	<!-- [JS - Externo] ScrollTrigger: plugin de GSAP para animaciones basadas en posición de scroll -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+	<!-- [JS] Global: inicializa comportamientos compartidos (navbar, utilidades comunes) -->
+	<script th:src="@{/js/base/global.js}"></script>
+
+	<!-- [JS] Scroll Indicator: actualiza el label de sección activa según la posición de scroll -->
+	<script th:src="@{/js/fragments/scroll-indicator.js}"></script>
+
+	<!-- [JS] Sections: gestiona animaciones y comportamientos de los fragmentos de sección -->
+	<script th:src="@{/js/fragments/sections.js}"></script>
+
+	<!-- [JS] Rooms (página): lógica del carrusel de imágenes y animaciones reveal de contenido -->
+	<script th:src="@{/js/pages/Rooms.js}"></script>
+
+</body>
+
+</html>

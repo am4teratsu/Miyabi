@@ -70,7 +70,7 @@ async function processRegistration() {
     // === Bloqueo del botón anti-doble clic ===
     // Se deshabilita antes del await para cubrir todo el tiempo de espera de la petición
     btnCreate.disabled = true;
-    btnCreate.innerText = "CREATING...";
+    btnCreate.innerText = "CREANDO...";
 
     // === Construcción del payload ===
     // Los campos de dirección (country, city) se inicializan con valores provisionales

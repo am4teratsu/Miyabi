@@ -11,9 +11,9 @@
 
 	<!-- Hojas de estilo globales y específicas de la página -->
 	<link rel="stylesheet" th:href="@{/css/base/global.css}">          <!-- Estilos base compartidos por toda la aplicación -->
-	<link rel="stylesheet" th:href="@{/css/cuisine/Cuisine.css}">         <!-- Estilos específicos de la página de cocina -->
-	<link rel="stylesheet" th:href="@{/css/cuisine/cuisine-menus.css}"> <!-- Estilos del componente de menús estacionales -->
-	<link rel="stylesheet" th:href="@{/css/components/sections.css}">   <!-- Estilos de los componentes de sección reutilizables (fac-intro, fac-section) -->
+	<link rel="stylesheet" th:href="@{/css/pages/Cuisine.css}">         <!-- Estilos específicos de la página de cocina -->
+	<link rel="stylesheet" th:href="@{/css/fragments/cuisine-menus.css}"> <!-- Estilos del componente de menús estacionales -->
+	<link rel="stylesheet" th:href="@{/css/fragments/sections.css}">   <!-- Estilos de los componentes de sección reutilizables (fac-intro, fac-section) -->
 </head>
 
 <body>
@@ -67,7 +67,7 @@
 		<!-- Sección de menús estacionales (Invierno, Otoño, Verano, Primavera).
 		     Inyectada desde el fragment "seasonal-menus" en fragments/cuisine/cuisine-menus.
 		     Incluye el sistema de pestañas por temporada y todas las opciones de mejora de menú. -->
-		<div th:replace="~{cuisine/cuisine-menus :: seasonal-menus}"></div>
+		<div th:replace="~{fragments/cuisine-menus :: seasonal-menus}"></div>
 
 	</main>
 	
@@ -82,8 +82,8 @@
 
 	<!-- Scripts de la aplicación -->
 	<script th:src="@{/js/base/global.js}"></script>              <!-- Lógica JavaScript global compartida -->
-	<script th:src="@{/js/cuisine/cuisine-menu.js}"></script>     <!-- Lógica del sistema de pestañas de menús estacionales -->
-	<script th:src="@{/js/components/sections.js}"></script>      <!-- Comportamiento interactivo de los componentes de sección -->
+	<script th:src="@{/js/fragments/cuisine-menu.js}"></script>     <!-- Lógica del sistema de pestañas de menús estacionales -->
+	<script th:src="@{/js/fragments/sections.js}"></script>      <!-- Comportamiento interactivo de los componentes de sección -->
 
 </body>
 

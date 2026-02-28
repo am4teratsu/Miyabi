@@ -7,25 +7,25 @@
 	<title>Miyabi</title>
 
 	<link rel="stylesheet" th:href="@{/css/base/global.css}">
-	<link rel="stylesheet" th:href="@{/css/index/hero.css}">
-	<link rel="stylesheet" th:href="@{/css/index/intro.css}">
-	<link rel="stylesheet" th:href="@{/css/index/features.css}">
+	<link rel="stylesheet" th:href="@{/css/fragments/hero.css}">
+	<link rel="stylesheet" th:href="@{/css/fragments/intro.css}">
+	<link rel="stylesheet" th:href="@{/css/fragments/features.css}">
 </head>
 
 <body>
 
 	<div th:replace="~{fragments/layout/components :: navbar}"></div>
 
-	<div th:replace="~{index/hero :: hero}"></div>
-	<div th:replace="~{index/intro :: intro}"></div>
-	<div th:replace="~{index/features :: features}"></div>
+	<div th:replace="~{fragments/hero :: hero}"></div>
+	<div th:replace="~{fragments/intro :: intro}"></div>
+	<div th:replace="~{fragments/features :: features}"></div>
 
 	<div th:replace="~{fragments/layout/components :: footer}"></div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 	<script th:src="@{/js/base/global.js}"></script>
-	<script th:src="@{/js/index/Index.js}"></script>
+	<script th:src="@{/js/pages/Index.js}"></script>
 
 </body>
 

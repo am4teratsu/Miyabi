@@ -18,37 +18,37 @@ public class HomeController {
 
     @GetMapping("/")
     public String index() {
-        return "index/Index"; 
+        return "pages/Index"; 
     }
 
     @GetMapping("/facilities")
     public String facilities() {
-        return "facilities/Facilities"; 
+        return "pages/Facilities"; 
     }
 
     @GetMapping("/cuisine")
     public String cuisine() {
-        return "cuisine/Cuisine"; 
+        return "pages/Cuisine"; 
     }
     
     @GetMapping("/rooms")
     public String rooms(Model model) {
         model.addAttribute("roomTypes", roomTypeService.findAll());
-        return "rooms/Rooms"; 
+        return "pages/Rooms"; 
     }
     
     @GetMapping("/reservation")
     public String reservation() {
-        return "reservation/Reservation"; 
+        return "pages/Reservation"; 
     }
     
     @GetMapping("/register")
     public String showRegisterPage() {
-        return "auth/Register"; 
+        return "pages/Register"; 
     }
     
     @GetMapping("/profile")
     public String showProfilePage() {
-        return "auth/Profile"; 
+        return "pages/Profile"; 
     }
 }

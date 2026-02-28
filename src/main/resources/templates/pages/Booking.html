@@ -10,24 +10,24 @@
     <link rel="stylesheet" th:href="@{/css/base/global.css}">
 
     <!-- Estilos específicos del módulo de reservas -->
-    <link rel="stylesheet" th:href="@{/css/reservation/booking-navbar.css}">
-    <link rel="stylesheet" th:href="@{/css/reservation/booking-hero.css}">
-    <link rel="stylesheet" th:href="@{/css/reservation/booking-layout.css}">
-    <link rel="stylesheet" th:href="@{/css/reservation/booking-widget.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/booking-navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/booking-hero.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/booking-layout.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/booking-widget.css}">
 </head>
 
 <body>
 
     <!-- Barra de navegación exclusiva para la sección de reservas (componente Thymeleaf reutilizable) -->
-    <div th:replace="~{reservation/booking-navbar :: bookingNavbar}"></div>
+    <div th:replace="~{fragments/booking-navbar :: bookingNavbar}"></div>
 
     <!-- Hero section de la página de reservas: imagen/banner principal con llamada a la acción -->
-    <div th:replace="~{reservation/booking-hero :: bookingHero}"></div>
+    <div th:replace="~{fragments/booking-hero :: bookingHero}"></div>
 
     <!-- Contenedor principal del flujo de reservas -->
     <main class="miyabi-booking-container">
         <!-- Grid principal del formulario/widget de reservas (selector de fecha, hora, comensales, etc.) -->
-        <div th:replace="~{reservation/fragments/booking-layout :: bookingMainGrid}"></div>
+        <div th:replace="~{fragments/booking-layout :: bookingMainGrid}"></div>
     </main>
 
     <!-- Footer global del sitio (componente Thymeleaf compartido entre páginas) -->
@@ -38,8 +38,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
     <!-- Lógica JS del módulo de reservas: inicialización global y manejo del flujo de reserva -->
-    <script th:src="@{/js/reservation/globalBooking.js}"></script>
-    <script th:src="@{/js/reservation/booking-logic.js}"></script>
+    <script th:src="@{/js/fragments/globalBooking.js}"></script>
+    <script th:src="@{/js/fragments/booking-logic.js}"></script>
 
 </body>
 </html>

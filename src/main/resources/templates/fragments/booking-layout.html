@@ -13,7 +13,7 @@
 
         <!-- Widget de búsqueda: selector de huéspedes, fechas y listado de habitaciones.
              Definido en reservation/fragments/search-widget.html -->
-        <div th:replace="~{reservation/fragments/search-widget :: searchWidget}"></div>
+        <div th:replace="~{fragments/search-widget :: searchWidget}"></div>
 
         <!-- Contenedor vacío reservado para la selección de habitación.
              Su contenido es inyectado dinámicamente por booking-logic.js -->
@@ -27,7 +27,7 @@
     <div class="booking-sidebar-column">
         <!-- Widget del carrito: muestra fechas, huéspedes, habitación seleccionada y total.
              Definido en reservation/fragments/cart-widget.html -->
-        <div th:replace="~{reservation/fragments/cart-widget :: cartWidget(hideSidebarBtn=false)}"></div>
+        <div th:replace="~{fragments/cart-widget :: cartWidget(hideSidebarBtn=false)}"></div>
     </div>
 
 </div>

@@ -9,15 +9,15 @@
     <!-- Estilos base del sitio: tipografía, variables CSS y reset global -->
     <link rel="stylesheet" th:href="@{/css/base/global.css}">
     <!-- Navbar específica del flujo de reservas (distinta a la navbar principal del sitio) -->
-    <link rel="stylesheet" th:href="@{/css/reservation/booking-navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/booking-navbar.css}">
     <!-- Estilos exclusivos de la página "Mis Reservas": tarjetas de reserva, estados, layout -->
-    <link rel="stylesheet" th:href="@{/css/reservation/MyReservations.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/MyReservations.css}">
 </head>
 <body>
 
     <!-- Navbar del flujo de reservas: componente Thymeleaf compartido entre las páginas
          de booking, checkout y my-reservations. Incluye el badge de perfil del huésped. -->
-    <div th:replace="~{reservation/booking-navbar :: bookingNavbar}"></div>
+    <div th:replace="~{fragments/booking-navbar :: bookingNavbar}"></div>
 
     <!-- Contenedor principal de la página: centra y limita el ancho del contenido
          siguiendo el sistema de layout de .miyabi-booking-container definido en global.css -->
@@ -48,8 +48,8 @@
          globalBooking.js  → utilidades compartidas del flujo de reservas (showToast, getInitials, etc.)
          booking-logic.js  → gestión del estado de sesión y autenticación en la navbar
          MyReservations.js → consulta la API, renderiza las tarjetas y gestiona las acciones del usuario -->
-	<script th:src="@{/js/reservation/globalBooking.js}"></script>
-	<script th:src="@{/js/reservation/booking-logic.js}"></script>
-    <script th:src="@{/js/reservation/MyReservations.js}"></script>
+	<script th:src="@{/js/fragments/globalBooking.js}"></script>
+	<script th:src="@{/js/fragments/booking-logic.js}"></script>
+    <script th:src="@{/js/pages/MyReservations.js}"></script>
 </body>
 </html>
