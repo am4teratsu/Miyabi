@@ -18,6 +18,7 @@ gsap.registerPlugin(ScrollTrigger);
 // === 1. LÓGICA DE APARICIÓN DEL NAVBAR =====================================
 
 const navBar = document.getElementById("main-nav");
+let navAnimation;
 
 /**
  * Controla la visibilidad y el estilo de la barra de navegación según la ruta
@@ -39,17 +40,22 @@ if (window.location.pathname === '/' || window.location.pathname === '') {
 	
     // Lo ocultamos desplazándolo hacia arriba el 100% de su propia altura
     gsap.set(navBar, { yPercent: -110, opacity: 1 });
-
-    gsap.to(navBar, {
+	
+    navAnimation = gsap.to(navBar, {
         yPercent: 0,
         duration: 0.6,
-        ease: "power3.inOut",
         ease: "power2.out",
-        scrollTrigger: {
-            trigger: "body",
-            start: "top -400px",   // Se activa cuando el usuario ha bajado 400px desde el top
-            // play: aparece al bajar | reverse: desaparece al volver arriba
-            toggleActions: "play none none reverse",
+        paused: true
+    });
+
+    ScrollTrigger.create({
+        trigger: "body",
+        start: "top -400px",
+        onEnter: () => navAnimation.play(),
+        onLeaveBack: () => {
+            if (!isMenuOpen) {
+                navAnimation.reverse();
+            }
         }
     });
 
@@ -119,6 +125,11 @@ menuToggle.addEventListener("click", () => {
     } else {
         // Cierre más rápido: 2x evita que la animación de salida se perciba lenta
         menuTimeline.timeScale(2).reverse(); 
+        
+        // Si estamos en la página de inicio, cerramos el menú y estamos en la cima de la página, ocultamos el Navbar
+        if (window.scrollY < 400 && (window.location.pathname === '/' || window.location.pathname === '')) {
+            if (navAnimation) navAnimation.reverse();
+        }
     }
 });
 

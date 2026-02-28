@@ -1,0 +1,224 @@
+/* =============================================================================
+   Rooms.css — Estilos de la página de Habitaciones
+   Arquitectura:
+     1. Layout principal del bloque por habitación
+     2. Columna izquierda: información textual y especificaciones
+     3. Columna derecha: carrusel de imágenes personalizado
+     4. Media Queries: adaptación a pantallas medianas/pequeñas
+   ============================================================================= */
+
+
+/* =============================================================================
+   1. LAYOUT PRINCIPAL
+   Cada habitación se representa como una fila flex que divide el espacio
+   en dos columnas: información (28%) e imágenes (72%).
+   ============================================================================= */
+
+.room-dynamic-layout {
+    display: flex;
+    /* Separación generosa entre bloques de habitación para evitar sensación de saturación */
+	margin-top: 160px;
+}
+
+
+/* =============================================================================
+   2. COLUMNA IZQUIERDA — Información de la Habitación
+   Contiene nombre, descripción, plano de planta, especificaciones y CTA.
+   El padding-right crea el gutter visual entre la columna de texto y la de imágenes.
+   ============================================================================= */
+
+.room-info-side {
+    width: 28%;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+	/* Crea el espacio interior (gutter) entre la columna de texto y la columna de imagen */
+	padding-right: 60px;
+}
+
+/* Contenedor interno que limita el ancho del texto para preservar la legibilidad
+   en pantallas anchas; max-width evita líneas de texto excesivamente largas */
+.info-content-wrapper {
+    width: 85%;
+    max-width: 500px;
+}
+
+/* --- Tipografía y elementos de texto --- */
+
+.room-nametype {
+    font-size: 20px;
+    font-weight: 500;
+	/* word-spacing sutil para dar un aire más tipográfico/editorial al nombre */
+	word-spacing: 4px;
+    color: #1a1a1a;
+    line-height: 1.3;
+    margin-bottom: 15px;
+}
+
+/* Línea decorativa minimalista que actúa como separador visual
+   entre el título y el bloque de contenido. El 15% de ancho le da
+   un carácter más artístico que funcional, en línea con la estética del proyecto */
+.separator-line {
+    width: 15%;
+    height: 1px;
+    background-color: #000;
+    margin-bottom: 15px;
+}
+
+.room-description {
+    font-size: 14px;
+	font-weight: 500;
+    color: #000;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+/* El plano de planta ocupa todo el ancho disponible del contenedor padre
+   para maximizar la legibilidad del diagrama */
+.room-floorplan {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.room-floorplan img {
+    width: 100%;
+    height: auto;
+    /* Borde sutil que enmarca el plano y lo distingue del fondo blanco */
+    border: 1px solid #1a1a1a;
+}
+
+/* La descripción corta actúa como subtítulo o tagline de la habitación;
+   la cursiva la diferencia visualmente de la descripción principal */
+.room-short-description {
+    font-size: 14px;
+	font-weight: 500;
+    font-style: italic;
+    color: #000;
+    margin-bottom: 15px;
+}
+
+/* --- Lista de especificaciones (ubicación, tamaño, amenidades, capacidad) --- */
+
+.room-specs-list {
+    list-style: none; /* Eliminamos el bullet nativo para usar el icono '◎' personalizado */
+    padding: 0;
+    margin: 0 0 20px 0;
+    font-size: 14px;
+	font-weight: 500;
+    color: #000;
+}
+
+/* Flex en cada ítem para alinear el icono personalizado con el texto,
+   incluso cuando el texto ocupa múltiples líneas (align-items: flex-start) */
+.room-specs-list li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+/* Icono decorativo '◎' que reemplaza al bullet estándar de la lista.
+   El margin-right crea el espacio consistente entre icono y texto */
+.icon-bullet {
+    font-size: 12px;
+    margin-right: 10px;
+    color: #000;
+}
+
+/* --- CTA de reserva --- */
+
+/* Botón de reserva de estilo "ghost" (fondo transparente con borde).
+   El padding horizontal amplio (60px) le da la proporción de botón tipo
+   "pill ancho" sin necesidad de un ancho fijo que rompería en textos largos */
+.btn-room-booking {
+    display: inline-block;
+    padding: 10px 60px;
+    border: 1px solid #000;
+	border-radius: 8px;
+    color: #000;
+    font-size: 13px;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+
+/* =============================================================================
+   3. COLUMNA DERECHA — Carrusel de Imágenes Personalizado
+   El sistema de capas se basa en position: absolute sobre todos los slides,
+   controlando la visibilidad mediante opacity + visibility en lugar de display,
+   para que las transiciones CSS (transition) puedan interpolarse suavemente.
+   ============================================================================= */
+
+.room-images-side {
+    width: 72%;
+    position: relative;
+    display: flex;
+    /* stretch asegura que el carrusel ocupe toda la altura del bloque de la habitación,
+       independientemente de la altura del contenido de texto de la columna izquierda */
+    align-items: stretch;
+}
+
+/* El contenedor del carrusel establece el contexto de posicionamiento para los slides absolutos.
+   overflow: hidden recorta las imágenes que sobresalen durante las transiciones */
+.room-custom-carousel {
+    width: 100%;
+    height: 100%;
+    min-height: 700px; /* Altura mínima para garantizar impacto visual en pantallas grandes */
+    position: relative;
+    overflow: hidden;
+    cursor: pointer; /* Indica al usuario que puede hacer clic para cambiar de imagen */
+}
+
+/* --- Sistema de capas del carrusel --- */
+
+/* Estado base: todos los slides están apilados en la misma posición (absolute top/left 0)
+   y son invisibles. Se usa opacity + visibility en lugar de display:none para
+   poder animar la transición de fundido con CSS (display no es animable) */
+.room-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease-in-out, visibility 0.8s; /* Fundido suave de 0.8s */
+    /* z-index base inferior: garantiza que el slide activo siempre quede por encima */
+    z-index: 1;
+}
+
+/* El slide activo asciende en el orden de capas (z-index: 2) y se hace visible.
+   La transición en .room-slide se encarga de animar el cambio de estado */
+.room-slide.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 2;
+}
+
+/* object-fit: cover asegura que la imagen cubra todo el contenedor sin deformarse,
+   independientemente de la relación de aspecto original de cada foto */
+.room-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block; /* Elimina el espacio inferior de línea base que añaden los <img> inline */
+}
+
+
+/* =============================================================================
+   4. MEDIA QUERIES — Adaptación Responsive
+   ============================================================================= */
+
+/* En pantallas medianas (≤992px), el layout de dos columnas colapsa verticalmente.
+   La imagen pasa a la parte superior (order: -1) para mantener el impacto visual
+   antes que el texto, siguiendo la convención de scroll en móvil */
+@media (max-width: 992px) {
+    .room-images-side {
+        min-height: 50vh; /* Altura relativa al viewport para adaptarse a cualquier dispositivo */
+        order: -1;        /* Reordena la columna de imagen para que aparezca antes que el texto */
+    }
+    .room-custom-carousel {
+        min-height: 50vh;
+    }
+}

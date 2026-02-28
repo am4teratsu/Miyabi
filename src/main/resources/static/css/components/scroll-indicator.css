@@ -64,3 +64,10 @@
 	line-height: 1.4;
     color: var(--color-black);
 }
+
+
+@media (max-width: 1250px) {
+    .indicator-text {
+		max-width: 60px;
+	}
+}

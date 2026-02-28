@@ -13,6 +13,10 @@ public class RoomTypeService {
     public RoomTypeService(RoomTypeRepository roomTypeRepository) {
         this.roomTypeRepository = roomTypeRepository;
     }
+    
+    public RoomType findById(Integer id) {
+        return roomTypeRepository.findById(id).orElse(null);
+    }
 
     public List<RoomType> findAll() {
         return roomTypeRepository.findAll();

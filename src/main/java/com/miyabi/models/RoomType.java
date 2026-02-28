@@ -4,9 +4,25 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Entity
 @Table(name = "room_type")
 public class RoomType {
+	
+	@Transient
+    public List<String> getParsedAmenities() {
+        if (this.amenities != null && !this.amenities.isEmpty()) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                return mapper.readValue(this.amenities, new TypeReference<List<String>>() {});
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return new java.util.ArrayList<>();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,7 +74,7 @@ public class RoomType {
 
     // Relación con las imágenes del carrusel
     @com.fasterxml.jackson.annotation.JsonIgnore
-    @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<RoomImage> images;
 
     public RoomType() {}
