@@ -1,13 +1,23 @@
 package com.miyabi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import com.miyabi.models.Reservation;
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
-
-    List<Reservation> findByGuest_IdGuest(Integer idGuest);
     
-    // Buscar una reserva por su código exacto (Ej: RES-2026-0001)
+    List<Reservation> findByGuest_IdGuest(Integer idGuest);
     Reservation findByReservationCode(String reservationCode);
+
+    // Sumar todo el dinero de reservas que no estén canceladas
+    @Query("SELECT SUM(r.totalPay) FROM Reservation r WHERE r.state != 'Cancelled'")
+    BigDecimal sumTotalRevenue();
+
+    // Contar reservas por estado
+    long countByState(String state);
+    
+    // Obtener las últimas 5 reservas para la tabla de movimientos
+    List<Reservation> findTop5ByOrderByReservationIdDesc();
 }

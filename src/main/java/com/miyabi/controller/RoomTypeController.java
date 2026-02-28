@@ -24,4 +24,18 @@ public class RoomTypeController {
     public RoomType createRoomType(@RequestBody RoomType roomType) {
         return roomTypeService.save(roomType);
     }
+    
+    // Agregado x Fabricio
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id) {
+        roomTypeService.deleteById(id);
+    }
+    
+    // Agregado x Fabricio
+    @GetMapping("/{id}")
+    public RoomType getById(@PathVariable Integer id) {
+        // Medoto del Service
+        return roomTypeService.findById(id).orElse(null);
+    }
+
 }

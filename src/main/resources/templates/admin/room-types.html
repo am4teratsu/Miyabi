@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Miyabi | Gestión de Tarifas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+	<nav class="navbar navbar-dark bg-dark shadow-sm mb-4">
+	    <div class="container">
+	        <a th:href="@{/admin/dashboard}" class="navbar-brand fw-bold text-decoration-none text-white">
+	            <i class="bi bi-building"></i> MIYABI Admin
+	        </a>
+	        
+	        <div class="d-flex align-items-center">
+	            <a th:href="@{/admin/dashboard}" class="btn btn-outline-light btn-sm me-2">
+	                <i class="bi bi-speedometer2"></i> Dashboard
+	            </a>
+	            <a th:href="@{/admin/rooms}" class="btn btn-outline-light btn-sm me-2">
+	                <i class="bi bi-door-open"></i> Habitaciones
+	            </a>
+	            <a th:href="@{/admin/room-types}" class="btn btn-outline-light btn-sm me-2">
+	                <i class="bi bi-tags"></i> Tarifas
+	            </a>
+	            <a th:href="@{/admin/users}" class="btn btn-outline-light btn-sm me-2">
+	                <i class="bi bi-people"></i> Personal
+	            </a>
+	            
+	            <div class="vr mx-2 text-white opacity-50"></div>
+	            
+	            <a href="/" class="btn btn-sm btn-light">
+	                <i class="bi bi-box-arrow-up-right"></i> Ver Web
+	            </a>
+	        </div>
+	    </div>
+	</nav>
+
+    <div class="container">
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-8">
+                <h3><i class="bi bi-tags"></i> Tipos de Habitación y Precios</h3>
+                <p class="text-muted">Configura los precios base y de temporada alta.</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalType">
+                    <i class="bi bi-plus-lg"></i> Nuevo Tipo
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-4" th:each="t : ${listTypes}">
+                <div class="card h-100 shadow-sm border-0">
+                    <img th:src="${t.imageUrl != null ? t.imageUrl : 'https://placehold.co/600x400?text=Miyabi+Hotel'}" 
+                         class="card-img-top" alt="Room Image" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold" th:text="${t.nameType}">Suite Doble</h5>
+                        <p class="card-text text-muted small" th:text="${t.shortDescription}">Descripción corta...</p>
+                        
+                        <ul class="list-group list-group-flush mb-3">
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Precio Base: <span class="fw-bold text-success" th:text="'S/ ' + ${t.basePrice}">S/ 100</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Temporada Alta: <span class="fw-bold text-danger" th:text="'S/ ' + ${t.highSeasonPrice}">S/ 150</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Capacidad: <span th:text="${t.capacityPeople} + ' personas'">2 personas</span>
+                            </li>
+                        </ul>
+                        
+						<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+						    <button class="btn btn-sm btn-outline-primary" 
+						            th:onclick="'editType(' + ${t.idTipo} + ')'">
+						        <i class="bi bi-pencil"></i> Editar
+						    </button>
+						    
+						    <button class="btn btn-sm btn-outline-danger" 
+						            th:onclick="'deleteType(' + ${t.idTipo} + ')'">
+						        <i class="bi bi-trash"></i> Borrar
+						    </button>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalType" tabindex="-1" aria-labelledby="modalTypeLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="modalTypeLabel">Gestionar Tipo de Habitación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formType">
+                    <div class="modal-body">
+                        <input type="hidden" id="typeId"> 
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Nombre del Tipo</label>
+                                <input type="text" class="form-control" id="nameType" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Capacidad</label>
+                                <input type="number" class="form-control" id="capacityPeople" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Precio Base</label>
+                                <input type="number" step="0.01" class="form-control" id="basePrice" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Precio Temp. Alta</label>
+                                <input type="number" step="0.01" class="form-control" id="highSeasonPrice" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">URL de la Imagen (Portada)</label>
+                                <input type="text" class="form-control" id="imageUrl" placeholder="https://unsplash.com/..." required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Descripción Corta</label>
+                                <input type="text" class="form-control" id="shortDescription" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Descripción Detallada</label>
+                                <textarea class="form-control" id="description" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script th:inline="javascript">
+        const modal = new bootstrap.Modal(document.getElementById('modalType'));
+        const form = document.getElementById('formType');
+
+        document.querySelector('[data-bs-target="#modalType"]').addEventListener('click', () => {
+            form.reset();
+            document.getElementById('typeId').value = '';
+            document.getElementById('modalTypeLabel').innerText = 'Nuevo Tipo de Habitación';
+        });
+
+        function editType(id) {
+            document.getElementById('modalTypeLabel').innerText = 'Editar Tipo de Habitación';
+            fetch('/api/room-types/' + id)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('typeId').value = data.idTipo;
+                    document.getElementById('nameType').value = data.nameType;
+                    document.getElementById('capacityPeople').value = data.capacityPeople;
+                    document.getElementById('basePrice').value = data.basePrice;
+                    document.getElementById('highSeasonPrice').value = data.highSeasonPrice;
+                    document.getElementById('shortDescription').value = data.shortDescription;
+                    document.getElementById('description').value = data.description;
+                    document.getElementById('imageUrl').value = data.imageUrl || '';
+                    modal.show();
+                });
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = {
+                idTipo: document.getElementById('typeId').value || null,
+                nameType: document.getElementById('nameType').value,
+                capacityPeople: document.getElementById('capacityPeople').value,
+                basePrice: document.getElementById('basePrice').value,
+                highSeasonPrice: document.getElementById('highSeasonPrice').value,
+                shortDescription: document.getElementById('shortDescription').value,
+                description: document.getElementById('description').value,
+                imageUrl: document.getElementById('imageUrl').value 
+            };
+
+            fetch('/api/room-types', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(() => location.reload());
+        });
+		
+		// Función para ELIMINAR
+		function deleteType(id) {
+		    if (confirm('¿Estás seguro de eliminar este tipo de habitación? Esta acción no se puede deshacer.')) {
+		        fetch('/api/room-types/' + id, {
+		            method: 'DELETE'
+		        }).then(response => {
+		            if (response.ok) {
+		                location.reload(); // Recarga para ver que ya no está
+		            } else {
+		                alert('No se puede eliminar: Es posible que existan habitaciones asociadas a este tipo.');
+		            }
+		        });
+		    }
+		}
+    </script>
+</body>
+</html>

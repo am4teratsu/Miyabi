@@ -25,4 +25,9 @@ public class UserService {
     public User save(User user) {
         return userRepository.save(user);
     }
+    
+    // Agregado x Fabricio
+    public void deleteById(Integer id) {
+        userRepository.deleteById(id);
+    }
 }

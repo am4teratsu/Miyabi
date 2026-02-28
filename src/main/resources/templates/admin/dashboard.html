@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Miyabi | Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+	<nav class="navbar navbar-dark bg-dark shadow-sm mb-4">
+	    <div class="container">
+	        <a th:href="@{/admin/dashboard}" class="navbar-brand fw-bold text-decoration-none text-white">
+	            <i class="bi bi-building"></i> MIYABI Admin
+	        </a>
+	        
+	        <div class="d-flex align-items-center">
+	            <a th:href="@{/admin/dashboard}" class="btn btn-outline-light btn-sm me-2">
+	                <i class="bi bi-speedometer2"></i> Dashboard
+	            </a>
+	            <a th:href="@{/admin/rooms}" class="btn btn-outline-light btn-sm me-2">
+	                <i class="bi bi-door-open"></i> Habitaciones
+	            </a>
+	            <a th:href="@{/admin/room-types}" class="btn btn-outline-light btn-sm me-2">
+	                <i class="bi bi-tags"></i> Tarifas
+	            </a>
+	            <a th:href="@{/admin/users}" class="btn btn-outline-light btn-sm me-2">
+	                <i class="bi bi-people"></i> Personal
+	            </a>
+	            
+	            <div class="vr mx-2 text-white opacity-50"></div>
+	            
+	            <a href="/" class="btn btn-sm btn-light">
+	                <i class="bi bi-box-arrow-up-right"></i> Ver Web
+	            </a>
+	        </div>
+	    </div>
+	</nav>
+
+    <div class="container">
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-primary text-white">
+                    <div class="card-body">
+                        <h6 class="text-uppercase small">Ingresos Totales</h6>
+                        <h2 class="fw-bold" th:text="'S/ ' + ${totalRevenue}">S/ 0.00</h2>
+                        <i class="bi bi-cash-stack float-end fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-warning text-dark">
+                    <div class="card-body">
+                        <h6 class="text-uppercase small">Reservas Pendientes</h6>
+                        <h2 class="fw-bold" th:text="${pendingCount}">0</h2>
+                        <i class="bi bi-clock-history float-end fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-success text-white">
+                    <div class="card-body">
+                        <h6 class="text-uppercase small">Reservas Activas</h6>
+                        <h2 class="fw-bold" th:text="${activeCount}">0</h2>
+                        <i class="bi bi-calendar-check float-end fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-dark text-white">
+                    <div class="card-body">
+                        <h6 class="text-uppercase small">Total Habitaciones</h6>
+                        <h2 class="fw-bold" th:text="${totalRooms}">0</h2>
+                        <i class="bi bi-door-open float-end fs-1 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-stars me-2"></i>Últimos Movimientos</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Código</th>
+                            <th>Cliente</th>
+                            <th>Habitación</th>
+                            <th>Entrada / Salida</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="r : ${recentReservations}">
+                            <td class="fw-bold text-primary" th:text="${r.reservationCode}">RES-001</td>
+                            <td th:text="${r.guest.names + ' ' + r.guest.surnames}">Cliente</td>
+                            <td th:text="'Hab. ' + ${r.room.roomNumber}">101</td>
+                            <td class="small">
+                                <span th:text="${r.entryDate}"></span> al <br>
+                                <span th:text="${r.departureDate}"></span>
+                            </td>
+                            <td class="fw-bold" th:text="'S/ ' + ${r.totalPay}">S/ 200</td>
+                            <td>
+                                <span th:classappend="${r.state == 'Confirmed' ? 'badge bg-success' : 'badge bg-warning'}" 
+                                      class="badge" th:text="${r.state}">Estado</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(recentReservations)}">
+                            <td colspan="6" class="text-center py-4 text-muted">No hay movimientos registrados hoy.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
