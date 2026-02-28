@@ -15,14 +15,24 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-@Controller
-@RequestMapping("/users")
+/**
+ * Controlador MVC para la gestión de Reservas por parte de los empleados (Intranet).
+ * A diferencia del ReservationController (API REST para el cliente final), 
+ * este controlador renderiza vistas HTML para que los recepcionistas o administradores
+ * puedan gestionar manualmente las reservas desde el panel de control.
+ */
+@Controller // Indica que es un controlador que devuelve plantillas Thymeleaf, no datos JSON.
+@RequestMapping("/users") // Ruta base para el módulo administrativo de empleados.
 public class UserReservationController {
 
+    // Dependencias inyectadas necesarias para cruzar los datos de reservas, habitaciones y clientes.
     private final ReservationService reservationService;
     private final RoomService roomService;
     private final GuestService guestService;
 
+    /**
+     * Constructor para la Inyección de Dependencias.
+     */
     public UserReservationController(ReservationService reservationService,
                                      RoomService roomService,
                                      GuestService guestService) {
@@ -32,8 +42,11 @@ public class UserReservationController {
     }
 
     // ── 1. LISTAR todas las reservas ────────────────────────────────────────
-    // URL: GET /users/reservations
-    // Retorna la vista: templates/users/Reservations.html
+    /**
+     * Endpoint GET: /users/reservations
+     * Carga la vista principal con la tabla de todas las reservas registradas.
+     * También envía la lista de habitaciones y huéspedes para poblar los selects de los modales de creación/edición.
+     */
     @GetMapping("/reservations")
     public String listReservations(Model model) {
         model.addAttribute("reservations", reservationService.findAll());
@@ -43,8 +56,11 @@ public class UserReservationController {
     }
 
     // ── 2. MOSTRAR formulario de edición ───────────────────────────────────
-    // URL: GET /users/reservations/edit/5
-    // Retorna la vista: templates/users/fragments/ReservationForm.html
+    /**
+     * Endpoint GET: /users/reservations/edit/{id}
+     * Carga un fragmento HTML (formulario de edición) para una reserva en específico.
+     * Esto es muy útil para cargarlo dinámicamente dentro de un modal en el frontend sin recargar toda la página.
+     */
     @GetMapping("/reservations/edit/{id}")
     public String editForm(@PathVariable Integer id, Model model) {
         Reservation reservation = reservationService.findById(id);
@@ -58,8 +74,11 @@ public class UserReservationController {
     }
 
     // ── 3. CREAR nueva reserva ─────────────────────────────────────────────
-    // URL: POST /users/reservations/save
-    // Viene del formulario en el modal de Reservations.html
+    /**
+     * Endpoint POST: /users/reservations/save
+     * Procesa el formulario para registrar una nueva reserva manualmente (ej. el cliente llamó por teléfono).
+     * Utiliza el patrón PRG (Post-Redirect-Get) redireccionando a la lista al terminar.
+     */
     @PostMapping("/reservations/save")
     public String save(@RequestParam Integer roomId,
                        @RequestParam Integer guestId,
@@ -69,14 +88,15 @@ public class UserReservationController {
                        @RequestParam(defaultValue = "0")  Integer numChildren,
                        @RequestParam(defaultValue = "Pending") String state,
                        @RequestParam(required = false) String observations,
-                       RedirectAttributes ra) {
+                       RedirectAttributes ra) { // ra permite enviar mensajes temporales ("flash") a la vista redireccionada.
         try {
             Room  room  = roomService.findById(roomId);
             Guest guest = guestService.findById(guestId);
 
+            // Cálculos automáticos de fechas y costos
             LocalDate in    = LocalDate.parse(entryDate);
             LocalDate out   = LocalDate.parse(departureDate);
-            long nights     = ChronoUnit.DAYS.between(in, out);
+            long nights     = ChronoUnit.DAYS.between(in, out); // Calcula los días exactos de estancia
             BigDecimal price    = room.getRoomType().getBasePrice();
             BigDecimal subtotal = price.multiply(BigDecimal.valueOf(nights));
 
@@ -88,20 +108,20 @@ public class UserReservationController {
             res.setNumberNights((int) nights);
             res.setPricePerNight(price);
             res.setRoomSubtotal(subtotal);
-            res.setTotalConsumption(BigDecimal.ZERO);
+            res.setTotalConsumption(BigDecimal.ZERO); // Como es nueva, aún no tiene consumos extra
             res.setTotalPay(subtotal);
             res.setNumAdults(numAdults);
             res.setNumChildren(numChildren);
             res.setState(state);
             res.setObservations(observations);
 
-            // Generar código único con número aleatorio (evita duplicados por tamaño de lista)
+            // Lógica de generación de código único para la reserva (Ej. RES-2026-1548)
             String year = String.valueOf(LocalDate.now().getYear());
             String code;
             do {
                 int rand = (int)(Math.random() * 9000) + 1000;
                 code = "RES-" + year + "-" + rand;
-            } while (reservationService.findByCode(code) != null);
+            } while (reservationService.findByCode(code) != null); // Verifica que el código no exista ya en la BD
             res.setReservationCode(code);
 
             reservationService.saveFromEmployee(res);
@@ -113,8 +133,10 @@ public class UserReservationController {
     }
 
     // ── 4. ACTUALIZAR reserva existente ────────────────────────────────────
-    // URL: POST /users/reservations/update/5
-    // Viene del formulario en ReservationForm.html
+    /**
+     * Endpoint POST: /users/reservations/update/{id}
+     * Procesa la actualización de los datos de una reserva (ej. el cliente extendió su estancia).
+     */
     @PostMapping("/reservations/update/{id}")
     public String update(@PathVariable Integer id,
                          @RequestParam Integer roomId,
@@ -138,6 +160,8 @@ public class UserReservationController {
             long nights     = ChronoUnit.DAYS.between(in, out);
             BigDecimal price    = room.getRoomType().getBasePrice();
             BigDecimal subtotal = price.multiply(BigDecimal.valueOf(nights));
+            
+            // Si la reserva ya tenía consumos de room service/spa, los mantiene para recalcular el pago final
             BigDecimal consumo  = res.getTotalConsumption() != null
                                     ? res.getTotalConsumption() : BigDecimal.ZERO;
 
@@ -148,7 +172,7 @@ public class UserReservationController {
             res.setNumberNights((int) nights);
             res.setPricePerNight(price);
             res.setRoomSubtotal(subtotal);
-            res.setTotalPay(subtotal.add(consumo));
+            res.setTotalPay(subtotal.add(consumo)); // Suma el costo de la habitación + los consumos
             res.setNumAdults(numAdults);
             res.setNumChildren(numChildren);
             res.setState(state);
@@ -163,8 +187,10 @@ public class UserReservationController {
     }
 
     // ── 5. ELIMINAR reserva ────────────────────────────────────────────────
-    // URL: POST /users/reservations/delete/5
-    // Viene del modal de confirmación en Reservations.html
+    /**
+     * Endpoint POST: /users/reservations/delete/{id}
+     * Elimina una reserva del sistema. 
+     */
     @PostMapping("/reservations/delete/{id}")
     public String delete(@PathVariable Integer id, RedirectAttributes ra) {
         try {

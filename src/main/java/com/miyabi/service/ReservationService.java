@@ -14,6 +14,11 @@ import com.miyabi.models.Reservation;
 import com.miyabi.models.Room;
 import com.miyabi.repository.ReservationRepository;
 
+/**
+ * Servicio principal del sistema Miyabi.
+ * Orquestra la creación de reservas, validando disponibilidad, 
+ * capacidad de personas y cálculos financieros.
+ */
 @Service
 public class ReservationService {
 
@@ -21,6 +26,7 @@ public class ReservationService {
     private final RoomService roomService;
     private final GuestService guestService;
 
+    // Inyección de dependencias: se comunica con habitaciones y huéspedes para validar datos.
     public ReservationService(ReservationRepository reservationRepository, RoomService roomService, GuestService guestService) {
         this.reservationRepository = reservationRepository;
         this.roomService = roomService;
@@ -35,17 +41,27 @@ public class ReservationService {
         return reservationRepository.findById(id).orElse(null);
     }
 
+    /**
+     * Recupera las reservas de un huésped específico.
+     */
     public List<Reservation> findByGuest_IdGuest(Integer idGuest) {
         return reservationRepository.findByGuest_IdGuest(idGuest);
     }
 
+    /**
+     * LÓGICA DE NEGOCIO PRINCIPAL: Creación de Reservas.
+     * @Transactional asegura que si algo falla (ej. la habitación no existe), 
+     * no se guarde nada a medias en la base de datos (Atomicidad).
+     */
     @Transactional
     public Reservation createReservation(Reservation reservation) {
 
+        // 1. VALIDACIÓN Y ACTUALIZACIÓN DEL CLIENTE
         if (reservation.getGuest() != null && reservation.getGuest().getIdGuest() != null) {
             Guest existingGuest = guestService.findById(reservation.getGuest().getIdGuest());
             
             if (existingGuest != null) {
+                // Actualizamos los datos de contacto del cliente con lo que ingresó en el formulario de reserva
                 Guest incomingData = reservation.getGuest();
                 if (incomingData.getPhone() != null) existingGuest.setPhone(incomingData.getPhone());
                 if (incomingData.getMobilePhone() != null) existingGuest.setMobilePhone(incomingData.getMobilePhone());
@@ -54,7 +70,7 @@ public class ReservationService {
                 if (incomingData.getCity() != null) existingGuest.setCity(incomingData.getCity());
                 if (incomingData.getPostalCode() != null) existingGuest.setPostalCode(incomingData.getPostalCode());
  
-                guestService.save(existingGuest);
+                guestService.save(existingGuest); // Persistimos los cambios del cliente
                 reservation.setGuest(existingGuest);
             } else {
                 throw new RuntimeException("Cliente no encontrado en la base de datos.");
@@ -63,6 +79,7 @@ public class ReservationService {
             throw new RuntimeException("La reserva debe estar asociada a un cliente logueado.");
         }
 
+        // 2. VALIDACIÓN DE CAPACIDAD
         int adults = reservation.getNumAdults() != null ? reservation.getNumAdults() : 1;
         int children = reservation.getNumChildren() != null ? reservation.getNumChildren() : 0;
         int totalGuests = adults + children;
@@ -74,19 +91,23 @@ public class ReservationService {
             throw new RuntimeException("Debe haber al menos 1 adulto en la reserva.");
         }
 
+        // 3. VALIDACIÓN DE HABITACIÓN Y CÁLCULOS
         Room roomToReserve = roomService.findById(reservation.getRoom().getIdRoom());
         if (roomToReserve == null) {
             throw new RuntimeException("La habitación no existe.");
         }
 
+        // Cálculo automático de noches y subtotales
         long nights = ChronoUnit.DAYS.between(reservation.getEntryDate(), reservation.getDepartureDate());
         reservation.setNumberNights((int) nights);
 
         BigDecimal nightsDecimal = new BigDecimal(nights);
         BigDecimal subtotal = reservation.getPricePerNight().multiply(nightsDecimal);
         reservation.setRoomSubtotal(subtotal);
-        reservation.setTotalPay(subtotal);
+        reservation.setTotalPay(subtotal); // Monto inicial sin consumos extras
 
+        // 4. IDENTIFICACIÓN ÚNICA
+        // Generamos un código corto y legible para el cliente (Ej: RES-A1B2C3)
         String code = "RES-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
         reservation.setReservationCode(code);
         reservation.setState("Pending");
@@ -94,6 +115,9 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
     
+    /**
+     * Adaptador para procesar datos provenientes de peticiones AJAX/JSON (Frontend).
+     */
     public Reservation createReservationFromMap(Map<String, Object> payload) {
         Reservation res = new Reservation();
 
@@ -103,6 +127,7 @@ public class ReservationService {
         res.setNumAdults((Integer) payload.get("numAdults"));
         res.setObservations((String) payload.get("observations"));
 
+        // Mapeo manual del objeto Guest desde el Map
         Map<String, Object> guestMap = (Map<String, Object>) payload.get("guest");
         Guest guest = new Guest();
         guest.setIdGuest((Integer) guestMap.get("idGuest"));
@@ -114,6 +139,7 @@ public class ReservationService {
         guest.setPostalCode((String) guestMap.get("postalCode"));
         res.setGuest(guest);
 
+        // Mapeo de la habitación
         Map<String, Object> roomMap = (Map<String, Object>) payload.get("room");
         Room room = new Room();
         room.setIdRoom((Integer) roomMap.get("idRoom"));
@@ -130,7 +156,6 @@ public class ReservationService {
         reservationRepository.deleteById(id);
     }
 
-    // ── Buscar por código único de reserva ──────────────────────────────────
     public Reservation findByCode(String code) {
         return reservationRepository.findByReservationCode(code);
     }
